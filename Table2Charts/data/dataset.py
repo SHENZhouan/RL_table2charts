@@ -390,31 +390,39 @@ class Index:
         logger.info(f"Total charts is {total_charts}")
         logger.info(f"Total pivot tables is {total_pivots}")
 
+    @staticmethod
+    def _ratio_index(ratio: float, total: int):
+        raw_index = ratio * total
+        nearest_index = round(raw_index)
+        if abs(raw_index - nearest_index) < 1e-8:
+            return int(nearest_index)
+        return int(raw_index)
+
     def train_tUIDs(self):
-        train_threshold = self.config.train_ratio * len(self.f_end)
+        train_threshold = self._ratio_index(self.config.train_ratio, len(self.f_end))
         if train_threshold < len(self.f_end):
-            end_index = self.f_end[int(train_threshold)]
+            end_index = self.f_end[train_threshold]
         else:
             end_index = self.f_end[-1]
         return self.get_tUIDs(0, end_index)
 
     def valid_tUIDs(self):
-        train_threshold = self.config.train_ratio * len(self.f_end)
-        valid_threshold = (self.config.train_ratio + self.config.valid_ratio) * len(self.f_end)
+        train_threshold = self._ratio_index(self.config.train_ratio, len(self.f_end))
+        valid_threshold = self._ratio_index(self.config.train_ratio + self.config.valid_ratio, len(self.f_end))
         if train_threshold < len(self.f_end):
-            start_index = self.f_end[int(train_threshold)]
+            start_index = self.f_end[train_threshold]
         else:
             start_index = self.f_end[-1]
         if valid_threshold < len(self.f_end):
-            end_index = self.f_end[int(valid_threshold)]
+            end_index = self.f_end[valid_threshold]
         else:
             end_index = self.f_end[-1]
         return self.get_tUIDs(start_index, end_index)
 
     def test_tUIDs(self):
-        valid_threshold = (self.config.train_ratio + self.config.valid_ratio) * len(self.f_end)
+        valid_threshold = self._ratio_index(self.config.train_ratio + self.config.valid_ratio, len(self.f_end))
         if valid_threshold < len(self.f_end):
-            start_index = self.f_end[int(valid_threshold)]
+            start_index = self.f_end[valid_threshold]
         else:
             start_index = self.f_end[-1]
         end_index = self.f_end[-1]

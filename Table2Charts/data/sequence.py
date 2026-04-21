@@ -147,7 +147,7 @@ class Sequence:
                 [config.empty_data if token.data_features is None else token.data_features
                  for token in tokens],
                 config.empty_data, final_len), dtype=torch.float),
-            "mask": torch.tensor([1] * len(tokens) + [0] * (final_len - len(tokens)), dtype=torch.uint8)
+            "mask": torch.tensor([1] * len(tokens) + [0] * (final_len - len(tokens)), dtype=torch.bool)
         }
         if field_indices:
             result["field_indices"] = torch.tensor(append_padding(indices, -1, final_len), dtype=torch.long)

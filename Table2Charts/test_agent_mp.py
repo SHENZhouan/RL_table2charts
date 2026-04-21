@@ -121,7 +121,7 @@ def construct_data_config(args) -> DataConfig:
 
 
 def construct_search_config(args, data_config) -> SearchConfig:
-    load_ground_truth = False if args.web_table else True
+    load_ground_truth = False if args.web_table or getattr(args, "inline_table_inference", False) else True
     search_config = get_search_config(load_ground_truth, args.search_limits,
                                       search_all_types=data_config.search_all_types,
                                       search_single_type=AnaType.from_raw_str(args.test_type)

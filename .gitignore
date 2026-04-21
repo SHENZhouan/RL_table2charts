@@ -127,3 +127,56 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# ----------------------------------------------------------------------
+# Project-local runtime artifacts
+# ----------------------------------------------------------------------
+
+# Local Codex/session metadata
+.codex
+.codex/
+
+# Local notes and one-off inference outputs
+command.md
+Table2Charts/result.json
+result.json
+
+# Downloaded archives
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+
+# ----------------------------------------------------------------------
+# Generated / downloaded datasets
+# Keep core checked-in examples and source code, but do not upload large
+# generated corpora or cloned third-party datasets.
+# ----------------------------------------------------------------------
+
+Data/Data2Vis/
+Data/Data2VisRaw/
+Data/Data2VisTable2Charts/
+Data/MiniTrain/
+Data/PlotlyTable2Charts/
+Data/PlotlyTable2ChartsSmoke/
+Data/PlotlyTable2ChartsSmokeFast/
+
+# Third-party baseline clones / duplicated external repositories
+Baselines/VizML/
+vizml/
+
+# ----------------------------------------------------------------------
+# Training and evaluation outputs
+# ----------------------------------------------------------------------
+
+# Model checkpoints and evaluation folders can be very large.
+Results/Models/
+
+# TensorBoard event files and generated summaries.
+Results/summary/
+
+# Pipeline logs/status/markers are local runtime state. Keep reusable
+# launcher scripts under Results/run_logs tracked if desired.
+Results/run_logs/*
+!Results/run_logs/
+!Results/run_logs/*.sh

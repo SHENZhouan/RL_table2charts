@@ -113,7 +113,7 @@ def parse_args():
     # Distributed computing
     parser.add_argument('--apex', default=False, dest='apex', action='store_true',
                         help="Use NVIDIA Apex DistributedDataParallel instead of the PyTorch one.")
-    parser.add_argument("--local_rank", default=0, type=int, metavar='N',
+    parser.add_argument("--local_rank", "--local-rank", default=0, type=int, metavar='N',
                         help="local rank to guide use which GPU device, given by the launch script")
     parser.add_argument('--amqp_addr', default="127.0.0.1", type=str,
                         help="Last node (rank world_size - 1)'s address, should be either "
@@ -123,6 +123,8 @@ def parse_args():
     parser.add_argument('--amqp_routing_key', default='TUID_QUEUE', type=str)
     parser.add_argument('--amqp_user', default='dist', type=str)
     parser.add_argument('--amqp_pwd', default='CommonAnalysis', type=str)
+    parser.add_argument('--queue_mode', choices=['amqp', 'local'], default='amqp', type=str,
+                        help="Task queue mode. Use 'local' for single-process smoke tests without RabbitMQ.")
 
     return parser.parse_args()
 
@@ -205,19 +207,32 @@ def dist_min(device, value):
     return tensor.item()
 
 
-def iteration(epoch: int, student: Student, is_testing: bool, n_tables: int, args):
+def iteration(epoch: int, student: Student, is_testing: bool, n_tables: int, args, local_tuids=None):
     student.reset(epoch, is_testing)
 
     start_perf_t = perf_counter()
     queue_empty = False
     enough_memory = False
     logged_finished = 0
-    connection, channel = get_conn_channel(args)
+    if args.queue_mode == 'amqp':
+        connection, channel = get_conn_channel(args)
+    else:
+        connection, channel = None, None
+        local_tuids = [] if local_tuids is None else local_tuids
+        local_idx = 0
     cnt = 0
     # Keep looping while there are tUIDs not fully searched by an agent.
     while dist_sum(student.device, student.agents.finished()) < n_tables:  # Sync point!
         # Take in and start new agent if the RabbitMQ is not empty, and the student still has room for more agents.
         while not queue_empty and student.agents.remaining() < args.max_tables:
+            if args.queue_mode == 'local':
+                if local_idx >= len(local_tuids):
+                    queue_empty = True
+                    break
+                student.add_table(local_tuids[local_idx])
+                local_idx += 1
+                cnt += 1
+                continue
             try:
                 # print(f"({student.local_rank}) Waiting to receive.")
                 method, properties, body = channel.basic_get(args.amqp_routing_key, auto_ack=True)
@@ -261,6 +276,10 @@ def iteration(epoch: int, student: Student, is_testing: bool, n_tables: int, arg
             student.sample_learn(args.memory_sample_rounds, args.memory_sample_size)  # Sync point!
 
     student.dist_summary()  # Sync point! Reduce and log overall metrics.
+    if channel is not None:
+        channel.close()
+    if connection is not None:
+        connection.close()
 
 
 # TODO: load all tables before searching?
@@ -273,23 +292,27 @@ def main(args):
 
     args.device = args.local_rank % torch.cuda.device_count()
     torch.cuda.set_device(args.device)
-    os.environ['NCCL_SOCKET_IFNAME'] = 'eth0'
+    if "NCCL_SOCKET_IFNAME" not in os.environ and int(os.environ.get("WORLD_SIZE", "1")) == 1:
+        os.environ["NCCL_SOCKET_IFNAME"] = "lo"
     dist.init_process_group(backend=dist.Backend.NCCL, init_method='env://')
 
     data_config = construct_data_config(args)
     if args.local_rank == 0:
         logger.info("DataConfig: {}".format(vars(data_config)))
 
-    get_conn_channel(args, True)  # To Clean Up the Queue!
+    if args.queue_mode == 'amqp':
+        get_conn_channel(args, True)  # To Clean Up the Queue!
 
     logger.info("Loading index...")
     index = Index(data_config)
-    train_size = len(index.train_tUIDs())
-    valid_size = len(index.valid_tUIDs())
+    train_tuids = index.train_tUIDs()
+    valid_tuids = index.valid_tUIDs()
+    train_size = len(train_tuids)
+    valid_size = len(valid_tuids)
 
     global_rank = dist.get_rank()
     world_size = dist.get_world_size()
-    if global_rank == world_size - 1:
+    if args.queue_mode == 'amqp' and global_rank == world_size - 1:
         logger.info("Setting up ventilator...")
         recv_queue, send_queue = mp.Pipe(duplex=False)
         ventilator = mp.Process(target=task_queue, args=(recv_queue, world_size, index, args))
@@ -319,9 +342,12 @@ def main(args):
         logger.info("Starting epoch %d" % epoch)
 
         # Reinforcement learning
-        if global_rank == world_size - 1:
-            send_queue.send(SenderTask.Train)
-        iteration(epoch, student, False, train_size, args)
+        if args.queue_mode == 'amqp':
+            if global_rank == world_size - 1:
+                send_queue.send(SenderTask.Train)
+            iteration(epoch, student, False, train_size, args)
+        else:
+            iteration(epoch, student, False, train_size, args, local_tuids=train_tuids[global_rank::world_size])
 
         # Save model
         if args.local_rank == 0:  # Save model checkpoint
@@ -329,11 +355,14 @@ def main(args):
             logger.info("EP-%d model saved at: %s" % (epoch, output_path))
 
         # Validation
-        if global_rank == world_size - 1:
-            send_queue.send(SenderTask.Valid)
-        iteration(epoch, student, True, valid_size, args)
+        if args.queue_mode == 'amqp':
+            if global_rank == world_size - 1:
+                send_queue.send(SenderTask.Valid)
+            iteration(epoch, student, True, valid_size, args)
+        else:
+            iteration(epoch, student, True, valid_size, args, local_tuids=valid_tuids[global_rank::world_size])
 
-    if global_rank == world_size - 1:
+    if args.queue_mode == 'amqp' and global_rank == world_size - 1:
         logger.info("Stopping ventilator...")
         send_queue.send(SenderTask.Stop)
         ventilator.join()

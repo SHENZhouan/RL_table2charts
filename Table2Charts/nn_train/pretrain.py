@@ -109,8 +109,8 @@ def train_parallel(rank, args):
     logger.info("pretrain() started!")
     device = torch.device("cuda:{}".format(rank) if torch.cuda.is_available() else "cpu")
     torch.cuda.set_device(device)
-    os.environ['MASTER_ADDR'] = 'localhost'
-    os.environ['MASTER_PORT'] = '29500'
+    os.environ.setdefault('MASTER_ADDR', 'localhost')
+    os.environ.setdefault('MASTER_PORT', '29500')
     dist.init_process_group(backend=dist.Backend.NCCL, world_size=args.nprocs, rank=rank)
 
     # Initialize and prepare model
@@ -131,11 +131,19 @@ def train_parallel(rank, args):
     logger.info("Loading index...")
     index = Index(data_config)
     logger.info("Loading training data...")
-    train_dataset, train_dataloader, train_sampler = prepare_data(index.train_tUIDs(), True, args)
+    train_tuids = index.train_tUIDs()
+    if len(train_tuids) == 0:
+        raise ValueError("No training tables found after filtering. Please check corpus/index settings.")
+    train_dataset, train_dataloader, train_sampler = prepare_data(train_tuids, True, args)
     logger.info(f"{len(train_dataset)} training samples in {len(train_dataloader)} batches.")
     logger.info("Loading validation data...")
-    valid_dataset, valid_dataloader, _ = prepare_data(index.valid_tUIDs(), False, args)
-    logger.info(f"{len(valid_dataset)} validation samples in {len(valid_dataloader)} batches.")
+    valid_tuids = index.valid_tUIDs()
+    if len(valid_tuids) == 0:
+        logger.warning("No validation tables found after filtering; skip validation for this run.")
+        valid_dataset, valid_dataloader = None, None
+    else:
+        valid_dataset, valid_dataloader, _ = prepare_data(valid_tuids, False, args)
+        logger.info(f"{len(valid_dataset)} validation samples in {len(valid_dataloader)} batches.")
 
     # for param in model.named_parameters():
     #     logger.info(f"{param[0]} : {param[1].size()}")

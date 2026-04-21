@@ -3,10 +3,8 @@
 
 import torch
 import torch.nn as nn
-from allennlp.modules.attention import LinearAttention
-from allennlp.modules.seq2seq_encoders import PytorchSeq2SeqWrapper
-from allennlp.nn import util
-from allennlp.nn.activations import Activation
+
+from .allennlp_local import Activation, LinearAttention, PytorchSeq2SeqWrapper, util
 from data import TokenType
 from torch.nn.modules.linear import Linear
 from torch.nn.modules.rnn import GRUCell
@@ -47,7 +45,7 @@ def get_target_to_source(state: Dict[str, torch.Tensor], actions: Dict[str, torc
 
     # TODO: change to torch.nn.functional.one_hot() after upgrade to torch >= 1.1
     # shape: (src_len + 1) * src_len, the last row is all zero for index = -1
-    id_matrix = torch.eye(src_len + 1, src_len, dtype=torch.uint8, device=index.device)
+    id_matrix = torch.eye(src_len + 1, src_len, dtype=torch.bool, device=index.device)
     # shape: state_len * batch_size * src_len
     one_hots = id_matrix[index, :]
     return one_hots
