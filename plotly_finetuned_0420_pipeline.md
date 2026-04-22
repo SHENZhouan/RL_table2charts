@@ -583,21 +583,16 @@ Test finished!
 Complete recall info: ...
 ```
 最终 evaluation 关键结果：
+Complete R@1   = 0.4178124517
+Complete R@3   = 0.7735980226
+Complete R@5   = 0.8326896339
+Complete R@10  = 0.9022091766
+Complete R@20  = 0.9528811988
+Complete all   = 0.9533446624
 
-t_cnt = 12946
-R@1  = 0.4178124517
-R@3  = 0.7735980226
-R@5  = 0.8326896339
-R@10 = 0.9022091766
-R@20 = 0.9528811988
-all  = 0.9533446624
-first_rank = 2.91 * 12342
-RL 训练阶段也正常保存了模型，训练 summary 里最终大致是：
-
-precision = 0.541323
-recall    = 0.358383
-f1        = 0.431254
-R@1       = 0.2073098969
-R@3       = 0.3956149336
-R@5       = 0.5014711331
-R@10      = 0.6527036157
+first_rank     = 2.91*12342
+effective t_cnt = 12946
+avg targets/table = 2.3966476132
+avg complete states reached/table = 20.6541016530
+avg reached states/table = 94.6921056697
+avg expanded states/table = 40.5281167928
