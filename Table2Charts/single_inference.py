@@ -20,6 +20,8 @@ def parse_args():
                         help='The path saved embedding info.')
     parser.add_argument("--model_path", required=True,
                         help='The path saved model.')
+    parser.add_argument("--output_path", default="result.json",
+                        help='The path to write inference results.')
     parser.add_argument("--max_steps", type=int, default=60,
                         help="Max search steps for single-table inference (CPU-friendly).")
     parser.add_argument(
@@ -110,5 +112,5 @@ if __name__ == '__main__':
     info = {"table": table_dicts, "embeddings": embedding}
     inference = single_inference(args)
     result = inference.inference(info)
-    with open('result.json', 'w', encoding='utf-8-sig') as f:
+    with open(args.output_path, 'w', encoding='utf-8-sig') as f:
         json.dump(result, f)

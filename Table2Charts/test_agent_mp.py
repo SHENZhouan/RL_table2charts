@@ -33,8 +33,8 @@ def parse_args():
 
     parser.add_argument("--empirical_study", default=False, dest='empirical_study', action='store_true',
                         help='Given table json, then get small-scale recommendation results.')
-    parser.add_argument("--empirical_corpus_path", default="/home/exp/pivot-clean-data/", type=str)
-    parser.add_argument("--empirical_log_path", default="/home/exp/empirical_result", type=str)
+    parser.add_argument("--empirical_corpus_path", default="../Data/Example", type=str)
+    parser.add_argument("--empirical_log_path", default="../Results/empirical_result", type=str)
     parser.add_argument("--corpus_path", type=str, required=True, help="The corpus path for metadata task.")
     parser.add_argument("--lang", "--specify_lang", choices=DEFAULT_LANGUAGES, default='en', type=str,
                         help="Specify the header language(s) to load tables.")
@@ -43,7 +43,7 @@ def parse_args():
     parser.add_argument("--model_name", choices=DEFAULT_MODEL_NAMES, default="cp", type=str)
 
     # Model and evaluation paths
-    parser.add_argument('-m', '--model_dir_path', default="/storage/models/random/", type=str, metavar='PATH',
+    parser.add_argument('-m', '--model_dir_path', default="../Results/Models", type=str, metavar='PATH',
                         help='dir path holding the models (as the starting point)')
     parser.add_argument('-f', '--model_file', type=str, metavar='FILENAME')
     parser.add_argument('-l', '--log_save_path', default="evaluations/test", type=str, metavar='PATH',
@@ -185,8 +185,11 @@ def process_parallel(index, device_count, special_tokens: SpecialTokens,
     """
     logger = logging.getLogger(f"process_parallel ({index}@{os.getpid()})")
     start_time = perf_counter()
-    device = index % device_count
-    torch.cuda.set_device(device)
+    if device_count:
+        device = index % device_count
+        torch.cuda.set_device(device)
+    else:
+        device = torch.device("cpu")
     dqn = create_model(device, args)
 
     logger.info(f"Start to search on {device}.")

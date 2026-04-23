@@ -38,7 +38,7 @@ def get_arguments():
     parser.add_argument("--lang", "--specify_lang", choices=DEFAULT_LANGUAGES, default='en', type=str,
                         help="Specify the header language(s) to load tables.")
     parser.add_argument("--model_size", choices=DEFAULT_MODEL_SIZES, required=True, type=str)
-    parser.add_argument('-m', "--model_save_path", default="/storage/models/", type=str)
+    parser.add_argument('-m', "--model_save_path", default="../Results/Models", type=str)
     parser.add_argument('--features', choices=DEFAULT_FEATURE_CHOICES, default="all-mul_bert", type=str,
                         help="Limit the data loading and control the feature ablation.")
     parser.add_argument('-s', '--search_type', choices=DEFAULT_ANALYSIS_TYPES, type=str, required=True,
@@ -81,7 +81,7 @@ def get_arguments():
 
     # Other configurations
     parser.add_argument("--log_freq", type=int, default=2000, help="frequency of logging")
-    parser.add_argument("--summary_path", default="/storage/summaries/", type=str, help='tensorboard summary path')
+    parser.add_argument("--summary_path", default="../Results/summary", type=str, help='tensorboard summary path')
 
     return parser.parse_args()
 

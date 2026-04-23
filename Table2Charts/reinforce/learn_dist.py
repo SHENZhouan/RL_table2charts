@@ -41,7 +41,7 @@ def parse_args():
     # Model and evaluation paths
     parser.add_argument('-p', '--pre_model_file', type=str, metavar='PATH',
                         help='file path to the pre-trained model (as the starting point)')
-    parser.add_argument('-m', "--model_save_path", default="/storage/models/", type=str)
+    parser.add_argument('-m', "--model_save_path", default="../Results/Models", type=str)
     parser.add_argument('-l', '--log_save_path', default="evaluations", type=str, metavar='PATH',
                         help='subdir path of model_save_path to log the evaluation metrics during validation/testing')
 
@@ -65,7 +65,7 @@ def parse_args():
     parser.add_argument('--restart_epoch', default=-1, type=int, metavar='N',
                         help='if the pretrain model is from an interrupted model saved by this script, '
                              'reload and restart from next epoch')
-    parser.add_argument('--summary_path', default="/storage/summaries/", type=str,
+    parser.add_argument('--summary_path', default="../Results/summary", type=str,
                         help='tensorboard summary path')
     parser.add_argument('-s', '--search_type', choices=DEFAULT_ANALYSIS_TYPES, type=str, required=True,
                         help="Determine which data to load and what types of analysis to search.")
