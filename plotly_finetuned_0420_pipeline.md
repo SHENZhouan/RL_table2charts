@@ -210,29 +210,34 @@ Results/Models/plotly_finetuned_0420_sft/states_ep0.pt
 Results/Models/plotly_finetuned_0420_sft/states_ep0.pt
 ```
 
-## Step 2: 可选 SFT Evaluation
+## Step 2: SFT Evaluation
 
-本轮没有跑 SFT eval，以减少总耗时。
+本轮主 pipeline 最初设置了 `RUN_SFT_EVAL=0`，因此 SFT 后直接进入 RL。之后在后台补跑了 SFT checkpoint 的 final evaluation，使用 Plotly test split。
 
-如果未来需要对 SFT checkpoint 单独评估，可以设置：
+实际补跑信息：
 
-```bash
-RUN_SFT_EVAL=1
+```text
+run_id              = 20260422T074819Z
+finished_utc        = 2026-04-22T08:27:53Z
+checkpoint          = Results/Models/plotly_finetuned_0420_sft/states_ep0.pt
+evaluation_dir      = Results/Models/plotly_finetuned_0420_sft/evaluations/test-sft-plotly-small-20260422T074819Z
+summary_log         = Results/Models/plotly_finetuned_0420_sft/evaluations/test-sft-plotly-small-20260422T074819Z/[test-summary]20260422T1548.log
+run_log             = Results/run_logs/plotly_sft_eval_20260422T074819Z.log
 ```
 
-或者单独运行：
+命令形状：
 
 ```bash
 cd /ssd/shenzhouan/Table2Charts/Table2Charts
 
-CUDA_VISIBLE_DEVICES=3,4,5,6 \
+CUDA_VISIBLE_DEVICES=3,5,6,7 \
 /ssd/shenzhouan/Table2Charts/.venv/bin/python test_agent_mp.py \
   -m ../Results/Models/plotly_finetuned_0420_sft \
   -f states_ep0.pt \
   --model_name cp \
   --model_size small \
   --features all-fast \
-  --log_save_path evaluations/test-sft-plotly-small-manual \
+  --log_save_path evaluations/test-sft-plotly-small-20260422T074819Z \
   --search_type allCharts \
   --input_type allCharts \
   --previous_type allCharts \
@@ -244,6 +249,23 @@ CUDA_VISIBLE_DEVICES=3,4,5,6 \
   --lang en \
   --limit_search_group
 ```
+
+实际 SFT evaluation 结果来自 summary 中的 `[all 12946]` 汇总块，口径为 `evaluation.stages.complete`，即 complete / overall chart recommendation recall：
+
+```text
+t_cnt              = 12946
+Complete R@1       = 0.1228178588
+Complete R@3       = 0.3706936505
+Complete R@5       = 0.7739842422
+Complete R@10      = 0.8776456048
+Complete R@20      = 0.9025181523
+Complete all       = 0.9395952418
+first_rank         = 4.71*12164
+avg targets/table  = 2.396647613162367
+avg complete states/table = 20.40939286266028
+```
+
+注意：这不是 `--test_field_selections` 或 `--test_design_choices`，而是完整图表推荐是否匹配 ground truth 的 overall 指标。
 
 ## Step 3: RL
 
