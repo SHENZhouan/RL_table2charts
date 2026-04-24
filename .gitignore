@@ -153,6 +153,7 @@ Data/MiniTrain/
 Data/PlotlyTable2Charts/
 Data/PlotlyTable2ChartsSmoke/
 Data/PlotlyTable2ChartsSmokeFast/
+Data/raw_data_all.csv
 
 # Third-party baseline clones / duplicated external repositories
 Baselines/VizML/
