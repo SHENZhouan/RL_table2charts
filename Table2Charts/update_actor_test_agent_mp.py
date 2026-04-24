@@ -104,6 +104,10 @@ def parse_args():
                         help='set this flag if we only want to test field selection')
     parser.add_argument('--test_design_choices', action='store_true',
                         help='set this flag if we only want to test charting (visualization)')
+    parser.add_argument('--score_mode', choices=['actor', 'critic', 'blend'], default='actor',
+                        help='Scoring source for eval-only actor-critic diagnostics.')
+    parser.add_argument('--critic_score_weight', default=0.5, type=float,
+                        help='Blend weight for critic scores when --score_mode=blend.')
 
     return parser.parse_args()
 
@@ -114,6 +118,8 @@ def construct_data_config(args) -> DataConfig:
                                   args.unified_ana_token, None, False, lang=args.lang,
                                   empirical_study=args.empirical_study, mode=args.mode,
                                   limit_search_group=args.limit_search_group)
+    data_config.score_mode = args.score_mode
+    data_config.critic_score_weight = args.critic_score_weight
     if args.model_name == "cp":
         data_config.need_field_indices = True
     if args.empirical_study:
@@ -173,8 +179,18 @@ def feed_batch_nn(samples: List[QValue], model: torch.nn.Module, device: str, co
         del data["values"]  # Not useful in evaluation
         data = to_device(data, device)
         output = model(data["state"], data["actions"])
-        return output["actor_logits"].masked_fill(torch.logical_not(data["actions"]["mask"].bool()), -1e9) \
-            .softmax(dim=-1).cpu()
+        valid_mask = data["actions"]["mask"].bool()
+        actor_scores = output["actor_logits"].masked_fill(torch.logical_not(valid_mask), -1e9).softmax(dim=-1)
+        critic_scores = output["critic_log_probs"][:, :, 1].exp()
+
+        if config.score_mode == 'actor':
+            scores = actor_scores
+        elif config.score_mode == 'critic':
+            scores = critic_scores
+        else:
+            scores = config.critic_score_weight * critic_scores + (1.0 - config.critic_score_weight) * actor_scores
+
+        return scores.masked_fill(torch.logical_not(valid_mask), -1e9).cpu()
 
 
 def process_parallel(index, device_count, special_tokens: SpecialTokens,

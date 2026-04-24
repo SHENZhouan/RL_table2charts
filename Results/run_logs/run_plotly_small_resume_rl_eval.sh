@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-ROOT="/ssd/shenzhouan/Table2Charts"
-CODE_DIR="${ROOT}/Table2Charts"
-PY="${ROOT}/.venv/bin/python"
+ROOT="${ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+CODE_DIR="${CODE_DIR:-${ROOT}/Table2Charts}"
+PY="${PY:-${ROOT}/.venv/bin/python}"
 RUN_ID="$(date -u +%Y%m%dT%H%M%SZ)"
 LOG_DIR="${ROOT}/Results/run_logs"
 LOG_FILE="${LOG_DIR}/plotly_small_resume_rl_eval_${RUN_ID}.log"

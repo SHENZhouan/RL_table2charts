@@ -51,5 +51,5 @@
     "master_port": 29653,
     "run_id": null
   },
-  "notes": "Planned-only until critic-only score evaluation is exposed by a verified CLI."
+  "notes": "Eval-only actor-critic diagnostic using critic-only scores from one existing actor-critic checkpoint."
 }

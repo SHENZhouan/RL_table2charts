@@ -51,5 +51,5 @@
     "master_port": 29654,
     "run_id": null
   },
-  "notes": "Planned-only until blended actor+critic scoring is exposed by a verified CLI."
+  "notes": "Eval-only actor-critic diagnostic using blended actor+critic scores from one existing actor-critic checkpoint."
 }

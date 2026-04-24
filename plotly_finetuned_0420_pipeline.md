@@ -18,19 +18,19 @@ Results/Models/plotly_finetuned_0420_rl  -> 20260421001338-2el192fd128.128GRUh-a
 代码根目录：
 
 ```bash
-/ssd/shenzhouan/Table2Charts
+${ROOT}
 ```
 
 训练代码目录：
 
 ```bash
-/ssd/shenzhouan/Table2Charts/Table2Charts
+${CODE_DIR}
 ```
 
 Python 环境：
 
 ```bash
-/ssd/shenzhouan/Table2Charts/.venv/bin/python
+${PY}
 ```
 
 数据集：
@@ -62,9 +62,9 @@ GPU              = 3,4,5,6
 启动完整 pipeline：
 
 ```bash
-cd /ssd/shenzhouan/Table2Charts
+cd ${ROOT}
 tmux new-session -d -s plotly_small_pipeline \
-  "cd /ssd/shenzhouan/Table2Charts && \
+  "cd ${ROOT} && \
    GPU_IDS=3,4,5,6 \
    SFT_NPROCS=4 \
    EVAL_NPROCS=4 \
@@ -83,8 +83,8 @@ tmux attach -t plotly_small_pipeline
 查看日志和状态：
 
 ```bash
-tail -f /ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_small_tmux_pipeline.latest.log
-cat /ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_small_tmux_pipeline.latest.status
+tail -f ${ROOT}/Results/run_logs/plotly_small_tmux_pipeline.latest.log
+cat ${ROOT}/Results/run_logs/plotly_small_tmux_pipeline.latest.status
 nvidia-smi
 ```
 
@@ -120,12 +120,12 @@ RUN_SFT_EVAL=0
 本轮 SFT 使用的命令形状如下：
 
 ```bash
-cd /ssd/shenzhouan/Table2Charts/Table2Charts
+cd ${CODE_DIR}
 
 CUDA_VISIBLE_DEVICES=3,4,5,6 \
 MASTER_ADDR=localhost \
 MASTER_PORT=29616 \
-/ssd/shenzhouan/Table2Charts/.venv/bin/python -m nn_train.pretrain \
+${PY} -m nn_train.pretrain \
   --model_name=cp \
   --model_size=small \
   --features=all-fast \
@@ -228,10 +228,10 @@ run_log             = Results/run_logs/plotly_sft_eval_20260422T074819Z.log
 命令形状：
 
 ```bash
-cd /ssd/shenzhouan/Table2Charts/Table2Charts
+cd ${CODE_DIR}
 
 CUDA_VISIBLE_DEVICES=3,5,6,7 \
-/ssd/shenzhouan/Table2Charts/.venv/bin/python test_agent_mp.py \
+${PY} test_agent_mp.py \
   -m ../Results/Models/plotly_finetuned_0420_sft \
   -f states_ep0.pt \
   --model_name cp \
@@ -289,10 +289,10 @@ valid_tuids[global_rank::world_size]
 RL 命令形状如下：
 
 ```bash
-cd /ssd/shenzhouan/Table2Charts/Table2Charts
+cd ${CODE_DIR}
 
 CUDA_VISIBLE_DEVICES=3,4,5,6 \
-/ssd/shenzhouan/Table2Charts/.venv/bin/python -m torch.distributed.launch \
+${PY} -m torch.distributed.launch \
   --nproc_per_node=4 \
   --master_port=29617 \
   script.py \
@@ -304,7 +304,7 @@ CUDA_VISIBLE_DEVICES=3,4,5,6 \
   --search_limits=e50-b4-na \
   --epochs=1 \
   -m ../Results/Models \
-  -p /ssd/shenzhouan/Table2Charts/Results/Models/plotly_finetuned_0420_sft/states_ep0.pt \
+  -p ${ROOT}/Results/Models/plotly_finetuned_0420_sft/states_ep0.pt \
   --summary_path=../Results/summary \
   --search_type=allCharts \
   --input_type=allCharts \
@@ -380,10 +380,10 @@ Results/Models/plotly_finetuned_0420_rl/evaluations/test-valid/
 命令形状如下：
 
 ```bash
-cd /ssd/shenzhouan/Table2Charts/Table2Charts
+cd ${CODE_DIR}
 
 CUDA_VISIBLE_DEVICES=3,4,5,6 \
-/ssd/shenzhouan/Table2Charts/.venv/bin/python test_agent_mp.py \
+${PY} test_agent_mp.py \
   -m ../Results/Models/plotly_finetuned_0420_rl \
   -f states_ep0.pt \
   --model_name cp \
@@ -457,15 +457,15 @@ first_rank = 2.91 * 12342
 如果 SFT 已经完成，后续只改 reward、RL 参数或 evaluation 参数，通常不需要重新 SFT。可以直接从 SFT checkpoint 续跑：
 
 ```bash
-cd /ssd/shenzhouan/Table2Charts
+cd ${ROOT}
 
 tmux new-session -d -s plotly_small_resume_rl_eval \
-  "cd /ssd/shenzhouan/Table2Charts && \
+  "cd ${ROOT} && \
    GPU_IDS=3,4,5,6 \
    RL_NPROCS=4 \
    EVAL_NPROCS=4 \
    MASTER_PORT=29617 \
-   SFT_CKPT=/ssd/shenzhouan/Table2Charts/Results/Models/plotly_finetuned_0420_sft/states_ep0.pt \
+   SFT_CKPT=${ROOT}/Results/Models/plotly_finetuned_0420_sft/states_ep0.pt \
    Results/run_logs/run_plotly_small_resume_rl_eval.sh"
 ```
 
@@ -478,8 +478,8 @@ Results/run_logs/run_plotly_small_resume_rl_eval.sh
 状态与日志：
 
 ```bash
-tail -f /ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_small_resume_rl_eval.latest.log
-cat /ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_small_resume_rl_eval.latest.status
+tail -f ${ROOT}/Results/run_logs/plotly_small_resume_rl_eval.latest.log
+cat ${ROOT}/Results/run_logs/plotly_small_resume_rl_eval.latest.status
 ```
 
 该脚本会自动执行：
@@ -531,10 +531,10 @@ sample-new/*.sample.json
 因此目前不能直接跑 WebTable evaluation。准备好 WebTable corpus 后，命令形状为：
 
 ```bash
-cd /ssd/shenzhouan/Table2Charts/Table2Charts
+cd ${CODE_DIR}
 
 CUDA_VISIBLE_DEVICES=3,4,5,6 \
-/ssd/shenzhouan/Table2Charts/.venv/bin/python test_agent_mp.py \
+${PY} test_agent_mp.py \
   -m ../Results/Models/plotly_finetuned_0420_rl \
   -f states_ep0.pt \
   --model_name cp \
@@ -588,7 +588,7 @@ valid_tuids[global_rank::world_size]
 看 status 文件：
 
 ```bash
-cat /ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_small_resume_rl_eval.latest.status
+cat ${ROOT}/Results/run_logs/plotly_small_resume_rl_eval.latest.status
 ```
 
 完成时应有：

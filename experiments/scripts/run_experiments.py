@@ -62,6 +62,7 @@ def resolve_defaults(config: Dict) -> Dict:
         "python_bin": env_default("PYTHON_BIN", paths.get("python_bin") or "python"),
         "corpus_path": env_default("CORPUS_PATH", paths.get("corpus_path") or str(root_path / "Data" / "PlotlyTable2Charts")),
         "sft_ckpt": env_default("SFT_CKPT", paths.get("sft_ckpt")),
+        "actor_critic_ckpt": env_default("ACTOR_CRITIC_CKPT", paths.get("checkpoint")),
         "model_save_path": env_default("MODEL_SAVE_PATH", paths.get("model_save_path") or str(root_path / "Results" / "Models")),
         "summary_path": env_default("SUMMARY_PATH", paths.get("summary_path") or str(root_path / "Results" / "summary")),
         "gpu_ids": env_default("GPU_IDS", runtime.get("gpu_ids")),
@@ -87,7 +88,7 @@ def quote_command(command: List[str]) -> str:
 
 def mk_env_exports(resolved: Dict) -> Dict[str, str]:
     exports = {}
-    for key in ("root", "python_bin", "corpus_path", "sft_ckpt", "model_save_path", "summary_path", "gpu_ids"):
+    for key in ("root", "python_bin", "corpus_path", "sft_ckpt", "actor_critic_ckpt", "model_save_path", "summary_path", "gpu_ids"):
         value = resolved.get(key)
         if value:
             exports[key.upper()] = value
@@ -386,55 +387,53 @@ def build_command_plan(config: Dict, resolved: Dict) -> Dict:
 
     if variant == "actor_critic":
         score_mode = actor_critic["score_mode"]
-        checkpoint = resolved["checkpoint"] or resolved["sft_ckpt"]
+        checkpoint = resolved["checkpoint"] or resolved["actor_critic_ckpt"]
         if not checkpoint:
             return {
                 "status": "planned_not_implemented",
-                "todo": "Actor-critic evaluation requires a checkpoint path.",
+                "todo": "Actor-critic evaluation requires paths.checkpoint or ACTOR_CRITIC_CKPT.",
                 "commands": [],
             }
         model_dir = str(Path(checkpoint).resolve().parent)
-        if score_mode == "actor":
-            command = [
-                resolved["python_bin"],
-                "update_actor_test_agent_mp.py",
-                "-m",
-                model_dir,
-                "-f",
-                Path(checkpoint).name,
-                "--model_name",
-                "cp",
-                "--model_size",
-                "small",
-                "--features",
-                "all-fast",
-                "--log_save_path",
-                output_dir,
-                "--search_type",
-                search["search_type"],
-                "--input_type",
-                search["input_type"],
-                "--previous_type",
-                search["previous_type"],
-                "--nprocs",
-                str(runtime["eval_nprocs"]),
-                "--nagents",
-                "64",
-                "--nthreads",
-                "5",
-                "--search_limits",
-                search["search_limits"],
-                "--corpus_path",
-                resolved["corpus_path"],
-                "--lang",
-                "en",
-            ] + (["--limit_search_group"] if search.get("limit_search_group") else [])
-            return {"status": "runnable", "todo": None, "commands": [command]}
-        return {
-            "status": "planned_not_implemented",
-            "todo": f"Current code does not expose a verified CLI for actor-critic score_mode={score_mode}.",
-            "commands": [],
-        }
+        command = [
+            resolved["python_bin"],
+            "update_actor_test_agent_mp.py",
+            "-m",
+            model_dir,
+            "-f",
+            Path(checkpoint).name,
+            "--model_name",
+            "cp",
+            "--model_size",
+            "small",
+            "--features",
+            "all-fast",
+            "--log_save_path",
+            output_dir,
+            "--search_type",
+            search["search_type"],
+            "--input_type",
+            search["input_type"],
+            "--previous_type",
+            search["previous_type"],
+            "--nprocs",
+            str(runtime["eval_nprocs"]),
+            "--nagents",
+            "64",
+            "--nthreads",
+            "5",
+            "--search_limits",
+            search["search_limits"],
+            "--corpus_path",
+            resolved["corpus_path"],
+            "--lang",
+            "en",
+            "--score_mode",
+            score_mode,
+            "--critic_score_weight",
+            str(actor_critic["critic_score_weight"]),
+        ] + (["--limit_search_group"] if search.get("limit_search_group") else [])
+        return {"status": "runnable", "todo": None, "commands": [command]}
 
     return {
         "status": "planned_not_implemented",

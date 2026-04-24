@@ -51,5 +51,5 @@
     "master_port": 29652,
     "run_id": null
   },
-  "notes": "Actor-only evaluation from an existing actor-critic checkpoint if the actor evaluation path is available."
+  "notes": "Eval-only actor-critic diagnostic using actor-only scores from one existing actor-critic checkpoint."
 }
