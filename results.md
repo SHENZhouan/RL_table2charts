@@ -57,3 +57,25 @@
 ```
 
 - all_finished_utc: 2026-04-22T23:52:44Z
+
+
+## Plotly Update Actor Actor-Critic 20260423T120014Z
+
+- started_utc: 2026-04-23T12:00:15Z
+- gpu_ids: 3,4,5,6
+- sft_ckpt: /ssd/shenzhouan/Table2Charts/Results/Models/plotly_finetuned_0420_sft/states_ep0.pt
+- actor_loss_weight: 0.1
+- entropy_weight: 0.001
+- critic_score_weight: 0.5
+- log_file: /ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_update_actor_actor_critic_rl_eval_20260423T120014Z.log
+
+### Update Actor eval rerun 20260423T1623Z_evalfix
+
+- finished_utc: 2026-04-23T16:53:32Z
+- model_dir: /ssd/shenzhouan/Table2Charts/Results/Models/20260423200116-update_actor-2el192fd128.128GRUh-allCharts-actor-critic-RL
+- eval_log_dir: /ssd/shenzhouan/Table2Charts/Results/Models/20260423200116-update_actor-2el192fd128.128GRUh-allCharts-actor-critic-RL/evaluations/test-update_actor-actor-critic-plotly-small-20260423T1623Z_evalfix
+- log_file: /ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_update_actor_eval_only_20260423T1623Z_evalfix.log
+
+```text
+04/23/2026 16:53:31 - INFO - summary(@4052863) -   Complete recall info: {'recall': {'@10': 0.6923374015139812, '@01': 0.347674957515835, '@05': 0.6198825892167464, '@03': 0.6137803182450178, 'all': 0.7315773211802874, '@20': 0.7100262629383594}, 'first_rank': '3.54*9471', 'reached': 17.172253978062724, 'targets': 2.396647613162367, 'top': [1, 3, 5, 10, 20], 't_cnt': 12946}
+```
