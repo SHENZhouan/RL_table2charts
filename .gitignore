@@ -173,3 +173,7 @@ Results/summary/
 Results/run_logs/*
 !Results/run_logs/
 !Results/run_logs/*.sh
+
+# Experiments scaffold outputs
+experiments/results/raw_logs/*
+!experiments/results/raw_logs/.gitkeep

@@ -1,0 +1,55 @@
+{
+  "name": "ucb_c010",
+  "method": "planned_sampling",
+  "stage": "train_eval",
+  "base_variant": "updated_policy",
+  "paths": {
+    "root": null,
+    "code_dir": null,
+    "python_bin": null,
+    "corpus_path": null,
+    "model_save_path": null,
+    "summary_path": null,
+    "sft_ckpt": null,
+    "checkpoint": null,
+    "output_dir": "experiments/results/raw_logs/ucb_c010"
+  },
+  "search": {
+    "search_type": "allCharts",
+    "input_type": "allCharts",
+    "previous_type": "allCharts",
+    "search_limits": "e50-b4-na",
+    "limit_search_group": true
+  },
+  "sampling": {
+    "strategy": "ucb",
+    "epsilon_start": null,
+    "epsilon_end": null,
+    "epsilon_decay": null,
+    "top_m": null,
+    "temperature": null,
+    "ucb_c": 0.1
+  },
+  "reward": {
+    "mode": "baseline",
+    "exact_reward": null,
+    "default_reward": null,
+    "same_token_reward": null,
+    "field_reward": null,
+    "same_field_type_reward": null,
+    "positive_threshold": null
+  },
+  "actor_critic": {
+    "score_mode": null,
+    "critic_score_weight": null,
+    "actor_loss_weight": null
+  },
+  "runtime": {
+    "gpu_ids": null,
+    "rl_nprocs": 4,
+    "eval_nprocs": 4,
+    "master_port": 29648,
+    "run_id": null
+  },
+  "notes": "Planned-only config until count-based UCB-style exploration is implemented in the codebase."
+}
