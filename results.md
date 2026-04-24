@@ -79,3 +79,42 @@
 ```text
 04/23/2026 16:53:31 - INFO - summary(@4052863) -   Complete recall info: {'recall': {'@10': 0.6923374015139812, '@01': 0.347674957515835, '@05': 0.6198825892167464, '@03': 0.6137803182450178, 'all': 0.7315773211802874, '@20': 0.7100262629383594}, 'first_rank': '3.54*9471', 'reached': 17.172253978062724, 'targets': 2.396647613162367, 'top': [1, 3, 5, 10, 20], 't_cnt': 12946}
 ```
+
+## Plotly Update Actor New 20260424T154040Z
+
+- started_utc: 2026-04-24T15:40:40Z
+- gpu_ids: 3,4,5,6
+- sft_ckpt: /ssd/shenzhouan/Table2Charts/Results/Models/plotly_finetuned_0420_sft/states_ep0.pt
+- actor_loss_weight: 0.1
+- entropy_weight: 0.001
+- actor_sampling_temperature: 1.0
+- actor_policy_seed: 20260424
+- epochs: 1
+- log_file: /ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_update_actor_new_rl_20260424T154040Z.log
+
+### Plotly Update Actor New failed
+
+- failed_utc: 2026-04-24T15:42:27Z
+- exit_code: 1
+- log_file: /ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_update_actor_new_rl_20260424T154040Z.log
+
+## Plotly Update Actor New 20260424T160628Z
+
+- started_utc: 2026-04-24T16:06:28Z
+
+- gpu_ids: 3,4
+- sft_ckpt: /ssd/shenzhouan/Table2Charts/Results/Models/plotly_finetuned_0420_sft/states_ep0.pt
+## Plotly Update UCB 20260424T160628Z
+- actor_loss_weight: 0.1
+- entropy_weight: 0.001
+
+- actor_sampling_temperature: 1.0
+- started_utc: 2026-04-24T16:06:29Z
+- actor_policy_seed: 20260424
+- gpu_ids: 5
+- epochs: 1
+- sft_ckpt: /ssd/shenzhouan/Table2Charts/Results/Models/plotly_finetuned_0420_sft/states_ep0.pt
+- log_file: /ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_update_actor_new_rl_20260424T160628Z.log
+- ucb_exploration: 0.5
+- epochs: 1
+- log_file: /ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_update_UCB_rl_20260424T160628Z.log

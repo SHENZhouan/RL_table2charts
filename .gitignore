@@ -146,7 +146,6 @@ result.json
 # generated corpora or cloned third-party datasets.
 # ----------------------------------------------------------------------
 
-Data/Data2Vis/
 Data/Data2VisRaw/
 Data/Data2VisTable2Charts/
 Data/MiniTrain/

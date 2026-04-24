@@ -1,0 +1,337 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
+"""
+Launch this script following https://pytorch.org/docs/stable/distributed.html#launch-utility
+Or find examples in learn_dist.sh
+"""
+import argparse
+import logging
+import multiprocessing as mp
+import numpy as np
+import os
+import pika
+import sys
+import torch
+import torch.distributed as dist
+import traceback
+from data import Index, DEFAULT_LANGUAGES, DEFAULT_FEATURE_CHOICES, DEFAULT_ANALYSIS_TYPES
+from enum import IntEnum
+from update_actor_new_helper import construct_data_config, create_model, prepare_model
+from model import DEFAULT_MODEL_SIZES, DEFAULT_MODEL_NAMES
+from os import path, getpid
+from reinforce.student.update_actor_new_config import StudentConfig
+from reinforce.student.update_actor_new_student import UpdateActorNewStudent
+from search.agent import get_search_config, DEFAULT_SEARCH_LIMITS
+from time import perf_counter
+from torch.utils.tensorboard import SummaryWriter
+from util import num_params
+
+logging.basicConfig(format='%(asctime)s - %(levelname)s - %(name)s -   %(message)s',
+                    datefmt='%m/%d/%Y %H:%M:%S',
+                    level=logging.INFO)
+logging.getLogger("pika").setLevel(logging.WARNING)
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="RL Training")
+
+    parser.add_argument('-p', '--pre_model_file', type=str, metavar='PATH',
+                        help='file path to the pre-trained model (as the starting point)')
+    parser.add_argument('-m', "--model_save_path", default="/storage/models/", type=str)
+    parser.add_argument('-l', '--log_save_path', default="evaluations", type=str, metavar='PATH',
+                        help='subdir path of model_save_path to log the evaluation metrics during validation/testing')
+
+    parser.add_argument("--corpus_path", type=str, required=True, help="The corpus path for metadata task.")
+    parser.add_argument("--lang", "--specify_lang", choices=DEFAULT_LANGUAGES, default='en', type=str,
+                        help="Specify the header language(s) to load tables.")
+
+    parser.add_argument("--model_name", choices=DEFAULT_MODEL_NAMES, default="cp", type=str)
+
+    parser.add_argument('--model_size', choices=DEFAULT_MODEL_SIZES, required=True, type=str)
+    parser.add_argument('--features', choices=DEFAULT_FEATURE_CHOICES, default="all-mul_bert", type=str,
+                        help="Limit the data loading and control the feature ablation.")
+    parser.add_argument('--log_freq_batch', default=100, type=int, metavar='N',
+                        help='number of batches to print dqn evaluation metrics')
+    parser.add_argument('--log_freq_agent', default=100, type=int, metavar='N',
+                        help='number of tables to print agent evaluation metrics')
+    parser.add_argument('--epochs', default=30, type=int, metavar='N',
+                        help='number of total training epochs to run')
+    parser.add_argument('--restart_epoch', default=-1, type=int, metavar='N',
+                        help='if the pretrain model is from an interrupted model saved by this script, '
+                             'reload and restart from next epoch')
+    parser.add_argument('--summary_path', default="/storage/summaries/", type=str,
+                        help='tensorboard summary path')
+    parser.add_argument('-s', '--search_type', choices=DEFAULT_ANALYSIS_TYPES, type=str, required=True,
+                        help="Determine which data to load and what types of analysis to search.")
+    parser.add_argument('--input_type', choices=DEFAULT_ANALYSIS_TYPES, type=str, default=None,
+                        help="Determine which data to load. This parameter is prior to --search_type.")
+    parser.add_argument('--previous_type', choices=DEFAULT_ANALYSIS_TYPES, type=str,
+                        help="Tell the action space information of pre_model_file/model_file."
+                             "Bar grouping should be the same as in data_constraint.")
+    parser.add_argument('--field_permutation', default=False, dest='field_permutation', action='store_true',
+                        help="Whether to randomly permutate table fields when training.")
+    parser.add_argument('--unified_ana_token', default=False, dest='unified_ana_token', action='store_true',
+                        help="Whether to use unified analysis token [ANA] instead of concrete type tokens.")
+    parser.add_argument("--freeze_embed", default=False, dest='freeze_embed', action='store_true',
+                        help="Whether to freeze params in embedding layer."
+                             "Only take effect when --pre_model_file is available.")
+    parser.add_argument("--freeze_encoder", default=False, dest='freeze_encoder', action='store_true',
+                        help="Whether to freeze params in encoder layers."
+                             "Only take effect when --pre_model_file is available.")
+    parser.add_argument("--fresh_decoder", default=False, dest='fresh_decoder', action='store_true',
+                        help="Whether to re-initialize params in decoding layers (attention layer, copy layer, etc.)"
+                             "Only take effect when --pre_model_file is available.")
+
+    parser.add_argument("--negative_weight", default=0.02, type=float, help="Negative class weight for NLLLoss.")
+    parser.add_argument("--actor_loss_weight", default=0.1, type=float,
+                        help="Weight for the actor policy-gradient loss.")
+    parser.add_argument("--entropy_weight", default=0.001, type=float,
+                        help="Weight for actor entropy regularization.")
+    parser.add_argument("--actor_sampling_temperature", default=1.0, type=float,
+                        help="Temperature used when sampling continuation actions from the actor policy.")
+    parser.add_argument("--actor_eval_greedy", action="store_true",
+                        help="Use actor argmax instead of actor sampling during validation/testing.")
+    parser.add_argument("--actor_policy_seed", default=None, type=int,
+                        help="Optional random seed for actor-driven continuation sampling.")
+
+    parser.add_argument('--memory_size', default=150000, type=int, metavar='N',
+                        help='the max capacity of experience replay memory')
+    parser.add_argument('--min_memory', default=5000, type=int, metavar='N',
+                        help='min number of experiences to start learning')
+    parser.add_argument('--memory_sample_size', default=128, type=int, metavar='N',
+                        help='the number of experiences in each memory sampling, '
+                             'in other words, training batch size for each distributed process')
+    parser.add_argument('--memory_sample_rounds', default=4, type=int, metavar='N',
+                        help='how many times to do the sampling after each expansion of agents')
+    parser.add_argument("--num_train_analysis", type=int, help="Number of Analysis each ana_type for training.")
+
+    parser.add_argument('--random_train', action="store_true",
+                        help="Set the flag if training samples will be generated randomly.")
+    parser.add_argument('--max_tables', default=64, type=int, metavar='N',
+                        help='number of tables to handle at the same time')
+    parser.add_argument('--search_limits', choices=DEFAULT_SEARCH_LIMITS, default="e200-b8-r4c2", type=str,
+                        help="Search config option")
+
+    parser.add_argument('--apex', default=False, dest='apex', action='store_true',
+                        help="Use NVIDIA Apex DistributedDataParallel instead of the PyTorch one.")
+    parser.add_argument("--local_rank", "--local-rank", default=0, type=int, metavar='N',
+                        help="local rank to guide use which GPU device, given by the launch script")
+    parser.add_argument('--amqp_addr', default="127.0.0.1", type=str,
+                        help="Last node (rank world_size - 1)'s address, should be either "
+                             "the IP address or the hostname of the node, for "
+                             "single node multi-proc training, the --master_addr can simply be 127.0.0.1")
+    parser.add_argument('--amqp_port', default=5672, type=str)
+    parser.add_argument('--amqp_routing_key', default='TUID_QUEUE', type=str)
+    parser.add_argument('--amqp_user', default='dist', type=str)
+    parser.add_argument('--amqp_pwd', default='CommonAnalysis', type=str)
+    parser.add_argument('--queue_mode', choices=['amqp', 'local'], default='amqp', type=str,
+                        help="Task queue mode. Use 'local' for single-process smoke tests without RabbitMQ.")
+
+    return parser.parse_args()
+
+
+class SenderTask(IntEnum):
+    Train = 0,
+    Valid = 1,
+    Stop = 2
+
+
+def get_conn_channel(args, purge_queue: bool = False):
+    credentials = pika.PlainCredentials(username=args.amqp_user, password=args.amqp_pwd)
+    parameters = pika.ConnectionParameters(host=args.amqp_addr, port=args.amqp_port, credentials=credentials)
+    connection = pika.BlockingConnection(parameters)
+    channel = connection.channel()
+    channel.queue_declare(args.amqp_routing_key, durable=True)
+    if purge_queue:
+        channel.queue_purge(args.amqp_routing_key)
+    return connection, channel
+
+
+def task_queue(receiver, world_size: int, index: Index, args):
+    logger = logging.getLogger("pika sender")
+
+    def send_msg(channel, message: str):
+        channel.basic_publish(exchange='', routing_key=args.amqp_routing_key, body=message.encode("ascii"),
+                              properties=pika.BasicProperties(delivery_mode=2))
+
+    logger.info("Wait for commands...")
+    while True:
+        task = receiver.recv()
+        if task == SenderTask.Train:
+            logger.info("Train Command Recv.")
+            train_tuids = index.train_tUIDs()
+            connection, channel = get_conn_channel(args)
+            for i in np.random.permutation(len(train_tuids)):
+                send_msg(channel, train_tuids[i])
+            for _ in range(world_size):
+                send_msg(channel, "")
+            logger.info(f"Train {len(train_tuids)} + {world_size} sent.")
+            channel.close()
+            connection.close()
+        elif task == SenderTask.Valid:
+            logger.info("Valid Command Recv.")
+            valid_tuids = index.valid_tUIDs()
+            connection, channel = get_conn_channel(args)
+            for tUID in valid_tuids:
+                send_msg(channel, tUID)
+            for _ in range(world_size):
+                send_msg(channel, "")
+            logger.info(f"Valid {len(valid_tuids)} + {world_size} sent.")
+            channel.close()
+            connection.close()
+        else:
+            logger.info("Stop")
+            return
+
+
+def dist_sum(device, value):
+    tensor = torch.tensor(value, device=device)
+    dist.all_reduce(tensor)
+    return tensor.item()
+
+
+def dist_min(device, value):
+    tensor = torch.tensor(value, device=device)
+    dist.all_reduce(tensor, op=dist.ReduceOp.MIN)
+    return tensor.item()
+
+
+def iteration(epoch: int, student: UpdateActorNewStudent, is_testing: bool, n_tables: int, args, local_tuids=None):
+    logger = logging.getLogger(f"iteration({dist.get_rank()})")
+    student.reset(epoch, is_testing)
+
+    if local_tuids is not None:
+        tUID_iter = iter(local_tuids)
+    elif args.queue_mode == 'local':
+        raise ValueError("local_tuids must be provided when queue_mode=local")
+    else:
+        connection, channel = get_conn_channel(args)
+
+        def next_tuid():
+            _, _, body = channel.basic_get(args.amqp_routing_key, auto_ack=True)
+            return body.decode("ascii") if body is not None else ""
+
+        tUID_iter = iter(next_tuid, "")
+
+    cnt = 0
+    enough_memory = is_testing
+    while True:
+        try:
+            while student.n_tables() < args.max_tables:
+                tUID = next(tUID_iter)
+                student.add_table(tUID)
+                cnt += 1
+        except StopIteration:
+            pass
+
+        finished_info = student.act_step()
+
+        if not enough_memory:
+            enough_memory = len(student.memory) >= student.config.min_memory
+        if enough_memory:
+            student.sample_learn(args.memory_sample_rounds, args.memory_sample_size)
+
+        if cnt >= n_tables and student.n_tables() == 0:
+            break
+
+        if cnt % args.log_freq_agent == 0 and cnt > 0:
+            logger.info("EP-%d %s progress: handled=%d/%d active=%d" % (
+                epoch, "valid" if is_testing else "train", cnt, n_tables, student.agents.remaining()))
+
+    if local_tuids is None and args.queue_mode == 'amqp':
+        channel.close()
+        connection.close()
+    student.dist_summary()
+
+
+def main(args):
+    logger = logging.getLogger("main")
+    args.mode = "train"
+
+    if args.local_rank == 0:
+        logger.info("Started: {}".format(args))
+
+    args.device = args.local_rank % torch.cuda.device_count()
+    torch.cuda.set_device(args.device)
+    if "NCCL_SOCKET_IFNAME" not in os.environ and int(os.environ.get("WORLD_SIZE", "1")) == 1:
+        os.environ["NCCL_SOCKET_IFNAME"] = "lo"
+    dist.init_process_group(backend=dist.Backend.NCCL, init_method='env://')
+
+    data_config = construct_data_config(args)
+    if args.local_rank == 0:
+        logger.info("DataConfig: {}".format(vars(data_config)))
+
+    if args.queue_mode == 'amqp':
+        get_conn_channel(args, True)
+
+    logger.info("Loading index...")
+    index = Index(data_config)
+    train_tuids = index.train_tUIDs()
+    valid_tuids = index.valid_tUIDs()
+    train_size = len(train_tuids)
+    valid_size = len(valid_tuids)
+
+    global_rank = dist.get_rank()
+    world_size = dist.get_world_size()
+    if args.queue_mode == 'amqp' and global_rank == world_size - 1:
+        logger.info("Setting up ventilator...")
+        recv_queue, send_queue = mp.Pipe(duplex=False)
+        ventilator = mp.Process(target=task_queue, args=(recv_queue, world_size, index, args))
+        ventilator.start()
+
+    logger.info("Preparing DDP model...")
+    model, experiment_name = create_model(args)
+    experiment_name += '-actor-policy-RL'
+    logger.info(f"{args.model_name} #parameters = {num_params(model)}")
+    ddp, optimizer, criterion = prepare_model(model, args.device, args)
+    args.model_save_path = path.join(args.model_save_path, experiment_name)
+
+    student_config = StudentConfig(optimizer, criterion,
+                                   memory_size=args.memory_size, min_memory=args.min_memory,
+                                   random_train=args.random_train,
+                                   log_tag=f"{args.local_rank}({getpid()})", log_freq=args.log_freq_batch,
+                                   log_dir=path.join(args.model_save_path, args.log_save_path),
+                                   actor_loss_weight=args.actor_loss_weight,
+                                   entropy_weight=args.entropy_weight,
+                                   actor_sampling_temperature=args.actor_sampling_temperature,
+                                   actor_eval_greedy=args.actor_eval_greedy,
+                                   actor_policy_seed=args.actor_policy_seed)
+    search_config = get_search_config(True, args.search_limits, data_config.search_all_types)
+    summary_writer = SummaryWriter(log_dir=path.join(args.summary_path, experiment_name + f"-R{args.local_rank}"))
+    if args.local_rank == 0:
+        logger.info("StudentConfig: {}".format(vars(student_config)))
+        logger.info("SearchConfig: {}".format(vars(search_config)))
+    student = UpdateActorNewStudent(student_config, data_config, search_config, ddp, args.apex,
+                                    args.device, args.local_rank, summary_writer)
+
+    for epoch in range(args.restart_epoch + 1, args.epochs):
+        logger.info("Starting epoch %d" % epoch)
+
+        if args.queue_mode == 'amqp':
+            if global_rank == world_size - 1:
+                send_queue.send(SenderTask.Train)
+            iteration(epoch, student, False, train_size, args)
+        else:
+            iteration(epoch, student, False, train_size, args, local_tuids=train_tuids[global_rank::world_size])
+
+        if args.local_rank == 0:
+            output_path = student.save_checkpoint(args.model_save_path)
+            logger.info("EP-%d model saved at: %s" % (epoch, output_path))
+
+        if args.queue_mode == 'amqp':
+            if global_rank == world_size - 1:
+                send_queue.send(SenderTask.Valid)
+            iteration(epoch, student, True, valid_size, args)
+        else:
+            iteration(epoch, student, True, valid_size, args, local_tuids=valid_tuids[global_rank::world_size])
+
+    if args.queue_mode == 'amqp' and global_rank == world_size - 1:
+        logger.info("Stopping ventilator...")
+        send_queue.send(SenderTask.Stop)
+        ventilator.join()
+    logger.info("Finished!")
+
+
+if __name__ == '__main__':
+    main(parse_args())
