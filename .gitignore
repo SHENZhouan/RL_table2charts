@@ -164,6 +164,9 @@ vizml/
 
 # Model checkpoints and evaluation folders can be very large.
 Results/Models/
+!Results/Models/
+Results/Models/*
+!Results/Models/sft_states_ep0.pt
 
 # TensorBoard event files and generated summaries.
 Results/summary/

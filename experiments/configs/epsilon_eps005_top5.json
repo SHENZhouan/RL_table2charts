@@ -24,7 +24,7 @@
   "sampling": {
     "strategy": "epsilon_top_m",
     "epsilon_start": 0.05,
-    "epsilon_end": 0.005,
+    "epsilon_end": 0.02,
     "epsilon_decay": 0.8,
     "top_m": 5,
     "temperature": null,

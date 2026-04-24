@@ -45,6 +45,53 @@ The runner resolves missing path and runtime values from environment variables w
 
 This keeps configs portable across WSL local editing and remote GPU execution.
 
+## Epsilon Sweep
+
+To preview the full epsilon sweep locally without running training:
+
+```bash
+python experiments/scripts/run_experiments.py --config-dir experiments/configs --only epsilon_ --dry-run
+```
+
+Recommended remote environment variables:
+
+- `ROOT`
+- `PYTHON_BIN`
+- `CORPUS_PATH`
+- `SFT_CKPT`
+- `MODEL_SAVE_PATH`
+- `SUMMARY_PATH`
+- `GPU_IDS`
+- `RL_NPROCS`
+- `EVAL_NPROCS`
+
+To launch the sequential remote sweep inside `tmux`:
+
+```bash
+tmux new-session -d -s epsilon_sweep \
+  "cd /path/to/RL_table2charts && \
+   ROOT=\$PWD \
+   PYTHON_BIN=python \
+   CORPUS_PATH=\$PWD/Data/PlotlyTable2Charts \
+   SFT_CKPT=/actual/path/to/states_ep0.pt \
+   MODEL_SAVE_PATH=\$PWD/Results/Models \
+   SUMMARY_PATH=\$PWD/Results/summary \
+   GPU_IDS=0,1,2,3 \
+   RL_NPROCS=4 \
+   EVAL_NPROCS=4 \
+   experiments/scripts/run_remote_epsilon_sweep.sh"
+```
+
+For a remote dry-run using the helper:
+
+```bash
+DRY_RUN=1 experiments/scripts/run_remote_epsilon_sweep.sh
+```
+
+The current `metrics.csv` contains historical updated-policy baseline context, not the new epsilon sweep runs.
+
+Do not launch full training from the notebook.
+
 ## Planned-But-Not-Implemented Handling
 
 Some planned experiment families are not yet supported by the codebase, such as Boltzmann or UCB exploration and possibly critic-only or blended actor-critic evaluation modes.

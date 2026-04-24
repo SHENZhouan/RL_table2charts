@@ -6,6 +6,8 @@
 - Replaced the metrics summary helper's pandas dependency with standard-library CSV parsing so the scaffold works in the local `t2c` environment without extra dataframe compatibility issues.
 - Fixed the `results.md` collector to split multi-block sections into separate normalized rows, recover missing updated-policy `top_m`, and refresh `metrics.csv` cleanly under `--overwrite` without leaving stale parser artifacts.
 - Added eval-only actor/critic/blend score-mode support to `update_actor_test_agent_mp.py`, made all three actor-critic diagnostic configs runnable in dry-run, and recorded reduced-concurrency local smoke-test commands for a single-GPU RTX 4060 setup.
+- Normalized the epsilon sweep scaffold for remote execution by fixing config endpoints, clarifying updated-policy train/eval TODOs, and adding a tmux-safe sequential remote sweep helper.
+- Added a local WSL runbook that pins `SFT_CKPT=$PWD/Results/Models/sft_states_ep0.pt` for consistent dry-run usage.
 
 ### Local Smoke-Test Commands (not executed)
 

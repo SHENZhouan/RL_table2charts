@@ -263,9 +263,9 @@ def build_command_plan(config: Dict, resolved: Dict) -> Dict:
             f"--policy_explore_top_m={sampling['top_m']}",
         ]
         eval_cmd = [
-            "# TODO: after training, evaluate the produced updated-policy checkpoint with test_agent_mp.py using the saved model dir."
+            "# TODO: training is runnable; evaluation requires discovering the produced RL model dir after training, which is intentionally deferred in this scaffold."
         ]
-        return {"status": "runnable", "todo": "Training command shape is implemented; evaluation requires the produced RL model directory.", "commands": [train_cmd, eval_cmd]}
+        return {"status": "runnable", "todo": "Training command shape is implemented; evaluation requires discovering the produced RL model dir after training and is intentionally deferred in this scaffold.", "commands": [train_cmd, eval_cmd]}
 
     if variant == "update_reward":
         if not resolved["sft_ckpt"]:
