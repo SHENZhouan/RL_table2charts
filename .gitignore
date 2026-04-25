@@ -179,6 +179,7 @@ Results/run_logs/*
 !Results/run_logs/
 !Results/run_logs/*.sh
 
-# Experiments scaffold outputs
-experiments/results/raw_logs/*
-!experiments/results/raw_logs/.gitkeep
+# Track experiment raw logs under experiments/results/raw_logs
+!experiments/results/raw_logs/
+!experiments/results/raw_logs/**
+

@@ -1,0 +1,79 @@
+run_id=20260424T155452Z
+root=/root/RL_table2charts
+code_dir=/root/RL_table2charts/Table2Charts
+python_bin=python
+corpus_path=/root/RL_table2charts/Data/PlotlyTable2Charts
+sft_ckpt=/root/RL_table2charts/Results/Models/sft_states_ep0.pt
+model_save_path=/root/RL_table2charts/Results/Models
+summary_path=/root/RL_table2charts/Results/summary
+gpu_ids=0
+rl_nprocs=1
+eval_nprocs=1
+dry_run=0
+sweep_log=/root/RL_table2charts/experiments/results/raw_logs/epsilon_sweep_20260424T155452Z.log
+
+=== running experiments/configs/epsilon_eps005_top5.json ===
+/root/anaconda3/envs/t2c/lib/python3.10/site-packages/torch/distributed/launch.py:183: FutureWarning: The module torch.distributed.launch is deprecated
+and will be removed in future. Use torchrun.
+Note that --use-env is set by default in torchrun.
+If your script expects `--local-rank` argument to be set, please
+change it to read from `os.environ['LOCAL_RANK']` instead. See 
+https://pytorch.org/docs/stable/distributed.html#launch-utility for 
+further instructions
+
+  warnings.warn(
+04/24/2026 23:54:57 - INFO - Rank 0(3037)|main -   Started: Namespace(pre_model_file='/root/RL_table2charts/Results/Models/sft_states_ep0.pt', model_save_path='/root/RL_table2charts/Results/Models', log_save_path='evaluations', corpus_path='/root/RL_table2charts/Data/PlotlyTable2Charts', lang='en', model_name='cp', model_size='small', features='all-fast', log_freq_batch=100, log_freq_agent=500, epochs=1, restart_epoch=-1, summary_path='/root/RL_table2charts/Results/summary', search_type='allCharts', input_type='allCharts', previous_type='allCharts', field_permutation=False, unified_ana_token=False, freeze_embed=False, freeze_encoder=False, fresh_decoder=False, negative_weight=0.8, memory_size=150000, min_memory=1000, memory_sample_size=64, memory_sample_rounds=2, num_train_analysis=None, random_train=False, max_tables=64, search_limits='e50-b4-na', policy_epsilon_start=0.05, policy_epsilon_end=0.02, policy_epsilon_decay=0.8, policy_explore_top_m=5, apex=False, local_rank=0, amqp_addr='127.0.0.1', amqp_port=5672, amqp_routing_key='TUID_QUEUE', amqp_user='dist', amqp_pwd='CommonAnalysis', queue_mode='local', mode=None)
+04/24/2026 23:54:57 - INFO - Rank 0(3037)|main -   DataConfig: {'corpus_path': '/root/RL_table2charts/Data/PlotlyTable2Charts', 'encoding': 'utf-8-sig', 'lang': 'en', 'english_only': True, 'max_field_num': 128, 'max_val_num': 4, 'max_dim_num': 4, 'need_field_indices': True, 'field_permutation': False, 'unified_ana_token': False, 'allow_multiple_values': True, 'limit_search_group': False, 'use_field_type': True, 'use_field_role': True, 'use_binary_tags': True, 'use_data_features': True, 'use_semantic_embeds': True, 'load_at_most': None, 'num_train_analysis': None, 'embed_model': 'fasttext', 'embed_len': 50, 'embed_in_json': True, 'embed_layer': '0', 'embed_reduce_type': 'mean', 'data_len': 31, 'data_cleanup_fn': <function cleanup_data_features_nn at 0x774a66be4430>, 'train_ratio': 0.7, 'valid_ratio': 0.1, 'test_ratio': 0.2, 'empirical_study': False, 'cat_nums': [5, 3, 3, 3, 3, 3, 3, 3], 'search_all_types': True, 'search_types': [<AnaType.LineChart: 1>, <AnaType.BarChart: 2>, <AnaType.ScatterChart: 3>, <AnaType.PieChart: 4>], 'model_types': [<AnaType.LineChart: 1>, <AnaType.BarChart: 2>, <AnaType.ScatterChart: 3>, <AnaType.PieChart: 4>], 'input_types': [<AnaType.LineChart: 1>, <AnaType.BarChart: 2>, <AnaType.ScatterChart: 3>, <AnaType.PieChart: 4>], 'consider_grouping_operations': True, 'top_freq_func': 0, 'cat_len': 8, 'empty_embed': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'empty_cat': [0, 0, 0, 0, 0, 0, 0, 0], 'empty_data': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'num_permute_samples': [0, 1, 2, 4, 8]}
+04/24/2026 23:54:57 - INFO - Rank 0(3037)|main -   Loading index...
+Traceback (most recent call last):
+  File "/root/anaconda3/envs/t2c/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/root/anaconda3/envs/t2c/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/root/RL_table2charts/Table2Charts/reinforce/updated_policy_learn_dist.py", line 388, in <module>
+    main(parse_args())
+  File "/root/RL_table2charts/Table2Charts/reinforce/updated_policy_learn_dist.py", line 317, in main
+    index = Index(data_config)
+  File "/root/RL_table2charts/Table2Charts/data/dataset.py", line 271, in __init__
+    with open(config.index_path(), "r", encoding=config.encoding) as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/root/RL_table2charts/Data/PlotlyTable2Charts/index/schema_ids.json'
+[2026-04-24 23:54:58,811] torch.distributed.elastic.multiprocessing.api: [ERROR] failed (exitcode: 1) local_rank: 0 (pid: 3037) of binary: /root/anaconda3/envs/t2c/bin/python
+Traceback (most recent call last):
+  File "/root/anaconda3/envs/t2c/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/root/anaconda3/envs/t2c/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/root/anaconda3/envs/t2c/lib/python3.10/site-packages/torch/distributed/launch.py", line 198, in <module>
+    main()
+  File "/root/anaconda3/envs/t2c/lib/python3.10/site-packages/torch/distributed/launch.py", line 194, in main
+    launch(args)
+  File "/root/anaconda3/envs/t2c/lib/python3.10/site-packages/torch/distributed/launch.py", line 179, in launch
+    run(args)
+  File "/root/anaconda3/envs/t2c/lib/python3.10/site-packages/torch/distributed/run.py", line 803, in run
+    elastic_launch(
+  File "/root/anaconda3/envs/t2c/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 135, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/root/anaconda3/envs/t2c/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 268, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+reinforce.updated_policy_learn_dist FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-04-24_23:54:58
+  host      : ubuntu22
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 3037)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
+resolved_train_command=python -m torch.distributed.launch --nproc_per_node 1 --master_port 29642 --module reinforce.updated_policy_learn_dist --corpus_path /root/RL_table2charts/Data/PlotlyTable2Charts --model_size=small --model_name=cp --features=all-fast --negative_weight=0.8 --search_limits=e50-b4-na --epochs=1 --model_save_path /root/RL_table2charts/Results/Models -p /root/RL_table2charts/Results/Models/sft_states_ep0.pt --summary_path /root/RL_table2charts/Results/summary --search_type allCharts --input_type allCharts --previous_type allCharts --lang=en --queue_mode=local --log_freq_agent=500 --log_freq_batch=100 --max_tables=64 --min_memory=1000 --memory_sample_size=64 --memory_sample_rounds=2 --policy_epsilon_start=0.05 --policy_epsilon_end=0.02 --policy_epsilon_decay=0.8 --policy_explore_top_m=5
+Traceback (most recent call last):
+  File "<stdin>", line 28, in <module>
+  File "/root/anaconda3/envs/t2c/lib/python3.10/subprocess.py", line 526, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['python', '-m', 'torch.distributed.launch', '--nproc_per_node', '1', '--master_port', '29642', '--module', 'reinforce.updated_policy_learn_dist', '--corpus_path', '/root/RL_table2charts/Data/PlotlyTable2Charts', '--model_size=small', '--model_name=cp', '--features=all-fast', '--negative_weight=0.8', '--search_limits=e50-b4-na', '--epochs=1', '--model_save_path', '/root/RL_table2charts/Results/Models', '-p', '/root/RL_table2charts/Results/Models/sft_states_ep0.pt', '--summary_path', '/root/RL_table2charts/Results/summary', '--search_type', 'allCharts', '--input_type', 'allCharts', '--previous_type', 'allCharts', '--lang=en', '--queue_mode=local', '--log_freq_agent=500', '--log_freq_batch=100', '--max_tables=64', '--min_memory=1000', '--memory_sample_size=64', '--memory_sample_rounds=2', '--policy_epsilon_start=0.05', '--policy_epsilon_end=0.02', '--policy_epsilon_decay=0.8', '--policy_explore_top_m=5']' returned non-zero exit status 1.

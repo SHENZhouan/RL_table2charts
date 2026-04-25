@@ -46,8 +46,8 @@
   },
   "runtime": {
     "gpu_ids": null,
-    "rl_nprocs": 4,
-    "eval_nprocs": 4,
+    "rl_nprocs": 2,
+    "eval_nprocs": 2,
     "master_port": 29642,
     "run_id": null
   },
