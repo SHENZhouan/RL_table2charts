@@ -104,6 +104,12 @@ For the concrete remote workflow, observed runtime, smoke-test command, and mach
 - [epsilon_sweep_runbook.md](/home/lyl610/RL_table2charts/experiments/epsilon_sweep_runbook.md)
 - [reward_intensity_interaction_runbook.md](/home/lyl610/RL_table2charts/experiments/reward_intensity_interaction_runbook.md)
 
+The epsilon runbook is also the source of truth for:
+
+- authoritative RL model-dir mappings for the 2026-04-25 sweep;
+- formal `[test-summary]` final-eval log locations;
+- `experiments/scripts/extract_test_summary.py`, which normalizes tracked `test_agent_mp.py` logs into the epsilon final-eval CSV.
+
 Do not launch full training from the notebook.
 
 ## Planned-But-Not-Implemented Handling

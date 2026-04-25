@@ -1,8 +1,19 @@
 # Epsilon Sweep Runbook
 
-## Scope
+## Summary
 
-This runbook documents the updated-policy epsilon-greedy sweep that was run on the Plotly-only Table2Charts setup.
+This document is the detailed operator record for the updated-policy epsilon sweep on the regenerated PlotlyTable2Charts corpus.
+
+The key correction is procedural: the original experiment scaffold could finish RL training without running the formal post-training `test_agent_mp.py` evaluation. That meant training-time `EP-0 test/valid SUMMARY` lines could be mistaken for final report metrics. The corrected pipeline defines completion as:
+
+1. RL training finishes
+2. the fresh RL model directory is discovered
+3. `test_agent_mp.py` runs on the test split
+4. the resulting `[test-summary]` log is recorded and extracted into CSV
+
+Report metrics must come from the `[test-summary]` logs written by `test_agent_mp.py`.
+
+## Experiment Matrix
 
 Sweep settings:
 
@@ -14,8 +25,9 @@ Sweep settings:
 - top-M: `5`
 - model init: `Results/Models/sft_states_ep0.pt`
 - epochs: `1`
-
-## What Was Trained
+- model size: `small`
+- features: `all-fast`
+- search/input/previous type: `allCharts`
 
 The successful sweep used the processed corpus at:
 
@@ -23,7 +35,7 @@ The successful sweep used the processed corpus at:
 Data/PlotlyTable2Charts
 ```
 
-The training logs show:
+Training logs showed:
 
 - `load_at_most=None`
 - `num_train_analysis=None`
@@ -33,31 +45,61 @@ The training logs show:
 - `Total schemas is 72939`
 - `Total tables is 69037`
 
-That means this was not a smoke-subset run. It used the full processed Plotly corpus available under `Data/PlotlyTable2Charts`, then split it by the repo's default ratio:
+This was a full processed-corpus run, not a smoke subset.
 
-- 70% train
-- 10% valid
-- 20% test
+## Scripts Involved
 
-So the RL training stage used the full training split of the processed corpus, not a manually capped subset. It still trained for only one epoch.
+Training/eval entrypoints:
 
-## Observed Runtime
+- `experiments/scripts/run_experiments.py`
+- `experiments/scripts/run_remote_epsilon_sweep.sh`
+- `Table2Charts/reinforce/updated_policy_learn_dist.py`
+- `Table2Charts/test_agent_mp.py`
+- `experiments/scripts/extract_test_summary.py`
 
-From `experiments/results/raw_logs/epsilon_sweep_20260425T024412Z.log`:
+Roles:
 
-- `epsilon=0.05`: about 16.3 min
-- `epsilon=0.10`: about 16.1 min
-- `epsilon=0.20`: about 16.1 min
-- `epsilon=0.30`: about 16.0 min
+- `run_experiments.py` generates the training command shape
+- `run_remote_epsilon_sweep.sh` is the helper that runs training, discovers the new RL model dir, and launches `test_agent_mp.py`
+- `updated_policy_learn_dist.py` performs RL training
+- `test_agent_mp.py` writes the formal `[test-summary]...log` final-eval artifact under the trained RL model directory
+- `extract_test_summary.py` normalizes those `[test-summary]` logs into CSV rows
 
-Practical estimate:
+## Actual Artifacts Produced
 
-- one epsilon run: about 16 min
-- four-run sequential sweep: about 65 min
+### RL model directories
 
-This estimate covers the RL train+valid stage recorded in the sweep log. Formal test-set evaluation via `test_agent_mp.py` is extra.
+Tracked in:
 
-## Smoke Test Command
+- [epsilon_sweep_model_dirs_20260425.csv](/home/lyl610/RL_table2charts/experiments/results/epsilon_sweep_model_dirs_20260425.csv)
+
+Authoritative model-dir mapping:
+
+- `epsilon_eps005_top5` -> `Results/Models/20260425104442-2el192fd128.128GRUh-allCharts-RL`
+- `epsilon_eps010_top5` -> `Results/Models/20260425110039-2el192fd128.128GRUh-allCharts-RL`
+- `epsilon_eps020_top5` -> `Results/Models/20260425111651-2el192fd128.128GRUh-allCharts-RL`
+- `epsilon_eps030_top5` -> `Results/Models/20260425113303-2el192fd128.128GRUh-allCharts-RL`
+
+There is also an older duplicate `eps005` model directory:
+
+- `Results/Models/20260425104458-2el192fd128.128GRUh-allCharts-RL`
+
+Do not use that duplicate as the authoritative `eps005` result source unless you intentionally re-verify it. The tracked mapping file points to `20260425104442...`, which is the authoritative row for the current epsilon sweep.
+
+### Formal final-eval summary logs
+
+These logs are the formal `test_agent_mp.py` outputs and are the provenance source for report metrics:
+
+- `Results/Models/20260425104442-2el192fd128.128GRUh-allCharts-RL/evaluations/test-epsilon-eps005-top5-20260425/[test-summary]20260425T1821.log`
+- `Results/Models/20260425110039-2el192fd128.128GRUh-allCharts-RL/evaluations/test-epsilon-eps010-top5-20260425/[test-summary]20260425T1826.log`
+- `Results/Models/20260425111651-2el192fd128.128GRUh-allCharts-RL/evaluations/test-epsilon-eps020-top5-20260425/[test-summary]20260425T1832.log`
+- `Results/Models/20260425113303-2el192fd128.128GRUh-allCharts-RL/evaluations/test-epsilon-eps030-top5-20260425/[test-summary]20260425T1838.log`
+
+These files are JSON-style merged summaries written by `Table2Charts/test_agent_mp.py`.
+
+## Runtime And Launch Shapes
+
+### Historical smoke test
 
 This was the single-GPU remote smoke-test shape used before the full sweep:
 
@@ -106,24 +148,22 @@ CUDA_VISIBLE_DEVICES=0 python -m torch.distributed.launch \
   --policy_explore_top_m=5
 ```
 
-Use this only to verify startup and data/model wiring. It is not the recommended way to launch the full sweep.
+### Correct full helper entrypoint
 
-## Recommended Sweep Entry Point
-
-The tracked helper script is:
+Use the helper script:
 
 ```text
 experiments/scripts/run_remote_epsilon_sweep.sh
 ```
 
-Use it with environment variables instead of editing machine-specific paths into the script.
+Current helper behavior in non-dry-run mode:
 
-In current helper behavior, one config is only considered fully completed after:
-
-1. RL training finishes
-2. the fresh RL model directory is discovered
-3. `test_agent_mp.py` runs on the test split
-4. the helper records the model dir and eval log dir
+1. create a marker file before training
+2. launch RL training
+3. discover the newly produced RL model directory
+4. assert `states_ep0.pt` exists
+5. run `test_agent_mp.py`
+6. record the config name, model dir, checkpoint, eval log dir, and completion time in a sidecar `.results` file
 
 Example remote launch:
 
@@ -142,26 +182,9 @@ EVAL_NPROCS=2 \
 bash experiments/scripts/run_remote_epsilon_sweep.sh
 ```
 
-For a `tmux` launch:
+### Machine-specific variables
 
-```bash
-tmux new-session -d -s epsilon_sweep \
-  "cd /path/to/RL_table2charts && \
-   ROOT=\$PWD \
-   PYTHON_BIN=python \
-   CORPUS_PATH=\$PWD/Data/PlotlyTable2Charts \
-   SFT_CKPT=\$PWD/Results/Models/sft_states_ep0.pt \
-   MODEL_SAVE_PATH=\$PWD/Results/Models \
-   SUMMARY_PATH=\$PWD/Results/summary \
-   GPU_IDS=0,1 \
-   RL_NPROCS=2 \
-   EVAL_NPROCS=2 \
-   bash experiments/scripts/run_remote_epsilon_sweep.sh"
-```
-
-## Variables You Must Adjust Per Machine
-
-Do not hard-code these into the script for one machine:
+Do not hard-code these into the helper:
 
 - `ROOT`
 - `PYTHON_BIN`
@@ -172,22 +195,53 @@ Do not hard-code these into the script for one machine:
 - `GPU_IDS`
 - `RL_NPROCS`
 - `EVAL_NPROCS`
-- `MASTER_PORT` if you run a one-off direct launch
+- `MASTER_PORT`
 
 Rules:
 
-- `GPU_IDS` must match the actual visible GPU list
+- `GPU_IDS` must match the actual visible GPUs
 - `RL_NPROCS` must match the number of visible GPUs used for training
-- do not set `nproc_per_node=4` when only 2 GPUs are visible
-- keep `queue_mode=local` for single-node smoke tests unless you intentionally use RabbitMQ
+- `EVAL_NPROCS` must match the intended evaluation parallelism
+- keep `queue_mode=local` for these single-node remote runs unless you intentionally switch to a queue-backed setup
 
-## Current Result Artifacts
+## Extracting Formal Final-Eval Metrics
+
+The extractor is:
+
+- [extract_test_summary.py](/home/lyl610/RL_table2charts/experiments/scripts/extract_test_summary.py)
+
+By default it reads `experiments/results/epsilon_sweep_model_dirs_20260425.csv`, discovers one `[test-summary]` log under each authoritative model directory, and writes normalized rows.
+
+Preview rows to stdout:
+
+```bash
+python experiments/scripts/extract_test_summary.py
+```
+
+Overwrite the normalized epsilon final-eval CSV:
+
+```bash
+python experiments/scripts/extract_test_summary.py \
+  --output experiments/results/final_eval_epsilon_sweep_20260425.csv \
+  --overwrite
+```
+
+Explicit-path mode is also supported if you want to pass `[test-summary]` files directly:
+
+```bash
+python experiments/scripts/extract_test_summary.py \
+  Results/Models/20260425104442-2el192fd128.128GRUh-allCharts-RL/evaluations/test-epsilon-eps005-top5-20260425/[test-summary]20260425T1821.log
+```
+
+The extractor only supports formal `test_agent_mp.py` outputs. It must not be pointed at training logs or `EP-0 test/valid SUMMARY` text.
+
+## Current Result Files
 
 Training model directories:
 
 - [epsilon_sweep_model_dirs_20260425.csv](/home/lyl610/RL_table2charts/experiments/results/epsilon_sweep_model_dirs_20260425.csv)
 
-Final evaluation summary table:
+Normalized final-eval table:
 
 - [final_eval_epsilon_sweep_20260425.csv](/home/lyl610/RL_table2charts/experiments/results/final_eval_epsilon_sweep_20260425.csv)
 
@@ -195,26 +249,35 @@ Main sweep raw log:
 
 - [epsilon_sweep_20260425T024412Z.log](/home/lyl610/RL_table2charts/experiments/results/raw_logs/epsilon_sweep_20260425T024412Z.log)
 
-## Metric Provenance
+## Metric Provenance Warning
 
-Do not use training-time `EP-0 test/valid SUMMARY` lines as formal report metrics. Those are useful progress signals, but they are not the same as the separate post-training test-set evaluation.
+Do not use training-time `EP-0 test/valid SUMMARY` lines as report metrics.
 
-For report-quality epsilon results, use the outputs produced by `test_agent_mp.py` and the normalized CSV derived from those outputs.
+Those summaries are useful for monitoring training, but they are not the formal post-training test-set evaluation. Formal report metrics must come from:
 
-## Current Final Eval Table
+1. `[test-summary]...log` files under `Results/Models/.../evaluations/...`
+2. the normalized CSV generated from those logs
 
-From `final_eval_epsilon_sweep_20260425.csv`:
+## Observed Runtime
 
-- `epsilon=0.20` gives the best `R@1`, `R@3`, `R@5`, and `R@10`
-- `epsilon=0.10` gives the best `R@20` and `recall_all`
+From `experiments/results/raw_logs/epsilon_sweep_20260425T024412Z.log`:
 
-This is the table currently stored in the repo, but the CSV should still be treated as a normalized summary. If exact recomputation is needed later, preserve the underlying final-eval raw logs alongside the CSV.
+- `epsilon=0.05`: about 16.3 min
+- `epsilon=0.10`: about 16.1 min
+- `epsilon=0.20`: about 16.1 min
+- `epsilon=0.30`: about 16.0 min
+
+Practical estimate:
+
+- one epsilon run: about 16 min of RL training
+- four-run sequential sweep: about 65 min of RL training
+- formal `test_agent_mp.py` evaluation is extra wall-clock time beyond that
 
 ## Common Failure Modes
 
 ### Missing processed corpus
 
-If training fails with missing `index/schema_ids.json`, the issue is not the runner. It means `CORPUS_PATH` does not point to a processed Table2Charts corpus.
+If training fails with missing `index/schema_ids.json`, `CORPUS_PATH` does not point to a processed Table2Charts corpus.
 
 ### Duplicate GPU / NCCL invalid usage
 
@@ -228,22 +291,16 @@ If the helper says permission denied, run:
 bash experiments/scripts/run_remote_epsilon_sweep.sh
 ```
 
-or add execute permission once and keep it tracked intentionally.
+or add execute permission once and keep that change intentional.
 
-### Dry-run vs real run
+### Dry-run confusion
 
-To preview commands without training:
+To preview commands without training or test:
 
 ```bash
 DRY_RUN=1 bash experiments/scripts/run_remote_epsilon_sweep.sh
 ```
 
-## Recommendation for TA Reproduction
+### Empty or truncated summary log
 
-For TA-facing reproduction, keep this split:
-
-- `experiments/README.md`: high-level map
-- `experiments/epsilon_sweep_runbook.md`: concrete operational steps
-- `notes/experiment_log.md`: what was actually run and what happened
-
-That keeps the pipeline understandable without mixing historical notes into the main instructions.
+If `extract_test_summary.py` fails on an empty or truncated `[test-summary]` file, rerun only the final-eval step for that specific RL model directory instead of retraining the whole sweep.

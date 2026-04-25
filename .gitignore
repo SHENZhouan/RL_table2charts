@@ -169,6 +169,13 @@ Results/Models/
 !Results/Models/
 Results/Models/*
 !Results/Models/sft_states_ep0.pt
+!Results/Models/*/
+Results/Models/*/*
+!Results/Models/*/evaluations/
+Results/Models/*/evaluations/*
+!Results/Models/*/evaluations/test-*/
+Results/Models/*/evaluations/test-*/*
+!Results/Models/*/evaluations/test-*/[[]test-summary]*.log
 
 # TensorBoard event files and generated summaries.
 Results/summary/
@@ -182,4 +189,3 @@ Results/run_logs/*
 # Track experiment raw logs under experiments/results/raw_logs
 !experiments/results/raw_logs/
 !experiments/results/raw_logs/**
-
