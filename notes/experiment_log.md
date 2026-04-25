@@ -71,3 +71,57 @@ CUDA_VISIBLE_DEVICES=0 python update_actor_test_agent_mp.py \
   --score_mode blend \
   --critic_score_weight 0.5
 ```
+
+## 2026-04-25
+
+- Fast-forward synced local `yilin/experiment-pipeline` to `1716132` (`Add missing Plotly preprocessing helpers`) after the remote preprocessing work landed upstream.
+- Confirmed the remote setup needed preprocessed Plotly corpus artifacts that are not stored in Git. The remote host was updated with raw Plotly input plus preprocessing code, then used to build a smoke-test corpus and unblock RL startup.
+- Ran a single-GPU smoke test on a remote 2080 against `reinforce.updated_policy_learn_dist` with `queue_mode=local` and the updated-policy epsilon settings. The command successfully started training initialization; it was manually stopped after confirming startup behavior.
+- Decision: keep syncing code changes through Git, but do not sync generated `Data/PlotlyTable2Charts_smoke/` corpus artifacts or other large preprocessing outputs. Those remain local/remote runtime data, not source-controlled assets.
+
+### Remote Updated-Policy Smoke-Test Command
+
+```bash
+cd ~/RL_table2charts
+
+export ROOT="$PWD"
+export PYTHON_BIN=python
+export CORPUS_PATH="$PWD/Data/PlotlyTable2Charts"
+export SFT_CKPT="$PWD/Results/Models/sft_states_ep0.pt"
+export MODEL_SAVE_PATH="$PWD/Results/Models"
+export SUMMARY_PATH="$PWD/Results/summary"
+export GPU_IDS=0
+export MASTER_PORT=29531
+
+cd Table2Charts
+
+CUDA_VISIBLE_DEVICES=0 python -m torch.distributed.launch \
+  --nproc_per_node 1 \
+  --master_port 29531 \
+  --module reinforce.updated_policy_learn_dist \
+  --corpus_path "$CORPUS_PATH" \
+  --model_size=small \
+  --model_name=cp \
+  --features=all-fast \
+  --negative_weight=0.8 \
+  --search_limits=e50-b4-na \
+  --epochs=1 \
+  --model_save_path "$MODEL_SAVE_PATH" \
+  -p "$SFT_CKPT" \
+  --summary_path "$SUMMARY_PATH" \
+  --search_type allCharts \
+  --input_type allCharts \
+  --previous_type allCharts \
+  --lang=en \
+  --queue_mode=local \
+  --log_freq_agent=500 \
+  --log_freq_batch=100 \
+  --max_tables=64 \
+  --min_memory=1000 \
+  --memory_sample_size=64 \
+  --memory_sample_rounds=2 \
+  --policy_epsilon_start=0.05 \
+  --policy_epsilon_end=0.02 \
+  --policy_epsilon_decay=0.8 \
+  --policy_explore_top_m=5
+```
