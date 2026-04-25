@@ -118,3 +118,13 @@
 - ucb_exploration: 0.5
 - epochs: 1
 - log_file: /ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_update_UCB_rl_20260424T160628Z.log
+
+### Update UCB RL
+
+- finished_utc: 2026-04-24T23:43:00Z
+- rl_dir: /ssd/shenzhouan/Table2Charts/Results/Models/20260425000722-2el192fd128.128GRUh-allCharts-UCB-RL
+
+```text
+04/24/2026 23:09:13 - INFO - Student 0(2972364) -   EP-0 train SUMMARY: elapsed=25288.8s | avg_loss=23.154825 (tn, fp, fn, tp)=[2054503   54740  113780   71742] precision=0.567211 recall=0.386703 f1=0.459879 | total_cnt=15288success_cnt=45883 #states(expanded, reached, cut, dropped, complete)=(41.14, 101.11, 0.00, 3.72, 23.21) t(perf, process)=(33.36s, 6.88s) final_stage_cnt=45883 R@1=0.47191770372469105 R@3=0.7875465858814812 R@5=0.8511431249046488 R@10=0.9133230172395005
+04/24/2026 23:42:51 - INFO - Student 0(2972364) -   EP-0 test/valid SUMMARY: elapsed=2014.5s | avg_loss=98.133532 (tn, fp, fn, tp)=[585440  16713  33657  19992] precision=0.544667 recall=0.372644 f1=0.442526 | total_cnt=1081success_cnt=6430 #states(expanded, reached, cut, dropped, complete)=(41.27, 105.99, 0.00, 4.32, 23.43) t(perf, process)=(19.46s, 4.43s) final_stage_cnt=6430 R@1=0.4499222395023328 R@3=0.7662519440124417 R@5=0.836547433903577 R@10=0.8996889580093312
+```
