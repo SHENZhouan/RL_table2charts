@@ -13,7 +13,7 @@ Fixed experiment settings:
 - `features=all-fast`
 - `search_type=input_type=previous_type=allCharts`
 - `limit_search_group=true`
-- current remote machine target: `2x4090`
+- current remote machine target: `2 GPUs`
 - `RL_NPROCS=2`
 - `EVAL_NPROCS=2`
 
@@ -77,7 +77,7 @@ Configs may still contain older default process counts, but the runner now resol
 - `EVAL_NPROCS` overrides `config["runtime"]["eval_nprocs"]`
 - `MASTER_PORT` overrides `config["runtime"]["master_port"]`
 
-For the current 2x4090 server, always export:
+For the current 2-GPU server, always export:
 
 ```bash
 RL_NPROCS=2
@@ -105,7 +105,7 @@ bash experiments/scripts/run_remote_reward_intensity_sweep.sh
 
 ## Default Remote Launch
 
-When ready to run on the 2x4090 server:
+When ready to run on the current 2-GPU server:
 
 ```bash
 ROOT="$PWD" \
@@ -139,6 +139,13 @@ tmux new-session -d -s reward_intensity \
    bash experiments/scripts/run_remote_reward_intensity_sweep.sh"
 ```
 
+In current helper behavior, one config is only considered fully completed after:
+
+1. RL training finishes
+2. the fresh RL model directory is discovered
+3. `test_agent_mp.py` runs on the test split
+4. the helper records the model dir and eval log dir
+
 ## Files Produced
 
 Use these result tables for this stage:
@@ -146,12 +153,18 @@ Use these result tables for this stage:
 - [reward_intensity_model_dirs_20260425.csv](/home/lyl610/RL_table2charts/experiments/results/reward_intensity_model_dirs_20260425.csv)
 - [final_eval_reward_intensity_20260425.csv](/home/lyl610/RL_table2charts/experiments/results/final_eval_reward_intensity_20260425.csv)
 
-Fill these after the actual remote runs complete.
+`reward_intensity_model_dirs_20260425.csv` is for discovered RL output directories.
+
+`final_eval_reward_intensity_20260425.csv` is only for metrics produced by `test_agent_mp.py` final evaluation. Do not backfill this file from training-time `test/valid SUMMARY` lines.
 
 ## Common Failure Modes
 
 - missing processed corpus under `Data/PlotlyTable2Charts`
 - `RL_NPROCS` not matching visible GPU count
 - reusing an occupied `MASTER_PORT`
+- on lower-memory GPUs such as `2080`, reduce concurrency or training-state size if you hit OOM:
+  - first try `RL_NPROCS=2` with `GPU_IDS=0,1`
+  - if that still fails, lower `max_tables` and `memory_sample_size`, or fall back to `RL_NPROCS=1`
 - forgetting that `hard reward + epsilon=0.20` is already available from the epsilon sweep and rerunning it unnecessarily
 - assuming `hard reward + greedy` is completed just because the config exists; that still requires a regenerated-corpus final eval artifact
+- treating training-time `EP-0 test/valid SUMMARY` as if it were the formal final test-set result

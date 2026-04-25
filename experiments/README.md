@@ -12,7 +12,7 @@ It is intended to:
 - normalize result extraction into one CSV;
 - support lightweight notebook analysis without embedding training code inline.
 
-It is not intended to replace the existing training or evaluation code in `Table2Charts/` during this first step.
+It does not replace the existing training or evaluation code in `Table2Charts/`. The helpers orchestrate those entrypoints so one command can run RL training and the follow-up `test_agent_mp.py` final evaluation.
 
 ## Structure
 
@@ -88,7 +88,16 @@ For a remote dry-run using the helper:
 DRY_RUN=1 experiments/scripts/run_remote_epsilon_sweep.sh
 ```
 
-The current `metrics.csv` contains historical updated-policy baseline context, not the new epsilon sweep runs.
+In non-dry-run mode, the helper now treats a config as completed only after:
+
+1. RL training finishes
+2. the new RL model directory is discovered
+3. `test_agent_mp.py` runs on the test split
+4. the helper records the model dir and eval log dir in its sidecar results file
+
+Do not treat training-time `test/valid SUMMARY` lines as formal report metrics. Final report metrics must come from the post-training `test_agent_mp.py` evaluation.
+
+The current `metrics.csv` contains normalized formal experiment rows, not raw training-time summaries.
 
 For the concrete remote workflow, observed runtime, smoke-test command, and machine-specific variables, see:
 

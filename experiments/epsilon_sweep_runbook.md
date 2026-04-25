@@ -55,7 +55,7 @@ Practical estimate:
 - one epsilon run: about 16 min
 - four-run sequential sweep: about 65 min
 
-This estimate covers the RL train+valid stage recorded in the sweep log. Final evaluation is extra.
+This estimate covers the RL train+valid stage recorded in the sweep log. Formal test-set evaluation via `test_agent_mp.py` is extra.
 
 ## Smoke Test Command
 
@@ -117,6 +117,13 @@ experiments/scripts/run_remote_epsilon_sweep.sh
 ```
 
 Use it with environment variables instead of editing machine-specific paths into the script.
+
+In current helper behavior, one config is only considered fully completed after:
+
+1. RL training finishes
+2. the fresh RL model directory is discovered
+3. `test_agent_mp.py` runs on the test split
+4. the helper records the model dir and eval log dir
 
 Example remote launch:
 
@@ -187,6 +194,12 @@ Final evaluation summary table:
 Main sweep raw log:
 
 - [epsilon_sweep_20260425T024412Z.log](/home/lyl610/RL_table2charts/experiments/results/raw_logs/epsilon_sweep_20260425T024412Z.log)
+
+## Metric Provenance
+
+Do not use training-time `EP-0 test/valid SUMMARY` lines as formal report metrics. Those are useful progress signals, but they are not the same as the separate post-training test-set evaluation.
+
+For report-quality epsilon results, use the outputs produced by `test_agent_mp.py` and the normalized CSV derived from those outputs.
 
 ## Current Final Eval Table
 

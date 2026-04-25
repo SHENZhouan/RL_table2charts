@@ -32,9 +32,9 @@
   },
   "reward": {
     "mode": "soft_reward",
-    "exact_reward": 0.9,
-    "default_reward": 0.02,
-    "same_token_reward": 0.05,
+    "exact_reward": 0.95,
+    "default_reward": 0.05,
+    "same_token_reward": 0.07,
     "field_reward": 0.1,
     "same_field_type_reward": 0.2,
     "positive_threshold": 0.5
@@ -51,5 +51,5 @@
     "master_port": 29650,
     "run_id": null
   },
-  "notes": "Conservative dense-reward candidate for reward-sweep comparisons."
+  "notes": "Conservative dense-reward setting for the reward-intensity interaction matrix."
 }
