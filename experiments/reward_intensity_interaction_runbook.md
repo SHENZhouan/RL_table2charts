@@ -1,8 +1,8 @@
-# Reward Interaction Runbook
+# Reward Intensity Interaction Runbook
 
 ## Scope
 
-This runbook prepares the dense reward plus epsilon interaction stage on the Plotly-only Table2Charts setup.
+This runbook prepares the reward-intensity × sampling interaction stage on the Plotly-only Table2Charts setup.
 
 Fixed experiment settings:
 
@@ -17,41 +17,57 @@ Fixed experiment settings:
 - `RL_NPROCS=2`
 - `EVAL_NPROCS=2`
 
-## 2x2 Design
+## Why The Old 2x2 Was Too Coarse
 
-The main interaction design is:
+The previous coarse framing mostly tested reward on/off against sampling on/off. That was useful as a first pass, but it does not isolate whether the interaction appears only when dense reward becomes stronger.
+
+The new question is more specific:
+
+- do epsilon exploration and denser reward shaping interfere because both encourage near-positive or intermediate actions?
+
+That requires comparing multiple reward intensities, not just hard vs one soft setting.
+
+## Reward Intensity × Sampling Matrix
+
+Core matrix:
 
 1. `hard reward + greedy`
 2. `hard reward + epsilon=0.20`
-3. `current soft reward + greedy`
-4. `current soft reward + epsilon=0.20`
+3. `conservative soft reward + greedy`
+4. `conservative soft reward + epsilon=0.20`
+5. `current soft reward + greedy`
+6. `current soft reward + epsilon=0.20`
 
-Interpretation for this repo:
+Optional extra matrix:
 
-- `hard reward + greedy`:
-  baseline greedy run, already covered by the existing baseline/SFT comparison setup
-- `hard reward + epsilon=0.20`:
-  already available from the current epsilon sweep at `epsilon=0.20`
-- `current soft reward + greedy`:
-  `experiments/configs/reward_current_greedy.json`
-- `current soft reward + epsilon=0.20`:
-  `experiments/configs/reward_current_epsilon.json`
-
-Optional comparison:
-
-- `reward_conservative_greedy.json` is a conservative soft-reward variant for sensitivity analysis, but it is not part of the default 2x2 run.
+7. `aggressive soft reward + greedy`
+8. `aggressive soft reward + epsilon=0.20`
 
 ## Existing Relevant Results
 
-Already available without new training:
+Completed:
 
 - hard reward + epsilon=0.20:
   [final_eval_epsilon_sweep_20260425.csv](/home/lyl610/RL_table2charts/experiments/results/final_eval_epsilon_sweep_20260425.csv)
 
-The dense-reward interaction stage therefore only needs to add:
+Represented by config but not automatically counted as completed on the regenerated corpus:
 
-- current soft reward + greedy
-- current soft reward + epsilon=0.20
+- hard reward + greedy:
+  `experiments/configs/baseline_rl_greedy_train_eval.json`
+
+This should be treated as **needs to run** unless a matching regenerated-corpus final evaluation result is present.
+
+Next runs:
+
+- `reward_conservative_greedy`
+- `reward_conservative_epsilon`
+- `reward_current_greedy`
+- `reward_current_epsilon`
+
+Optional runs:
+
+- `reward_aggressive_greedy`
+- `reward_aggressive_epsilon`
 
 ## Runtime Override Rule
 
@@ -70,7 +86,7 @@ EVAL_NPROCS=2
 
 ## Dry-Run
 
-Preview the two reward interaction runs:
+Preview the reward-intensity stage:
 
 ```bash
 ROOT="$PWD" \
@@ -84,7 +100,7 @@ RL_NPROCS=2 \
 EVAL_NPROCS=2 \
 MASTER_PORT=29649 \
 DRY_RUN=1 \
-bash experiments/scripts/run_remote_reward_interaction.sh
+bash experiments/scripts/run_remote_reward_intensity_sweep.sh
 ```
 
 ## Default Remote Launch
@@ -102,13 +118,13 @@ GPU_IDS=0,1 \
 RL_NPROCS=2 \
 EVAL_NPROCS=2 \
 MASTER_PORT=29649 \
-bash experiments/scripts/run_remote_reward_interaction.sh
+bash experiments/scripts/run_remote_reward_intensity_sweep.sh
 ```
 
 For `tmux`:
 
 ```bash
-tmux new-session -d -s reward_interaction \
+tmux new-session -d -s reward_intensity \
   "cd /path/to/RL_table2charts && \
    ROOT=\$PWD \
    PYTHON_BIN=python \
@@ -120,15 +136,15 @@ tmux new-session -d -s reward_interaction \
    RL_NPROCS=2 \
    EVAL_NPROCS=2 \
    MASTER_PORT=29649 \
-   bash experiments/scripts/run_remote_reward_interaction.sh"
+   bash experiments/scripts/run_remote_reward_intensity_sweep.sh"
 ```
 
 ## Files Produced
 
 Use these result tables for this stage:
 
-- [reward_interaction_model_dirs_20260425.csv](/home/lyl610/RL_table2charts/experiments/results/reward_interaction_model_dirs_20260425.csv)
-- [final_eval_reward_interaction_20260425.csv](/home/lyl610/RL_table2charts/experiments/results/final_eval_reward_interaction_20260425.csv)
+- [reward_intensity_model_dirs_20260425.csv](/home/lyl610/RL_table2charts/experiments/results/reward_intensity_model_dirs_20260425.csv)
+- [final_eval_reward_intensity_20260425.csv](/home/lyl610/RL_table2charts/experiments/results/final_eval_reward_intensity_20260425.csv)
 
 Fill these after the actual remote runs complete.
 
@@ -138,3 +154,4 @@ Fill these after the actual remote runs complete.
 - `RL_NPROCS` not matching visible GPU count
 - reusing an occupied `MASTER_PORT`
 - forgetting that `hard reward + epsilon=0.20` is already available from the epsilon sweep and rerunning it unnecessarily
+- assuming `hard reward + greedy` is completed just because the config exists; that still requires a regenerated-corpus final eval artifact

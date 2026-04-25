@@ -82,7 +82,7 @@ CUDA_VISIBLE_DEVICES=0 python update_actor_test_agent_mp.py \
 - Recorded the produced model directories in `experiments/results/epsilon_sweep_model_dirs_20260425.csv` and the final evaluation summary in `experiments/results/final_eval_epsilon_sweep_20260425.csv`.
 - Confirmed from the training logs that the successful sweep used `Data/PlotlyTable2Charts` with `load_at_most=None`, `num_train_analysis=None`, and the default `train/valid/test = 0.7/0.1/0.2` split. This was not a smoke-subset training run.
 - Moved the previously parsed teammate/historical rows out of `experiments/results/metrics.csv` into `experiments/results/metrics_historical.csv`, and repopulated the main `metrics.csv` with the 2026-04-25 epsilon sweep final-eval results only so the main table matches the current formal analysis set.
-- Prepared the next-stage dense reward plus epsilon interaction scaffold for the current 2x4090 server: runtime env overrides in `run_experiments.py`, a remote reward-interaction helper, a dedicated runbook, and header-only result CSV templates. The default interaction stage now targets `reward_current_greedy` and `reward_current_epsilon`, while `reward_conservative_greedy` remains optional.
+- Prepared the next-stage reward-intensity × sampling scaffold for the current 2x4090 server: added conservative/aggressive reward configs, locked runtime env overrides in `run_experiments.py`, replaced the coarse reward-interaction helper/runbook with an intensity-focused version, and added header-only result CSV templates. No reward training was run in this step.
 
 ### Remote Updated-Policy Smoke-Test Command
 

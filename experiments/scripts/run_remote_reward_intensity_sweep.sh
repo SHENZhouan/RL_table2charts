@@ -12,19 +12,26 @@ RL_NPROCS="${RL_NPROCS:-2}"
 EVAL_NPROCS="${EVAL_NPROCS:-2}"
 MASTER_PORT="${MASTER_PORT:-29649}"
 DRY_RUN="${DRY_RUN:-0}"
+RUN_AGGRESSIVE="${RUN_AGGRESSIVE:-0}"
 SFT_CKPT="${SFT_CKPT:?SFT_CKPT must point to a completed SFT states_ep0.pt on the remote host}"
 
 RUN_ID="$(date -u +%Y%m%dT%H%M%SZ)"
 RAW_LOG_ROOT="${ROOT}/experiments/results/raw_logs"
-RUN_LOG="${RAW_LOG_ROOT}/reward_interaction_${RUN_ID}.log"
+RUN_LOG="${RAW_LOG_ROOT}/reward_intensity_${RUN_ID}.log"
 
 CONFIGS=(
+  "experiments/configs/reward_conservative_greedy.json"
+  "experiments/configs/reward_conservative_epsilon.json"
   "experiments/configs/reward_current_greedy.json"
   "experiments/configs/reward_current_epsilon.json"
 )
 
-# Optional sensitivity run; do not include by default.
-# OPTIONAL_CONFIG="experiments/configs/reward_conservative_greedy.json"
+if [[ "${RUN_AGGRESSIVE}" == "1" ]]; then
+  CONFIGS+=(
+    "experiments/configs/reward_aggressive_greedy.json"
+    "experiments/configs/reward_aggressive_epsilon.json"
+  )
+fi
 
 mkdir -p "${RAW_LOG_ROOT}"
 exec > >(tee -a "${RUN_LOG}") 2>&1
@@ -42,6 +49,7 @@ echo "rl_nprocs=${RL_NPROCS}"
 echo "eval_nprocs=${EVAL_NPROCS}"
 echo "master_port=${MASTER_PORT}"
 echo "dry_run=${DRY_RUN}"
+echo "run_aggressive=${RUN_AGGRESSIVE}"
 echo "run_log=${RUN_LOG}"
 
 cd "${ROOT}"
