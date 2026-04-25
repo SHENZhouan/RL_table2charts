@@ -90,6 +90,10 @@ DRY_RUN=1 experiments/scripts/run_remote_epsilon_sweep.sh
 
 The current `metrics.csv` contains historical updated-policy baseline context, not the new epsilon sweep runs.
 
+For the concrete remote workflow, observed runtime, smoke-test command, and machine-specific variables, see:
+
+- [epsilon_sweep_runbook.md](/home/lyl610/RL_table2charts/experiments/epsilon_sweep_runbook.md)
+
 Do not launch full training from the notebook.
 
 ## Planned-But-Not-Implemented Handling

@@ -78,6 +78,10 @@ CUDA_VISIBLE_DEVICES=0 python update_actor_test_agent_mp.py \
 - Confirmed the remote setup needed preprocessed Plotly corpus artifacts that are not stored in Git. The remote host was updated with raw Plotly input plus preprocessing code, then used to build a smoke-test corpus and unblock RL startup.
 - Ran a single-GPU smoke test on a remote 2080 against `reinforce.updated_policy_learn_dist` with `queue_mode=local` and the updated-policy epsilon settings. The command successfully started training initialization; it was manually stopped after confirming startup behavior.
 - Decision: keep syncing code changes through Git, but do not sync generated `Data/PlotlyTable2Charts_smoke/` corpus artifacts or other large preprocessing outputs. Those remain local/remote runtime data, not source-controlled assets.
+- Completed the remote epsilon sweep and final evaluation on the processed full Plotly corpus. Each one-epoch updated-policy training run took about 16 minutes wall-clock, so the 4-run sequential sweep took about 65 minutes before final eval.
+- Recorded the produced model directories in `experiments/results/epsilon_sweep_model_dirs_20260425.csv` and the final evaluation summary in `experiments/results/final_eval_epsilon_sweep_20260425.csv`.
+- Confirmed from the training logs that the successful sweep used `Data/PlotlyTable2Charts` with `load_at_most=None`, `num_train_analysis=None`, and the default `train/valid/test = 0.7/0.1/0.2` split. This was not a smoke-subset training run.
+- Moved the previously parsed teammate/historical rows out of `experiments/results/metrics.csv` into `experiments/results/metrics_historical.csv`, and repopulated the main `metrics.csv` with the 2026-04-25 epsilon sweep final-eval results only so the main table matches the current formal analysis set.
 
 ### Remote Updated-Policy Smoke-Test Command
 
