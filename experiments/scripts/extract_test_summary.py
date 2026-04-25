@@ -30,7 +30,7 @@ FAMILY_CONFIG = {
         "passthrough_fields": ["epsilon_start", "model_dir"],
     },
     "reward_intensity": {
-        "default_model_dirs_csv": REPO_ROOT / "experiments" / "results" / "reward_intensity_model_dirs_20260425.csv",
+        "default_model_dirs_csv": REPO_ROOT / "experiments" / "results" / "reward_intensity_rerun_manifest_20260425.csv",
         "default_output": REPO_ROOT / "experiments" / "results" / "final_eval_reward_intensity_20260425.csv",
         "output_fields": [
             "experiment",
@@ -140,6 +140,18 @@ def discover_summary_log(row: Dict[str, str]) -> Path:
     return matches[0]
 
 
+def resolve_summary_log(row: Dict[str, str]) -> Path:
+    explicit = row.get("rerun_log_path") or row.get("log_path")
+    if explicit:
+        path = Path(explicit)
+        if not path.is_absolute():
+            path = (REPO_ROOT / path).resolve()
+        if not path.exists():
+            raise FileNotFoundError(f"Summary log does not exist: {path}")
+        return path
+    return discover_summary_log(row)
+
+
 def extract_all_section(text: str, source: Path) -> Dict:
     marker = text.rfind("[all ")
     if marker == -1:
@@ -212,7 +224,7 @@ def rows_from_model_dirs(mapping_rows: Iterable[Dict[str, str]], family: str, no
     defaults = family_defaults(family)
     rows: List[Dict[str, str]] = []
     for mapping in mapping_rows:
-        log_path = discover_summary_log(mapping)
+        log_path = resolve_summary_log(mapping)
         summary = parse_summary_file(log_path)
         row = {field: "" for field in defaults["output_fields"]}
         row["experiment"] = base_experiment_name(mapping["config"])

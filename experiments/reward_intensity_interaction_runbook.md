@@ -59,9 +59,19 @@ This should be treated as **needs to run** unless a matching regenerated-corpus 
 
 The reward helper had the same historical pipeline gap as the epsilon helper: older training runs could stop after RL training and leave only training-time `EP-0 test/valid SUMMARY` lines. Those summaries are provisional only. Formal report metrics must come from `test_agent_mp.py` `[test-summary]` logs.
 
-Formal final-eval file now exists for the four completed soft-reward runs:
+Formal final-eval file now exists for the four completed soft-reward runs, but the report source of truth is now defined more strictly:
 
 - [final_eval_reward_intensity_20260425.csv](/home/lyl610/RL_table2charts/experiments/results/final_eval_reward_intensity_20260425.csv)
+
+The earlier reward `[test-summary]` files existed before helper auto-eval was added. They are formal test logs, but they do not prove the old helper was complete. For that reason:
+
+- [final_eval_reward_intensity_pre_helper_20260425.csv](/home/lyl610/RL_table2charts/experiments/results/final_eval_reward_intensity_pre_helper_20260425.csv) preserves the pre-helper-fix reward final-eval rows for audit purposes only
+- [reward_intensity_rerun_manifest_20260425.csv](/home/lyl610/RL_table2charts/experiments/results/reward_intensity_rerun_manifest_20260425.csv) is the rerun manifest used to rebuild the report-facing reward final-eval CSV from authoritative rerun logs only
+
+The current operator decision is:
+
+- full rerun with the current helper-managed `train -> discover RL dir -> test_agent_mp.py` pipeline is the report source of truth
+- pre-helper-fix reward final-eval artifacts remain in the repo as history, not as the preferred report source
 
 Completed on regenerated corpus with formal final eval:
 
@@ -140,6 +150,23 @@ MASTER_PORT=29649 \
 bash experiments/scripts/run_remote_reward_intensity_sweep.sh
 ```
 
+To run the full 6-run reward rerun, including aggressive:
+
+```bash
+ROOT="$PWD" \
+PYTHON_BIN=python \
+CORPUS_PATH="$PWD/Data/PlotlyTable2Charts" \
+SFT_CKPT="$PWD/Results/Models/sft_states_ep0.pt" \
+MODEL_SAVE_PATH="$PWD/Results/Models" \
+SUMMARY_PATH="$PWD/Results/summary" \
+GPU_IDS=0,1 \
+RL_NPROCS=2 \
+EVAL_NPROCS=2 \
+MASTER_PORT=29649 \
+RUN_AGGRESSIVE=1 \
+bash experiments/scripts/run_remote_reward_intensity_sweep.sh
+```
+
 For `tmux`:
 
 ```bash
@@ -185,6 +212,22 @@ python experiments/scripts/extract_test_summary.py \
   --overwrite
 ```
 
+For the reward rerun, the extractor reads the rerun manifest by default:
+
+- [reward_intensity_rerun_manifest_20260425.csv](/home/lyl610/RL_table2charts/experiments/results/reward_intensity_rerun_manifest_20260425.csv)
+
+Each rerun row in that manifest records:
+
+- config
+- reward mode
+- sampling strategy
+- epsilon start
+- model dir
+- authoritative rerun log path
+- notes
+
+After the full 6-run rerun completes, append the aggressive rows to that manifest and rerun the extractor.
+
 ## Common Failure Modes
 
 - missing processed corpus under `Data/PlotlyTable2Charts`
@@ -196,3 +239,4 @@ python experiments/scripts/extract_test_summary.py \
 - forgetting that `hard reward + epsilon=0.20` is already available from the epsilon sweep and rerunning it unnecessarily
 - assuming `hard reward + greedy` is completed just because the config exists; that still requires a regenerated-corpus final eval artifact
 - treating training-time `EP-0 test/valid SUMMARY` as if it were the formal final test-set result
+- extracting from mixed old+rereun reward logs without a rerun manifest

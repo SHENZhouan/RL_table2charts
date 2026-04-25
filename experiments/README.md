@@ -113,6 +113,8 @@ The epsilon runbook is also the source of truth for:
   - `--family epsilon_sweep`
   - `--family reward_intensity`
 
+For reward reruns, the extractor reads a dedicated rerun manifest so report-facing CSVs are rebuilt from authoritative rerun logs only, without mixing old and rerun `[test-summary]` files from the same model directory.
+
 Do not launch full training from the notebook.
 
 ## Planned-But-Not-Implemented Handling
