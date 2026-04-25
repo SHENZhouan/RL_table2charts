@@ -57,7 +57,26 @@ Represented by config but not automatically counted as completed on the regenera
 
 This should be treated as **needs to run** unless a matching regenerated-corpus final evaluation result is present.
 
-Next runs:
+The reward helper had the same historical pipeline gap as the epsilon helper: older training runs could stop after RL training and leave only training-time `EP-0 test/valid SUMMARY` lines. Those summaries are provisional only. Formal report metrics must come from `test_agent_mp.py` `[test-summary]` logs.
+
+Formal final-eval file now exists for the four completed soft-reward runs:
+
+- [final_eval_reward_intensity_20260425.csv](/home/lyl610/RL_table2charts/experiments/results/final_eval_reward_intensity_20260425.csv)
+
+Completed on regenerated corpus with formal final eval:
+
+- `reward_conservative_greedy`
+- `reward_conservative_epsilon`
+- `reward_current_greedy`
+- `reward_current_epsilon`
+
+Still needs to run:
+
+- `hard + greedy` unless a regenerated-corpus final eval artifact is available
+- `reward_aggressive_greedy`
+- `reward_aggressive_epsilon`
+
+Historical next-run list before the formal eval catch-up was:
 
 - `reward_conservative_greedy`
 - `reward_conservative_epsilon`
@@ -156,6 +175,15 @@ Use these result tables for this stage:
 `reward_intensity_model_dirs_20260425.csv` is for discovered RL output directories.
 
 `final_eval_reward_intensity_20260425.csv` is only for metrics produced by `test_agent_mp.py` final evaluation. Do not backfill this file from training-time `test/valid SUMMARY` lines.
+
+The extractor interface is shared with epsilon:
+
+```bash
+python experiments/scripts/extract_test_summary.py \
+  --family reward_intensity \
+  --output experiments/results/final_eval_reward_intensity_20260425.csv \
+  --overwrite
+```
 
 ## Common Failure Modes
 

@@ -19,6 +19,7 @@ It does not replace the existing training or evaluation code in `Table2Charts/`.
 - `configs/`: JSON configs for baseline, updated-policy, reward, and actor-critic diagnostics
 - `scripts/run_experiments.py`: dry-run-first orchestration layer
 - `scripts/collect_results.py`: normalize existing results into `metrics.csv`
+- `scripts/extract_test_summary.py`: normalize tracked `test_agent_mp.py` final-eval logs into family-specific CSVs
 - `results/metrics.csv`: normalized experiment table
 - `results/raw_logs/`: optional future output location for runner-managed logs
 
@@ -108,7 +109,9 @@ The epsilon runbook is also the source of truth for:
 
 - authoritative RL model-dir mappings for the 2026-04-25 sweep;
 - formal `[test-summary]` final-eval log locations;
-- `experiments/scripts/extract_test_summary.py`, which normalizes tracked `test_agent_mp.py` logs into the epsilon final-eval CSV.
+- `experiments/scripts/extract_test_summary.py`, which now provides one interface for both:
+  - `--family epsilon_sweep`
+  - `--family reward_intensity`
 
 Do not launch full training from the notebook.
 

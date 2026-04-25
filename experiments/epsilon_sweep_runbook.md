@@ -55,7 +55,7 @@ Training/eval entrypoints:
 - `experiments/scripts/run_remote_epsilon_sweep.sh`
 - `Table2Charts/reinforce/updated_policy_learn_dist.py`
 - `Table2Charts/test_agent_mp.py`
-- `experiments/scripts/extract_test_summary.py`
+- `experiments/scripts/extract_test_summary.py` with `--family epsilon_sweep`
 
 Roles:
 
@@ -215,13 +215,14 @@ By default it reads `experiments/results/epsilon_sweep_model_dirs_20260425.csv`,
 Preview rows to stdout:
 
 ```bash
-python experiments/scripts/extract_test_summary.py
+python experiments/scripts/extract_test_summary.py --family epsilon_sweep
 ```
 
 Overwrite the normalized epsilon final-eval CSV:
 
 ```bash
 python experiments/scripts/extract_test_summary.py \
+  --family epsilon_sweep \
   --output experiments/results/final_eval_epsilon_sweep_20260425.csv \
   --overwrite
 ```
@@ -230,6 +231,7 @@ Explicit-path mode is also supported if you want to pass `[test-summary]` files 
 
 ```bash
 python experiments/scripts/extract_test_summary.py \
+  --family epsilon_sweep \
   Results/Models/20260425104442-2el192fd128.128GRUh-allCharts-RL/evaluations/test-epsilon-eps005-top5-20260425/[test-summary]20260425T1821.log
 ```
 
