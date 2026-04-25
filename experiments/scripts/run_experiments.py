@@ -76,9 +76,12 @@ def resolve_defaults(config: Dict) -> Dict:
     resolved["checkpoint"] = paths.get("checkpoint")
     resolved["output_dir"] = paths.get("output_dir")
     resolved["run_id"] = runtime.get("run_id")
-    resolved["rl_nprocs"] = runtime.get("rl_nprocs")
-    resolved["eval_nprocs"] = runtime.get("eval_nprocs")
-    resolved["master_port"] = runtime.get("master_port")
+    resolved["rl_nprocs"] = int(env_default("RL_NPROCS", str(runtime.get("rl_nprocs"))) or runtime.get("rl_nprocs") or 1)
+    resolved["eval_nprocs"] = int(env_default("EVAL_NPROCS", str(runtime.get("eval_nprocs"))) or runtime.get("eval_nprocs") or 1)
+    resolved["master_port"] = int(env_default("MASTER_PORT", str(runtime.get("master_port"))) or runtime.get("master_port") or 29500)
+    runtime["rl_nprocs"] = resolved["rl_nprocs"]
+    runtime["eval_nprocs"] = resolved["eval_nprocs"]
+    runtime["master_port"] = resolved["master_port"]
     return resolved
 
 

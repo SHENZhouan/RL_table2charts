@@ -93,6 +93,7 @@ The current `metrics.csv` contains historical updated-policy baseline context, n
 For the concrete remote workflow, observed runtime, smoke-test command, and machine-specific variables, see:
 
 - [epsilon_sweep_runbook.md](/home/lyl610/RL_table2charts/experiments/epsilon_sweep_runbook.md)
+- [reward_interaction_runbook.md](/home/lyl610/RL_table2charts/experiments/reward_interaction_runbook.md)
 
 Do not launch full training from the notebook.
 
