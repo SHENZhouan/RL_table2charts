@@ -388,6 +388,64 @@ def build_command_plan(config: Dict, resolved: Dict) -> Dict:
         ]
         return {"status": "runnable", "todo": "Training command shape is implemented; helper scripts must discover the produced RL model directory and run test_agent_mp.py for final test-set evaluation.", "commands": [train_cmd, eval_cmd]}
 
+    if variant == "actor_critic_train_eval":
+        if not resolved["sft_ckpt"]:
+            return {
+                "status": "planned_not_implemented",
+                "todo": "SFT_CKPT is required to warm-start actor-critic training.",
+                "commands": [],
+            }
+        actor_eval_greedy = actor_critic.get("actor_eval_greedy", True)
+        train_cmd = [
+            resolved["python_bin"],
+            "-m",
+            "torch.distributed.launch",
+            "--nproc_per_node",
+            str(runtime["rl_nprocs"]),
+            "--master_port",
+            str(runtime["master_port"]),
+            "--module",
+            "reinforce.update_actor_new_learn_dist",
+            "--corpus_path",
+            resolved["corpus_path"],
+            "--model_size=small",
+            "--model_name=cp",
+            "--features=all-fast",
+            "--negative_weight=0.8",
+            f"--search_limits={search['search_limits']}",
+            "--epochs=1",
+            "--model_save_path",
+            resolved["model_save_path"],
+            "-p",
+            resolved["sft_ckpt"],
+            "--summary_path",
+            resolved["summary_path"],
+            "--search_type",
+            search["search_type"],
+            "--input_type",
+            search["input_type"],
+            "--previous_type",
+            search["previous_type"],
+            "--lang=en",
+            "--queue_mode=local",
+            "--log_freq_agent=500",
+            "--log_freq_batch=100",
+            "--max_tables=64",
+            "--min_memory=1000",
+            "--memory_sample_size=64",
+            "--memory_sample_rounds=2",
+            f"--actor_loss_weight={actor_critic.get('actor_loss_weight', 0.1)}",
+            f"--entropy_weight={actor_critic.get('entropy_weight', 0.001)}",
+            f"--actor_sampling_temperature={actor_critic.get('actor_sampling_temperature', 1.0)}",
+            f"--actor_policy_seed={actor_critic.get('actor_policy_seed', 20260424)}",
+        ]
+        if actor_eval_greedy:
+            train_cmd.append("--actor_eval_greedy")
+        eval_cmd = [
+            "# TODO: helper-managed actor-critic diagnostics: discover the produced update_actor_new checkpoint directory, export ACTOR_CRITIC_CKPT, then run actor/critic/blend eval configs."
+        ]
+        return {"status": "runnable", "todo": "Training command shape is implemented; helper scripts must discover the produced actor-critic model directory and run the three score-mode diagnostics.", "commands": [train_cmd, eval_cmd]}
+
     if variant == "actor_critic":
         score_mode = actor_critic["score_mode"]
         checkpoint = resolved["checkpoint"] or resolved["actor_critic_ckpt"]
