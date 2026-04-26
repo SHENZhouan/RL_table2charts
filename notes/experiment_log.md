@@ -92,6 +92,7 @@ CUDA_VISIBLE_DEVICES=0 python update_actor_test_agent_mp.py \
 - Removed the last manual step from the reward rerun flow: `run_remote_reward_intensity_sweep.sh` now records each discovered `[test-summary]` into the rerun manifest automatically and refreshes `final_eval_reward_intensity_20260425.csv` automatically when the helper finishes.
 - Promoted the six authoritative helper-managed reward rerun rows into `experiments/results/metrics.csv`, so the main metrics table now contains both the formal epsilon sweep results and the full formal reward-intensity matrix (conservative/current/aggressive × greedy/epsilon). The archived pre-helper reward rows remain in `experiments/results/final_eval_reward_intensity_pre_helper_20260425.csv` for audit only.
 - Added `experiments/scripts/run_remote_hard_greedy.sh` as the dedicated one-command helper for the standalone regenerated-corpus `hard reward + greedy` RL baseline. It runs the single baseline RL config from SFT, discovers the new RL dir, executes `test_agent_mp.py`, and records a sidecar `.results` file for reproducible TA reruns.
+- Added `experiments/scripts/promote_metrics.py` to rebuild the main `experiments/results/metrics.csv` in one step from the authoritative epsilon final-eval CSV, reward final-eval CSV, and the latest hard-greedy helper `.results`. This removes the remaining manual append step when promoting formal experiment results into the top-level metrics table.
 
 ### Remote Updated-Policy Smoke-Test Command
 

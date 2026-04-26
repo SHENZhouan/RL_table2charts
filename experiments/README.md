@@ -20,6 +20,7 @@ It does not replace the existing training or evaluation code in `Table2Charts/`.
 - `scripts/run_experiments.py`: dry-run-first orchestration layer
 - `scripts/collect_results.py`: normalize existing results into `metrics.csv`
 - `scripts/extract_test_summary.py`: normalize tracked `test_agent_mp.py` final-eval logs into family-specific CSVs
+- `scripts/promote_metrics.py`: rebuild `results/metrics.csv` from the authoritative epsilon CSV, reward CSV, and hard-greedy helper results
 - `results/metrics.csv`: normalized experiment table
 - `results/raw_logs/`: optional future output location for runner-managed logs
 
@@ -114,6 +115,23 @@ The epsilon runbook is also the source of truth for:
   - `--family reward_intensity`
 
 For reward reruns, the extractor reads a dedicated rerun manifest so report-facing CSVs are rebuilt from authoritative rerun logs only, without mixing old and rerun `[test-summary]` files from the same model directory. The reward helper updates that manifest automatically and refreshes the formal reward CSV at the end of a non-dry-run execution.
+
+To rebuild the top-level `experiments/results/metrics.csv` from all authoritative experiment families in one step, run:
+
+```bash
+python experiments/scripts/promote_metrics.py --overwrite
+```
+
+On a remote host, that command reads:
+
+- `experiments/results/final_eval_epsilon_sweep_20260425.csv`
+- `experiments/results/final_eval_reward_intensity_20260425.csv`
+- the latest `experiments/results/raw_logs/hard_greedy_*.results`
+
+and then:
+
+1. prints the rebuilt metrics table to the terminal
+2. overwrites `experiments/results/metrics.csv`
 
 For the standalone hard-reward greedy RL baseline on the regenerated corpus, use:
 
