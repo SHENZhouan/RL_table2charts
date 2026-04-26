@@ -115,6 +115,21 @@ The epsilon runbook is also the source of truth for:
 
 For reward reruns, the extractor reads a dedicated rerun manifest so report-facing CSVs are rebuilt from authoritative rerun logs only, without mixing old and rerun `[test-summary]` files from the same model directory. The reward helper updates that manifest automatically and refreshes the formal reward CSV at the end of a non-dry-run execution.
 
+For the standalone hard-reward greedy RL baseline on the regenerated corpus, use:
+
+- `experiments/scripts/run_remote_hard_greedy.sh`
+
+This helper runs exactly one config:
+
+- `experiments/configs/baseline_rl_greedy_train_eval.json`
+
+and follows the same one-command semantics as the reward/epsilon helpers:
+
+1. RL training
+2. fresh RL dir discovery
+3. `test_agent_mp.py` final evaluation
+4. sidecar `.results` recording
+
 Do not launch full training from the notebook.
 
 ## Planned-But-Not-Implemented Handling

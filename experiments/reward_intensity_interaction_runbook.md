@@ -56,6 +56,9 @@ Represented by config but not automatically counted as completed on the regenera
   `experiments/configs/baseline_rl_greedy_train_eval.json`
 
 This should be treated as **needs to run** unless a matching regenerated-corpus final evaluation result is present.
+The dedicated one-command helper for this case is:
+
+- `experiments/scripts/run_remote_hard_greedy.sh`
 
 The reward helper had the same historical pipeline gap as the epsilon helper: older training runs could stop after RL training and leave only training-time `EP-0 test/valid SUMMARY` lines. Those summaries are provisional only. Formal report metrics must come from `test_agent_mp.py` `[test-summary]` logs.
 
@@ -168,6 +171,22 @@ RUN_AGGRESSIVE=1 \
 bash experiments/scripts/run_remote_reward_intensity_sweep.sh
 ```
 
+To run only the standalone hard-reward greedy RL baseline:
+
+```bash
+ROOT="$PWD" \
+PYTHON_BIN=python \
+CORPUS_PATH="$PWD/Data/PlotlyTable2Charts" \
+SFT_CKPT="$PWD/Results/Models/sft_states_ep0.pt" \
+MODEL_SAVE_PATH="$PWD/Results/Models" \
+SUMMARY_PATH="$PWD/Results/summary" \
+GPU_IDS=0,1 \
+RL_NPROCS=2 \
+EVAL_NPROCS=2 \
+MASTER_PORT=29641 \
+bash experiments/scripts/run_remote_hard_greedy.sh
+```
+
 For `tmux`:
 
 ```bash
@@ -243,6 +262,6 @@ After the full 6-run rerun completes through the helper, the aggressive rows are
   - first try `RL_NPROCS=2` with `GPU_IDS=0,1`
   - if that still fails, lower `max_tables` and `memory_sample_size`, or fall back to `RL_NPROCS=1`
 - forgetting that `hard reward + epsilon=0.20` is already available from the epsilon sweep and rerunning it unnecessarily
-- assuming `hard reward + greedy` is completed just because the config exists; that still requires a regenerated-corpus final eval artifact
+- assuming `hard reward + greedy` is completed just because the config exists; that still requires a regenerated-corpus final eval artifact or a completed `run_remote_hard_greedy.sh` run
 - treating training-time `EP-0 test/valid SUMMARY` as if it were the formal final test-set result
 - extracting from mixed old+rereun reward logs without a rerun manifest
