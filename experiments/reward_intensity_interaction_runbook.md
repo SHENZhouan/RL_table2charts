@@ -72,6 +72,7 @@ The current operator decision is:
 
 - full rerun with the current helper-managed `train -> discover RL dir -> test_agent_mp.py` pipeline is the report source of truth
 - pre-helper-fix reward final-eval artifacts remain in the repo as history, not as the preferred report source
+- the helper now updates the rerun manifest and refreshes the formal reward final-eval CSV automatically after a non-dry-run execution
 
 Completed on regenerated corpus with formal final eval:
 
@@ -191,6 +192,11 @@ In current helper behavior, one config is only considered fully completed after:
 2. the fresh RL model directory is discovered
 3. `test_agent_mp.py` runs on the test split
 4. the helper records the model dir and eval log dir
+5. the helper updates the reward rerun manifest with the authoritative `[test-summary]` path
+
+After the full helper run finishes, it automatically rebuilds:
+
+- [final_eval_reward_intensity_20260425.csv](/home/lyl610/RL_table2charts/experiments/results/final_eval_reward_intensity_20260425.csv)
 
 ## Files Produced
 
@@ -226,7 +232,7 @@ Each rerun row in that manifest records:
 - authoritative rerun log path
 - notes
 
-After the full 6-run rerun completes, append the aggressive rows to that manifest and rerun the extractor.
+After the full 6-run rerun completes through the helper, the aggressive rows are added to that manifest automatically and the final reward CSV is refreshed automatically.
 
 ## Common Failure Modes
 

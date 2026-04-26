@@ -189,3 +189,4 @@ Results/run_logs/*
 # Track experiment raw logs under experiments/results/raw_logs
 !experiments/results/raw_logs/
 !experiments/results/raw_logs/**
+experiments/results/raw_logs/reward_intensity_20260426T021230Z.log
