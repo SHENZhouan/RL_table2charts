@@ -193,7 +193,35 @@ Then run any diagnostic directly:
 
 ## Result Collection
 
-After the eval summaries exist, use the existing result tools:
+After the eval summaries exist, extract the actor-critic final eval CSV from
+the helper `.results` file:
+
+```bash
+python experiments/scripts/extract_actor_critic_eval.py --overwrite
+```
+
+By default this uses the newest:
+
+```text
+experiments/results/raw_logs/actor_critic_train_eval_*.results
+```
+
+and writes:
+
+```text
+experiments/results/final_eval_actor_critic_<RUN_ID>.csv
+```
+
+For an explicit run:
+
+```bash
+python experiments/scripts/extract_actor_critic_eval.py \
+  --results experiments/results/raw_logs/actor_critic_train_eval_<RUN_ID>.results \
+  --output experiments/results/final_eval_actor_critic_<RUN_ID>.csv \
+  --overwrite
+```
+
+Then use the existing result tools as needed:
 
 ```bash
 "$PYTHON_BIN" experiments/scripts/collect_results.py
