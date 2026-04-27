@@ -66,6 +66,9 @@ if [[ "${DRY_RUN}" == "1" ]]; then
   echo "post_train_discovery: find ${MODEL_SAVE_PATH} -maxdepth 1 -type d -newer ${MARKER_FILE} -name '${DISCOVER_GLOB}'"
   echo "post_train_checkpoint: <discovered_actor_critic_dir>/states_ep0.pt"
   for config in "${EVAL_CONFIGS[@]}"; do
+    CONFIG_NAME="$(basename "${config}" .json)"
+    EVAL_LOG_DIR="evaluations/test-${CONFIG_NAME}-${RUN_ID}"
+    RECOMMEND_LOG_DIR="<discovered_actor_critic_dir>/${EVAL_LOG_DIR}/recommendations"
     echo
     echo "=== planned eval ${config} ==="
     ROOT="${ROOT}" \
@@ -75,6 +78,7 @@ if [[ "${DRY_RUN}" == "1" ]]; then
     GPU_IDS="${GPU_IDS}" \
     EVAL_NPROCS="${EVAL_NPROCS}" \
     "${PYTHON_BIN}" experiments/scripts/run_experiments.py --config "${config}" --dry-run
+    echo "recommend_log_dir: ${RECOMMEND_LOG_DIR}"
   done
   exit 0
 fi
@@ -139,20 +143,45 @@ echo "discovered_actor_critic_ckpt=${RL_CKPT}"
 
 for config in "${EVAL_CONFIGS[@]}"; do
   CONFIG_NAME="$(basename "${config}" .json)"
+  EVAL_LOG_DIR="evaluations/test-${CONFIG_NAME}-${RUN_ID}"
+  RECOMMEND_LOG_DIR="${RL_DIR}/${EVAL_LOG_DIR}/recommendations"
+  SCORE_MODE="$("${PYTHON_BIN}" -c 'import json,sys; print(json.load(open(sys.argv[1]))["actor_critic"]["score_mode"])' "${config}")"
+  CRITIC_SCORE_WEIGHT="$("${PYTHON_BIN}" -c 'import json,sys; print(json.load(open(sys.argv[1]))["actor_critic"]["critic_score_weight"])' "${config}")"
   echo
   echo "=== running eval ${config} ==="
-  ROOT="${ROOT}" \
-  PYTHON_BIN="${PYTHON_BIN}" \
-  CORPUS_PATH="${CORPUS_PATH}" \
-  ACTOR_CRITIC_CKPT="${RL_CKPT}" \
-  MODEL_SAVE_PATH="${MODEL_SAVE_PATH}" \
-  SUMMARY_PATH="${SUMMARY_PATH}" \
-  GPU_IDS="${GPU_IDS}" \
-  EVAL_NPROCS="${EVAL_NPROCS}" \
-  "${PYTHON_BIN}" experiments/scripts/run_experiments.py --config "${config}"
+  (
+    cd "${CODE_DIR}"
+    CUDA_VISIBLE_DEVICES="${GPU_IDS}" "${PYTHON_BIN}" update_actor_test_agent_mp.py \
+      -m "${RL_DIR}" \
+      -f states_ep0.pt \
+      --model_name cp \
+      --model_size small \
+      --features all-fast \
+      --log_save_path "${EVAL_LOG_DIR}" \
+      --search_type allCharts \
+      --input_type allCharts \
+      --previous_type allCharts \
+      --nprocs "${EVAL_NPROCS}" \
+      --nagents 64 \
+      --nthreads 5 \
+      --search_limits e50-b4-na \
+      --corpus_path "${CORPUS_PATH}" \
+      --lang en \
+      --score_mode "${SCORE_MODE}" \
+      --critic_score_weight "${CRITIC_SCORE_WEIGHT}" \
+      --limit_search_group \
+      --recommend_log_path "${RECOMMEND_LOG_DIR}"
+  )
+  SUMMARY_LOG="$(find "${RL_DIR}/${EVAL_LOG_DIR}" -maxdepth 1 -type f -name '[[]test-summary]*.log' | sort | tail -1)"
+  test -n "${SUMMARY_LOG}"
+  test -f "${SUMMARY_LOG}"
+  test -d "${RECOMMEND_LOG_DIR}"
   {
     echo "eval_config=${CONFIG_NAME}"
-    echo "eval_log_dir=${RL_DIR}/$("${PYTHON_BIN}" -c 'import json,sys; print(json.load(open(sys.argv[1]))["paths"]["output_dir"])' "${config}")"
+    echo "score_mode=${SCORE_MODE}"
+    echo "eval_log_dir=${RL_DIR}/${EVAL_LOG_DIR}"
+    echo "summary_log=${SUMMARY_LOG}"
+    echo "recommend_log_dir=${RECOMMEND_LOG_DIR}"
   } >> "${RESULT_FILE}"
 done
 

@@ -96,7 +96,7 @@ class UpdateActorNewStudent:
                                                          self.search_config))
 
     def n_tables(self):
-        return self.agents.remaining() + self.agents.finished()
+        return self.agents.remaining()
 
     def reset(self, epoch: int, is_testing: bool):
         self.start_perf_time = perf_counter()

@@ -201,46 +201,68 @@ def iteration(epoch: int, student: UpdateActorNewStudent, is_testing: bool, n_ta
     logger = logging.getLogger(f"iteration({dist.get_rank()})")
     student.reset(epoch, is_testing)
 
-    if local_tuids is not None:
-        tUID_iter = iter(local_tuids)
-    elif args.queue_mode == 'local':
+    if args.queue_mode == 'local' and local_tuids is None:
         raise ValueError("local_tuids must be provided when queue_mode=local")
-    else:
+
+    if args.queue_mode == 'amqp':
         connection, channel = get_conn_channel(args)
+    else:
+        connection, channel = None, None
+        local_tuids = [] if local_tuids is None else local_tuids
+        local_idx = 0
 
-        def next_tuid():
+    def next_tuid():
+        nonlocal connection, channel
+        nonlocal local_idx
+        if args.queue_mode == 'local':
+            if local_idx >= len(local_tuids):
+                return ""
+            tUID = local_tuids[local_idx]
+            local_idx += 1
+            return tUID
+        try:
             _, _, body = channel.basic_get(args.amqp_routing_key, auto_ack=True)
-            return body.decode("ascii") if body is not None else ""
-
-        tUID_iter = iter(next_tuid, "")
+            return body.decode("ascii") if body is not None else None
+        except (ConnectionResetError, pika.exceptions.StreamLostError):
+            traceback.print_exc(file=sys.stdout)
+            logger.info("Setting up connection again...")
+            connection, channel = get_conn_channel(args)
+            _, _, body = channel.basic_get(args.amqp_routing_key, auto_ack=True)
+            return body.decode("ascii") if body is not None else None
 
     cnt = 0
-    enough_memory = is_testing
-    while True:
-        try:
-            while student.n_tables() < args.max_tables:
-                tUID = next(tUID_iter)
-                student.add_table(tUID)
-                cnt += 1
-        except StopIteration:
-            pass
+    logged_finished = 0
+    queue_empty = False
+    enough_memory = False
+    while dist_sum(student.device, student.agents.finished()) < n_tables:
+        while not queue_empty and student.agents.remaining() < args.max_tables:
+            tUID = next_tuid()
+            if tUID is None:
+                continue
+            if not tUID:
+                queue_empty = True
+                break
+            student.add_table(tUID)
+            cnt += 1
 
-        finished_info = student.act_step()
+        student.act_step()
 
         if not enough_memory:
-            enough_memory = len(student.memory) >= student.config.min_memory
-        if enough_memory:
+            enough_memory = dist_min(student.device, len(student.memory)) >= student.config.min_memory
+        if not is_testing and enough_memory:
             student.sample_learn(args.memory_sample_rounds, args.memory_sample_size)
 
-        if cnt >= n_tables and student.n_tables() == 0:
-            break
+        finished = int(dist_sum(student.device, student.agents.finished()))
+        if finished - logged_finished >= args.log_freq_agent or finished == n_tables:
+            handled = int(dist_sum(student.device, cnt))
+            logger.info("EP-%d %s progress: handled=%d/%d finished=%d/%d active=%d" % (
+                epoch, "valid" if is_testing else "train", handled, n_tables,
+                finished, n_tables, student.agents.remaining()))
+            logged_finished = finished
 
-        if cnt % args.log_freq_agent == 0 and cnt > 0:
-            logger.info("EP-%d %s progress: handled=%d/%d active=%d" % (
-                epoch, "valid" if is_testing else "train", cnt, n_tables, student.agents.remaining()))
-
-    if local_tuids is None and args.queue_mode == 'amqp':
+    if channel is not None:
         channel.close()
+    if connection is not None:
         connection.close()
     student.dist_summary()
 
