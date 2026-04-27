@@ -1,0 +1,9 @@
+Input: Data/raw_data_all.csv
+[scan] rows=50,000 clean=50,000 unique=49,175 elapsed=2056.1s
+Kept deduplicated fids: 89,862
+Converted tables: 72,939
+Converted charts: 109,119
+ana:barChart: 19,991
+ana:lineChart: 44,196
+ana:scatterChart: 44,932
+Report: Data/PlotlyTable2Charts/conversion_report.json

@@ -3,14 +3,14 @@
 - started_utc: 2026-04-22T08:23:00Z
 - finished_utc: 2026-04-22T12:47:03Z
 - gpu_ids: 3,5,6,7
-- sft_ckpt: /ssd/shenzhouan/Table2Charts/Results/Models/plotly_finetuned_0420_sft/states_ep0.pt
+- sft_ckpt: historical_path=/ssd/shenzhouan/Table2Charts/Results/Models/plotly_finetuned_0420_sft/states_ep0.pt
 - policy: epsilon_top_m
 - policy_epsilon_start: 0.2
 - policy_epsilon_end: 0.02
 - policy_epsilon_decay: 0.8
 - policy_explore_top_m: 5
-- rl_dir: /ssd/shenzhouan/Table2Charts/Results/Models/20260422162508-2el192fd128.128GRUh-allCharts-RL
-- eval_log_dir: /ssd/shenzhouan/Table2Charts/Results/Models/20260422162508-2el192fd128.128GRUh-allCharts-RL/evaluations/test-updated-policy-rl-plotly-small-20260422T082259Z
+- rl_dir: historical_path=/ssd/shenzhouan/Table2Charts/Results/Models/20260422162508-2el192fd128.128GRUh-allCharts-RL
+- eval_log_dir: historical_path=/ssd/shenzhouan/Table2Charts/Results/Models/20260422162508-2el192fd128.128GRUh-allCharts-RL/evaluations/test-updated-policy-rl-plotly-small-20260422T082259Z
 
 ```text
 04/22/2026 11:43:24 - INFO - Student 0(3776631) -   EP-0 train SUMMARY: elapsed=11845.8s | avg_loss=18.912955 (tn, fp, fn, tp)=[2069263   44529   94568   51792] precision=0.537702 recall=0.353867 f1=0.426832 | total_cnt=15232success_cnt=45883 #states(expanded, reached, cut, dropped, complete)=(41.13, 99.90, 0.00, 4.37, 22.36) t(perf, process)=(61.90s, 9.16s) final_stage_cnt=45883 R@1=0.2024497090425648 R@3=0.39007911426890135 R@5=0.49833271582067434 R@10=0.650284419065885
@@ -22,16 +22,16 @@
 
 - started_utc: 2026-04-22T16:38:33Z
 - gpu_ids: 3,4,5,6
-- sft_ckpt: /ssd/shenzhouan/Table2Charts/Results/Models/plotly_finetuned_0420_sft/states_ep0.pt
+- sft_ckpt: historical_path=/ssd/shenzhouan/Table2Charts/Results/Models/plotly_finetuned_0420_sft/states_ep0.pt
 - reward: exact=0.95, default=0.05, same_token=0.10, field=0.15, same_field_type=0.35
 - combo_policy: epsilon_start=0.2, epsilon_end=0.02, epsilon_decay=0.8, explore_top_m=5
-- log_file: /ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_update_reward_then_combo_20260422T163833Z.log
+- log_file: source_machine_path=/ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_update_reward_then_combo_20260422T163833Z.log
 
 
 ### Update Reward Only, Original Greedy Policy
 
 - finished_utc: 2026-04-22T20:28:24Z
-- eval_log_dir: /ssd/shenzhouan/Table2Charts/Results/Models/20260423003933-2el192fd128.128GRUh-allCharts-RL/evaluations/test-update-reward-only-plotly-small-20260422T163833Z
+- eval_log_dir: historical_path=/ssd/shenzhouan/Table2Charts/Results/Models/20260423003933-2el192fd128.128GRUh-allCharts-RL/evaluations/test-update-reward-only-plotly-small-20260422T163833Z
 
 ```text
 04/22/2026 19:44:36 - INFO - Student 0(836687) -   EP-0 train SUMMARY: elapsed=11066.6s | avg_loss=39.375889 (tn, fp, fn, tp)=[2083491   36878  100535   42475] precision=0.535266 recall=0.297007 f1=0.382033 | total_cnt=15216success_cnt=45883 #states(expanded, reached, cut, dropped, complete)=(41.13, 100.11, 0.00, 4.50, 22.09) t(perf, process)=(57.81s, 9.01s) final_stage_cnt=45883 R@1=0.16411307020029206 R@3=0.3294248414445437 R@5=0.43835407449382124 R@10=0.6051478761196958
@@ -42,7 +42,7 @@
 ### Update Reward + Updated Policy, Greedy Evaluation
 
 - finished_utc: 2026-04-22T23:52:44Z
-- eval_log_dir: /ssd/shenzhouan/Table2Charts/Results/Models/20260423042902-2el192fd128.128GRUh-allCharts-RL/evaluations/test-update-reward-policy-plotly-small-20260422T163833Z
+- eval_log_dir: historical_path=/ssd/shenzhouan/Table2Charts/Results/Models/20260423042902-2el192fd128.128GRUh-allCharts-RL/evaluations/test-update-reward-policy-plotly-small-20260422T163833Z
 
 ```text
 04/22/2026 19:44:36 - INFO - Student 0(836687) -   EP-0 train SUMMARY: elapsed=11066.6s | avg_loss=39.375889 (tn, fp, fn, tp)=[2083491   36878  100535   42475] precision=0.535266 recall=0.297007 f1=0.382033 | total_cnt=15216success_cnt=45883 #states(expanded, reached, cut, dropped, complete)=(41.13, 100.11, 0.00, 4.50, 22.09) t(perf, process)=(57.81s, 9.01s) final_stage_cnt=45883 R@1=0.16411307020029206 R@3=0.3294248414445437 R@5=0.43835407449382124 R@10=0.6051478761196958
@@ -63,18 +63,18 @@
 
 - started_utc: 2026-04-23T12:00:15Z
 - gpu_ids: 3,4,5,6
-- sft_ckpt: /ssd/shenzhouan/Table2Charts/Results/Models/plotly_finetuned_0420_sft/states_ep0.pt
+- sft_ckpt: historical_path=/ssd/shenzhouan/Table2Charts/Results/Models/plotly_finetuned_0420_sft/states_ep0.pt
 - actor_loss_weight: 0.1
 - entropy_weight: 0.001
 - critic_score_weight: 0.5
-- log_file: /ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_update_actor_actor_critic_rl_eval_20260423T120014Z.log
+- log_file: source_machine_path=/ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_update_actor_actor_critic_rl_eval_20260423T120014Z.log
 
 ### Update Actor eval rerun 20260423T1623Z_evalfix
 
 - finished_utc: 2026-04-23T16:53:32Z
-- model_dir: /ssd/shenzhouan/Table2Charts/Results/Models/20260423200116-update_actor-2el192fd128.128GRUh-allCharts-actor-critic-RL
-- eval_log_dir: /ssd/shenzhouan/Table2Charts/Results/Models/20260423200116-update_actor-2el192fd128.128GRUh-allCharts-actor-critic-RL/evaluations/test-update_actor-actor-critic-plotly-small-20260423T1623Z_evalfix
-- log_file: /ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_update_actor_eval_only_20260423T1623Z_evalfix.log
+- model_dir: historical_path=/ssd/shenzhouan/Table2Charts/Results/Models/20260423200116-update_actor-2el192fd128.128GRUh-allCharts-actor-critic-RL
+- eval_log_dir: historical_path=/ssd/shenzhouan/Table2Charts/Results/Models/20260423200116-update_actor-2el192fd128.128GRUh-allCharts-actor-critic-RL/evaluations/test-update_actor-actor-critic-plotly-small-20260423T1623Z_evalfix
+- log_file: source_machine_path=/ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_update_actor_eval_only_20260423T1623Z_evalfix.log
 
 ```text
 04/23/2026 16:53:31 - INFO - summary(@4052863) -   Complete recall info: {'recall': {'@10': 0.6923374015139812, '@01': 0.347674957515835, '@05': 0.6198825892167464, '@03': 0.6137803182450178, 'all': 0.7315773211802874, '@20': 0.7100262629383594}, 'first_rank': '3.54*9471', 'reached': 17.172253978062724, 'targets': 2.396647613162367, 'top': [1, 3, 5, 10, 20], 't_cnt': 12946}

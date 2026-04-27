@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT="/ssd/shenzhouan/Table2Charts"
-CODE_DIR="${ROOT}/Table2Charts"
-PY="${ROOT}/.venv/bin/python"
+ROOT="${ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+CODE_DIR="${CODE_DIR:-${ROOT}/Table2Charts}"
+PY="${PY:-${ROOT}/.venv/bin/python}"
 MODEL_DIR="${1:?usage: $0 MODEL_DIR [RUN_ID]}"
 RUN_ID="${2:-$(date -u +%Y%m%dT%H%M%SZ)}"
 GPU_IDS="${GPU_IDS:-3,4,5,6}"

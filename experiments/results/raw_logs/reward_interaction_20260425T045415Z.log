@@ -1,0 +1,50 @@
+run_id=20260425T045415Z
+root=/home/lyl610/RL_table2charts
+code_dir=/home/lyl610/RL_table2charts/Table2Charts
+python_bin=python
+corpus_path=/home/lyl610/RL_table2charts/Data/PlotlyTable2Charts
+sft_ckpt=/home/lyl610/RL_table2charts/Results/Models/sft_states_ep0.pt
+model_save_path=/home/lyl610/RL_table2charts/Results/Models
+summary_path=/home/lyl610/RL_table2charts/Results/summary
+gpu_ids=0,1
+rl_nprocs=2
+eval_nprocs=2
+master_port=29649
+dry_run=1
+run_log=/home/lyl610/RL_table2charts/experiments/results/raw_logs/reward_interaction_20260425T045415Z.log
+
+=== running experiments/configs/reward_current_greedy.json ===
+=== reward_current_greedy ===
+config: /home/lyl610/RL_table2charts/experiments/configs/reward_current_greedy.json
+status: runnable
+todo: Training command shape is implemented; evaluation requires the produced RL model directory.
+resolved_env:
+  ROOT=/home/lyl610/RL_table2charts
+  PYTHON_BIN=python
+  CORPUS_PATH=/home/lyl610/RL_table2charts/Data/PlotlyTable2Charts
+  SFT_CKPT=/home/lyl610/RL_table2charts/Results/Models/sft_states_ep0.pt
+  MODEL_SAVE_PATH=/home/lyl610/RL_table2charts/Results/Models
+  SUMMARY_PATH=/home/lyl610/RL_table2charts/Results/summary
+  GPU_IDS=0,1
+commands:
+  1. python -m torch.distributed.launch --nproc_per_node 2 --master_port 29649 --module reinforce.update_reward_learn_dist --corpus_path /home/lyl610/RL_table2charts/Data/PlotlyTable2Charts --model_size=small --model_name=cp --features=all-fast --negative_weight=0.8 --search_limits=e50-b4-na --epochs=1 --model_save_path /home/lyl610/RL_table2charts/Results/Models -p /home/lyl610/RL_table2charts/Results/Models/sft_states_ep0.pt --summary_path /home/lyl610/RL_table2charts/Results/summary --search_type allCharts --input_type allCharts --previous_type allCharts --lang=en --queue_mode=local --log_freq_agent=500 --log_freq_batch=100 --max_tables=64 --min_memory=1000 --memory_sample_size=64 --memory_sample_rounds=2 --update_reward_exact=0.95 --update_reward_default=0.05 --update_reward_same_token=0.1 --update_reward_field=0.15 --update_reward_same_field_type=0.35 --update_reward_positive_threshold=0.5
+  2. # TODO: after training, evaluate the produced dense-reward checkpoint with test_agent_mp.py using the saved model dir.
+
+
+=== running experiments/configs/reward_current_epsilon.json ===
+=== reward_current_epsilon ===
+config: /home/lyl610/RL_table2charts/experiments/configs/reward_current_epsilon.json
+status: runnable
+todo: Training command shape is implemented; evaluation requires the produced RL model directory.
+resolved_env:
+  ROOT=/home/lyl610/RL_table2charts
+  PYTHON_BIN=python
+  CORPUS_PATH=/home/lyl610/RL_table2charts/Data/PlotlyTable2Charts
+  SFT_CKPT=/home/lyl610/RL_table2charts/Results/Models/sft_states_ep0.pt
+  MODEL_SAVE_PATH=/home/lyl610/RL_table2charts/Results/Models
+  SUMMARY_PATH=/home/lyl610/RL_table2charts/Results/summary
+  GPU_IDS=0,1
+commands:
+  1. python -m torch.distributed.launch --nproc_per_node 2 --master_port 29649 --module reinforce.update_reward_policy_learn_dist --corpus_path /home/lyl610/RL_table2charts/Data/PlotlyTable2Charts --model_size=small --model_name=cp --features=all-fast --negative_weight=0.8 --search_limits=e50-b4-na --epochs=1 --model_save_path /home/lyl610/RL_table2charts/Results/Models -p /home/lyl610/RL_table2charts/Results/Models/sft_states_ep0.pt --summary_path /home/lyl610/RL_table2charts/Results/summary --search_type allCharts --input_type allCharts --previous_type allCharts --lang=en --queue_mode=local --log_freq_agent=500 --log_freq_batch=100 --max_tables=64 --min_memory=1000 --memory_sample_size=64 --memory_sample_rounds=2 --update_reward_exact=0.95 --update_reward_default=0.05 --update_reward_same_token=0.1 --update_reward_field=0.15 --update_reward_same_field_type=0.35 --update_reward_positive_threshold=0.5 --policy_epsilon_start=0.2 --policy_epsilon_end=0.02 --policy_epsilon_decay=0.8 --policy_explore_top_m=5
+  2. # TODO: after training, evaluate the produced dense-reward+policy checkpoint with test_agent_mp.py using the saved model dir.
+

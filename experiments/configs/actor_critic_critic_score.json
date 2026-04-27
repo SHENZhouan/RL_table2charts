@@ -1,0 +1,55 @@
+{
+  "name": "actor_critic_critic_score",
+  "method": "actor_critic",
+  "stage": "eval_only",
+  "base_variant": "actor_critic",
+  "paths": {
+    "root": null,
+    "code_dir": null,
+    "python_bin": null,
+    "corpus_path": null,
+    "model_save_path": null,
+    "summary_path": null,
+    "sft_ckpt": null,
+    "checkpoint": null,
+    "output_dir": "experiments/results/raw_logs/actor_critic_critic_score"
+  },
+  "search": {
+    "search_type": "allCharts",
+    "input_type": "allCharts",
+    "previous_type": "allCharts",
+    "search_limits": "e50-b4-na",
+    "limit_search_group": true
+  },
+  "sampling": {
+    "strategy": "greedy",
+    "epsilon_start": null,
+    "epsilon_end": null,
+    "epsilon_decay": null,
+    "top_m": null,
+    "temperature": null,
+    "ucb_c": null
+  },
+  "reward": {
+    "mode": "baseline",
+    "exact_reward": null,
+    "default_reward": null,
+    "same_token_reward": null,
+    "field_reward": null,
+    "same_field_type_reward": null,
+    "positive_threshold": null
+  },
+  "actor_critic": {
+    "score_mode": "critic",
+    "critic_score_weight": 1.0,
+    "actor_loss_weight": 0.1
+  },
+  "runtime": {
+    "gpu_ids": null,
+    "rl_nprocs": 1,
+    "eval_nprocs": 4,
+    "master_port": 29653,
+    "run_id": null
+  },
+  "notes": "Eval-only actor-critic diagnostic using critic-only scores from one existing actor-critic checkpoint."
+}

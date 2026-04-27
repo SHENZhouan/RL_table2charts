@@ -1,0 +1,211 @@
+python -m torch.distributed.launch --nproc_per_node 4 --master_port 29642 --module reinforce.updated_policy_learn_dist --corpus_path /root/RL_table2charts/Data/PlotlyTable2Charts --model_size=small --model_name=cp --features=all-fast --negative_weight=0.8 --search_limits=e50-b4-na --epochs=1 --model_save_path /root/RL_table2charts/Results/Models -p /root/RL_table2charts/Results/Models/sft_states_ep0.pt --summary_path /root/RL_table2charts/Results/summary --search_type allCharts --input_type allCharts --previous_type allCharts --lang=en --queue_mode=local --log_freq_agent=500 --log_freq_batch=100 --max_tables=64 --min_memory=1000 --memory_sample_size=64 --memory_sample_rounds=2 --policy_epsilon_start=0.05 --policy_epsilon_end=0.02 --policy_epsilon_decay=0.8 --policy_explore_top_m=5
+/root/anaconda3/envs/t2c/lib/python3.10/site-packages/torch/distributed/launch.py:183: FutureWarning: The module torch.distributed.launch is deprecated
+and will be removed in future. Use torchrun.
+Note that --use-env is set by default in torchrun.
+If your script expects `--local-rank` argument to be set, please
+change it to read from `os.environ['LOCAL_RANK']` instead. See 
+https://pytorch.org/docs/stable/distributed.html#launch-utility for 
+further instructions
+
+  warnings.warn(
+[2026-04-25 10:00:53,887] torch.distributed.run: [WARNING] 
+[2026-04-25 10:00:53,887] torch.distributed.run: [WARNING] *****************************************
+[2026-04-25 10:00:53,887] torch.distributed.run: [WARNING] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+[2026-04-25 10:00:53,887] torch.distributed.run: [WARNING] *****************************************
+04/25/2026 10:00:57 - INFO - Rank 0(5352)|main -   Started: Namespace(pre_model_file='/root/RL_table2charts/Results/Models/sft_states_ep0.pt', model_save_path='/root/RL_table2charts/Results/Models', log_save_path='evaluations', corpus_path='/root/RL_table2charts/Data/PlotlyTable2Charts', lang='en', model_name='cp', model_size='small', features='all-fast', log_freq_batch=100, log_freq_agent=500, epochs=1, restart_epoch=-1, summary_path='/root/RL_table2charts/Results/summary', search_type='allCharts', input_type='allCharts', previous_type='allCharts', field_permutation=False, unified_ana_token=False, freeze_embed=False, freeze_encoder=False, fresh_decoder=False, negative_weight=0.8, memory_size=150000, min_memory=1000, memory_sample_size=64, memory_sample_rounds=2, num_train_analysis=None, random_train=False, max_tables=64, search_limits='e50-b4-na', policy_epsilon_start=0.05, policy_epsilon_end=0.02, policy_epsilon_decay=0.8, policy_explore_top_m=5, apex=False, local_rank=0, amqp_addr='127.0.0.1', amqp_port=5672, amqp_routing_key='TUID_QUEUE', amqp_user='dist', amqp_pwd='CommonAnalysis', queue_mode='local', mode=None)
+04/25/2026 10:00:57 - INFO - Rank 2(5354)|main -   Loading index...
+04/25/2026 10:00:57 - INFO - Rank 3(5355)|main -   Loading index...
+04/25/2026 10:00:57 - INFO - Rank 1(5353)|main -   Loading index...
+04/25/2026 10:00:57 - INFO - Rank 0(5352)|main -   DataConfig: {'corpus_path': '/root/RL_table2charts/Data/PlotlyTable2Charts', 'encoding': 'utf-8-sig', 'lang': 'en', 'english_only': True, 'max_field_num': 128, 'max_val_num': 4, 'max_dim_num': 4, 'need_field_indices': True, 'field_permutation': False, 'unified_ana_token': False, 'allow_multiple_values': True, 'limit_search_group': False, 'use_field_type': True, 'use_field_role': True, 'use_binary_tags': True, 'use_data_features': True, 'use_semantic_embeds': True, 'load_at_most': None, 'num_train_analysis': None, 'embed_model': 'fasttext', 'embed_len': 50, 'embed_in_json': True, 'embed_layer': '0', 'embed_reduce_type': 'mean', 'data_len': 31, 'data_cleanup_fn': <function cleanup_data_features_nn at 0x70173e0d8430>, 'train_ratio': 0.7, 'valid_ratio': 0.1, 'test_ratio': 0.2, 'empirical_study': False, 'cat_nums': [5, 3, 3, 3, 3, 3, 3, 3], 'search_all_types': True, 'search_types': [<AnaType.LineChart: 1>, <AnaType.BarChart: 2>, <AnaType.ScatterChart: 3>, <AnaType.PieChart: 4>], 'model_types': [<AnaType.LineChart: 1>, <AnaType.BarChart: 2>, <AnaType.ScatterChart: 3>, <AnaType.PieChart: 4>], 'input_types': [<AnaType.LineChart: 1>, <AnaType.BarChart: 2>, <AnaType.ScatterChart: 3>, <AnaType.PieChart: 4>], 'consider_grouping_operations': True, 'top_freq_func': 0, 'cat_len': 8, 'empty_embed': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'empty_cat': [0, 0, 0, 0, 0, 0, 0, 0], 'empty_data': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'num_permute_samples': [0, 1, 2, 4, 8]}
+04/25/2026 10:00:57 - INFO - Rank 0(5352)|main -   Loading index...
+04/25/2026 10:01:36 - INFO - Index init() -   Total schemas is 72939
+04/25/2026 10:01:36 - INFO - Index init() -   Total schemas is 72939
+04/25/2026 10:01:36 - INFO - Index init() -   Total schemas is 72939
+04/25/2026 10:01:36 - INFO - Index init() -   Total schemas is 72939
+04/25/2026 10:01:36 - INFO - Index init() -   file filtered by language: 0
+04/25/2026 10:01:36 - INFO - Index init() -   file filtered by language: 0
+04/25/2026 10:01:36 - INFO - Index init() -   file filtered by language: 0
+04/25/2026 10:01:36 - INFO - Index init() -   file filtered by openfile: 0
+04/25/2026 10:01:36 - INFO - Index init() -   file filtered by openfile: 0
+04/25/2026 10:01:36 - INFO - Index init() -   file filtered by language: 0
+04/25/2026 10:01:36 - INFO - Index init() -   file filtered by openfile: 0
+04/25/2026 10:01:36 - INFO - Index init() -   table filtered by no embedding: 0
+04/25/2026 10:01:36 - INFO - Index init() -   table filtered by no embedding: 0
+04/25/2026 10:01:36 - INFO - Index init() -   file filtered by openfile: 0
+04/25/2026 10:01:36 - INFO - Index init() -   table filtered by too many fields: 0
+04/25/2026 10:01:36 - INFO - Index init() -   table filtered by too many fields: 0
+04/25/2026 10:01:36 - INFO - Index init() -   table filtered by no embedding: 0
+04/25/2026 10:01:36 - INFO - Index init() -   table filtered by no embedding: 0
+04/25/2026 10:01:36 - INFO - Index init() -   table filtered by no valid analysis: 3902
+04/25/2026 10:01:36 - INFO - Index init() -   table filtered by no valid analysis: 3902
+04/25/2026 10:01:36 - INFO - Index init() -   table filtered by too many fields: 0
+04/25/2026 10:01:36 - INFO - Index init() -   table filtered by too many fields: 0
+04/25/2026 10:01:36 - INFO - Index init() -   chart filtered by no valnum: 0
+04/25/2026 10:01:36 - INFO - Index init() -   chart filtered by no valnum: 0
+04/25/2026 10:01:36 - INFO - Index init() -   table filtered by no valid analysis: 3902
+04/25/2026 10:01:36 - INFO - Index init() -   chart filtered by too many values: 4484
+04/25/2026 10:01:36 - INFO - Index init() -   table filtered by no valid analysis: 3902
+04/25/2026 10:01:36 - INFO - Index init() -   chart filtered by too many values: 4484
+04/25/2026 10:01:36 - INFO - Index init() -   chart filtered by no valnum: 0
+04/25/2026 10:01:36 - INFO - Index init() -   pivot filtered by too many dimensions: 0
+04/25/2026 10:01:36 - INFO - Index init() -   chart filtered by no valnum: 0
+04/25/2026 10:01:36 - INFO - Index init() -   pivot filtered by too many dimensions: 0
+04/25/2026 10:01:36 - INFO - Index init() -   chart filtered by too many values: 4484
+04/25/2026 10:01:36 - INFO - Index init() -   Total tables is 69037
+04/25/2026 10:01:36 - INFO - Index init() -   chart filtered by too many values: 4484
+04/25/2026 10:01:36 - INFO - Index init() -   pivot filtered by too many dimensions: 0
+04/25/2026 10:01:36 - INFO - Index init() -   Total charts is 104635
+04/25/2026 10:01:36 - INFO - Index init() -   Total tables is 69037
+04/25/2026 10:01:36 - INFO - Index init() -   pivot filtered by too many dimensions: 0
+04/25/2026 10:01:36 - INFO - Index init() -   Total tables is 69037
+04/25/2026 10:01:36 - INFO - Index init() -   Total pivot tables is 0
+04/25/2026 10:01:36 - INFO - Index init() -   Total tables is 69037
+04/25/2026 10:01:36 - INFO - Index init() -   Total charts is 104635
+04/25/2026 10:01:36 - INFO - Index init() -   Total charts is 104635
+04/25/2026 10:01:36 - INFO - Index init() -   Total charts is 104635
+04/25/2026 10:01:36 - INFO - Index init() -   Total pivot tables is 0
+04/25/2026 10:01:36 - INFO - Index init() -   Total pivot tables is 0
+04/25/2026 10:01:36 - INFO - Index init() -   Total pivot tables is 0
+04/25/2026 10:01:36 - INFO - Rank 3(5355)|main -   Preparing DDP model...
+04/25/2026 10:01:36 - INFO - Rank 2(5354)|main -   Preparing DDP model...
+04/25/2026 10:01:36 - INFO - Rank 1(5353)|main -   Preparing DDP model...
+04/25/2026 10:01:36 - INFO - Rank 0(5352)|main -   Preparing DDP model...
+04/25/2026 10:01:37 - INFO - Rank 3(5355)|main -   cp #parameters = 836651
+04/25/2026 10:01:37 - INFO - prepare_model(3) -   Loading pre-trained / previous model from /root/RL_table2charts/Results/Models/sft_states_ep0.pt...
+04/25/2026 10:01:37 - INFO - create_model(0) -   CopyNetConfig: {'encoder_layers': 2, 'decoder_layers': 1, 'num_cmd_tokens': 3, 'encoder_GRU_hidden': 128, 'decoder_GRU_hidden': 128, 'feature_dim': 192, 'decoder_hidden_size': 192, 'embed_len': 50, 'data_len': 31, 'cat_len': 8, 'positional': False, 'num_token_type': 14, 'num_segment_type': 9, 'num_categories': [5, 3, 3, 3, 3, 3, 3, 3], 'hidden': 192, 'dropout': 0.1}
+04/25/2026 10:01:37 - INFO - Rank 0(5352)|main -   cp #parameters = 836651
+04/25/2026 10:01:37 - INFO - Rank 1(5353)|main -   cp #parameters = 836651
+04/25/2026 10:01:37 - INFO - Rank 2(5354)|main -   cp #parameters = 836651
+04/25/2026 10:01:37 - INFO - prepare_model(0) -   Loading pre-trained / previous model from /root/RL_table2charts/Results/Models/sft_states_ep0.pt...
+04/25/2026 10:01:37 - INFO - prepare_model(1) -   Loading pre-trained / previous model from /root/RL_table2charts/Results/Models/sft_states_ep0.pt...
+04/25/2026 10:01:37 - INFO - prepare_model(2) -   Loading pre-trained / previous model from /root/RL_table2charts/Results/Models/sft_states_ep0.pt...
+Traceback (most recent call last):
+Traceback (most recent call last):
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/root/anaconda3/envs/t2c/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+  File "/root/anaconda3/envs/t2c/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+  File "/root/anaconda3/envs/t2c/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+  File "/root/anaconda3/envs/t2c/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+                return _run_code(code, main_globals, None,return _run_code(code, main_globals, None,return _run_code(code, main_globals, None,return _run_code(code, main_globals, None,
+
+
+
+  File "/root/anaconda3/envs/t2c/lib/python3.10/runpy.py", line 86, in _run_code
+  File "/root/anaconda3/envs/t2c/lib/python3.10/runpy.py", line 86, in _run_code
+  File "/root/anaconda3/envs/t2c/lib/python3.10/runpy.py", line 86, in _run_code
+  File "/root/anaconda3/envs/t2c/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)        
+    exec(code, run_globals)exec(code, run_globals)  File "/root/RL_table2charts/Table2Charts/reinforce/updated_policy_learn_dist.py", line 388, in <module>
+exec(code, run_globals)
+
+
+  File "/root/RL_table2charts/Table2Charts/reinforce/updated_policy_learn_dist.py", line 388, in <module>
+  File "/root/RL_table2charts/Table2Charts/reinforce/updated_policy_learn_dist.py", line 388, in <module>
+  File "/root/RL_table2charts/Table2Charts/reinforce/updated_policy_learn_dist.py", line 388, in <module>
+            main(parse_args())main(parse_args())main(parse_args())
+
+
+      File "/root/RL_table2charts/Table2Charts/reinforce/updated_policy_learn_dist.py", line 335, in main
+  File "/root/RL_table2charts/Table2Charts/reinforce/updated_policy_learn_dist.py", line 335, in main
+  File "/root/RL_table2charts/Table2Charts/reinforce/updated_policy_learn_dist.py", line 335, in main
+main(parse_args())        
+ddp, optimizer, criterion = prepare_model(model, args.device, args)ddp, optimizer, criterion = prepare_model(model, args.device, args)
+  File "/root/RL_table2charts/Table2Charts/reinforce/updated_policy_learn_dist.py", line 335, in main
+
+  File "/root/RL_table2charts/Table2Charts/helper.py", line 112, in prepare_model
+  File "/root/RL_table2charts/Table2Charts/helper.py", line 112, in prepare_model
+    ddp, optimizer, criterion = prepare_model(model, args.device, args)
+      File "/root/RL_table2charts/Table2Charts/helper.py", line 112, in prepare_model
+ddp, optimizer, criterion = prepare_model(model, args.device, args)
+  File "/root/RL_table2charts/Table2Charts/helper.py", line 112, in prepare_model
+        ddp = DistributedDataParallel(model, device_ids=[device], output_device=device)    ddp = DistributedDataParallel(model, device_ids=[device], output_device=device)
+ddp = DistributedDataParallel(model, device_ids=[device], output_device=device)
+
+  File "/root/anaconda3/envs/t2c/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 798, in __init__
+  File "/root/anaconda3/envs/t2c/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 798, in __init__
+  File "/root/anaconda3/envs/t2c/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 798, in __init__
+    ddp = DistributedDataParallel(model, device_ids=[device], output_device=device)
+  File "/root/anaconda3/envs/t2c/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 798, in __init__
+                _verify_param_shape_across_processes(self.process_group, parameters)_verify_param_shape_across_processes(self.process_group, parameters)_verify_param_shape_across_processes(self.process_group, parameters)_verify_param_shape_across_processes(self.process_group, parameters)
+
+
+
+  File "/root/anaconda3/envs/t2c/lib/python3.10/site-packages/torch/distributed/utils.py", line 263, in _verify_param_shape_across_processes
+  File "/root/anaconda3/envs/t2c/lib/python3.10/site-packages/torch/distributed/utils.py", line 263, in _verify_param_shape_across_processes
+  File "/root/anaconda3/envs/t2c/lib/python3.10/site-packages/torch/distributed/utils.py", line 263, in _verify_param_shape_across_processes
+  File "/root/anaconda3/envs/t2c/lib/python3.10/site-packages/torch/distributed/utils.py", line 263, in _verify_param_shape_across_processes
+            return dist._verify_params_across_processes(process_group, tensors, logger)return dist._verify_params_across_processes(process_group, tensors, logger)return dist._verify_params_across_processes(process_group, tensors, logger)    
+
+
+return dist._verify_params_across_processes(process_group, tensors, logger)
+torch.distributed.torch.distributedtorch.distributedtorch.distributedDistBackendError...: DistBackendErrorDistBackendError: DistBackendErrorNCCL error in: ../torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:1691, invalid usage (run with NCCL_DEBUG=WARN for details), NCCL version 2.19.3
+ncclInvalidUsage: This usually reflects invalid usage of NCCL library.
+Last error:
+Duplicate GPU detected : rank 2 and rank 0 both on CUDA device 80: NCCL error in: ../torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:1691, invalid usage (run with NCCL_DEBUG=WARN for details), NCCL version 2.19.3
+ncclInvalidUsage: This usually reflects invalid usage of NCCL library.
+Last error:
+Duplicate GPU detected : rank 3 and rank 0 both on CUDA device 80: 
+NCCL error in: ../torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:1691, invalid usage (run with NCCL_DEBUG=WARN for details), NCCL version 2.19.3
+ncclInvalidUsage: This usually reflects invalid usage of NCCL library.
+Last error:
+Duplicate GPU detected : rank 0 and rank 1 both on CUDA device 80NCCL error in: ../torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:1691, invalid usage (run with NCCL_DEBUG=WARN for details), NCCL version 2.19.3
+ncclInvalidUsage: This usually reflects invalid usage of NCCL library.
+Last error:
+Duplicate GPU detected : rank 1 and rank 0 both on CUDA device 80
+
+
+[2026-04-25 10:01:43,953] torch.distributed.elastic.multiprocessing.api: [ERROR] failed (exitcode: 1) local_rank: 0 (pid: 5352) of binary: /root/anaconda3/envs/t2c/bin/python
+Traceback (most recent call last):
+  File "/root/anaconda3/envs/t2c/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/root/anaconda3/envs/t2c/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/root/anaconda3/envs/t2c/lib/python3.10/site-packages/torch/distributed/launch.py", line 198, in <module>
+    main()
+  File "/root/anaconda3/envs/t2c/lib/python3.10/site-packages/torch/distributed/launch.py", line 194, in main
+    launch(args)
+  File "/root/anaconda3/envs/t2c/lib/python3.10/site-packages/torch/distributed/launch.py", line 179, in launch
+    run(args)
+  File "/root/anaconda3/envs/t2c/lib/python3.10/site-packages/torch/distributed/run.py", line 803, in run
+    elastic_launch(
+  File "/root/anaconda3/envs/t2c/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 135, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/root/anaconda3/envs/t2c/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 268, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+reinforce.updated_policy_learn_dist FAILED
+------------------------------------------------------------
+Failures:
+[1]:
+  time      : 2026-04-25_10:01:43
+  host      : ubuntu22
+  rank      : 1 (local_rank: 1)
+  exitcode  : 1 (pid: 5353)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+[2]:
+  time      : 2026-04-25_10:01:43
+  host      : ubuntu22
+  rank      : 2 (local_rank: 2)
+  exitcode  : 1 (pid: 5354)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+[3]:
+  time      : 2026-04-25_10:01:43
+  host      : ubuntu22
+  rank      : 3 (local_rank: 3)
+  exitcode  : 1 (pid: 5355)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-04-25_10:01:43
+  host      : ubuntu22
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 5352)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

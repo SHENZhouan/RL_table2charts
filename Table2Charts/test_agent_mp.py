@@ -61,6 +61,8 @@ def parse_args():
     parser.add_argument('-f', '--model_file', type=str, metavar='FILENAME')
     parser.add_argument('-l', '--log_save_path', default="evaluations/test", type=str, metavar='PATH',
                         help='subdir path of model_dir_path to log the evaluation metrics during testing')
+    parser.add_argument('--recommend_log_path', type=str, default=None, metavar='PATH',
+                        help='optional directory for per-table ranked recommendation JSON logs')
 
     # Experiment settings
     parser.add_argument('--model_size', choices=DEFAULT_MODEL_SIZES, required=True, type=str)
@@ -141,11 +143,14 @@ def construct_data_config(args) -> DataConfig:
 
 def construct_search_config(args, data_config) -> SearchConfig:
     load_ground_truth = False if args.web_table or getattr(args, "inline_table_inference", False) else True
+    recommend_log_path = args.recommend_log_path
+    if recommend_log_path is None and (args.empirical_study or args.web_table):
+        recommend_log_path = args.empirical_log_path
     search_config = get_search_config(load_ground_truth, args.search_limits,
                                       search_all_types=data_config.search_all_types,
                                       search_single_type=AnaType.from_raw_str(args.test_type)
                                       if args.test_type is not None else None,
-                                      log_path=args.empirical_log_path if args.empirical_study or args.web_table else None,
+                                      log_path=recommend_log_path,
                                       test_field_selections=args.test_field_selections,
                                       test_design_choices=args.test_design_choices)
     # TODO: args.log_save_path currently not used

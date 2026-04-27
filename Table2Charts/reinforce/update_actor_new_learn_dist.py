@@ -202,9 +202,8 @@ def iteration(epoch: int, student: UpdateActorNewStudent, is_testing: bool, n_ta
     student.reset(epoch, is_testing)
 
     start_perf_t = perf_counter()
-    queue_empty = False
-    enough_memory = False
-    logged_finished = 0
+    if args.queue_mode == 'local' and local_tuids is None:
+        raise ValueError("local_tuids must be provided when queue_mode=local")
     if args.queue_mode == 'amqp':
         connection, channel = get_conn_channel(args)
     else:
@@ -212,48 +211,54 @@ def iteration(epoch: int, student: UpdateActorNewStudent, is_testing: bool, n_ta
         local_tuids = [] if local_tuids is None else local_tuids
         local_idx = 0
 
+    def next_tuid():
+        nonlocal connection, channel
+        nonlocal local_idx
+        if args.queue_mode == 'local':
+            if local_idx >= len(local_tuids):
+                return ""
+            tUID = local_tuids[local_idx]
+            local_idx += 1
+            return tUID
+        try:
+            _, _, body = channel.basic_get(args.amqp_routing_key, auto_ack=True)
+            return body.decode("ascii") if body is not None else None
+        except (ConnectionResetError, pika.exceptions.StreamLostError):
+            traceback.print_exc(file=sys.stdout)
+            logger.info("Setting up connection again...")
+            connection, channel = get_conn_channel(args)
+            _, _, body = channel.basic_get(args.amqp_routing_key, auto_ack=True)
+            return body.decode("ascii") if body is not None else None
+
     cnt = 0
+    logged_finished = 0
+    queue_empty = False
+    enough_memory = False
     while dist_sum(student.device, student.agents.finished()) < n_tables:
         while not queue_empty and student.agents.remaining() < args.max_tables:
-            if args.queue_mode == 'local':
-                if local_idx >= len(local_tuids):
-                    queue_empty = True
-                    break
-                student.add_table(local_tuids[local_idx])
-                local_idx += 1
-                cnt += 1
+            tUID = next_tuid()
+            if tUID is None:
                 continue
-            try:
-                _, _, body = channel.basic_get(args.amqp_routing_key, auto_ack=True)
-            except (ConnectionResetError, pika.exceptions.StreamLostError):
-                traceback.print_exc(file=sys.stdout)
-                logger.info("Setting up connection again...")
-                connection, channel = get_conn_channel(args)
-                _, _, body = channel.basic_get(args.amqp_routing_key, auto_ack=True)
-
-            if body is None:
-                continue
-            cnt += 1
-            tUID = body.decode("ascii")
-            if len(tUID) == 0:
+            if not tUID:
                 queue_empty = True
-            else:
-                student.add_table(tUID)
+                break
+            student.add_table(tUID)
+            cnt += 1
 
         student.act_step()
-        if student.agents.finished() - logged_finished >= args.log_freq_agent:
-            logger.info("Agents finished=%d remaining=%d error=%d! EP-%d (%s) elapsed time: %.1fs" % (
-                student.agents.finished(), student.agents.remaining(), student.agents.error_cnt,
-                epoch, "test/valid" if is_testing else "train", perf_counter() - start_perf_t))
-            logged_finished = student.agents.finished()
 
-        if not enough_memory and not is_testing:
-            min_memory = dist_min(student.device, len(student.memory))
-            if min_memory >= student.config.min_memory:
-                enough_memory = True
+        if not enough_memory:
+            enough_memory = dist_min(student.device, len(student.memory)) >= student.config.min_memory
         if not is_testing and enough_memory:
             student.sample_learn(args.memory_sample_rounds, args.memory_sample_size)
 
+        finished = int(dist_sum(student.device, student.agents.finished()))
+        if finished - logged_finished >= args.log_freq_agent or finished == n_tables:
+            handled = int(dist_sum(student.device, cnt))
+            logger.info("EP-%d %s progress: handled=%d/%d finished=%d/%d active=%d" % (
+                epoch, "valid" if is_testing else "train", handled, n_tables,
+                finished, n_tables, student.agents.remaining()))
+            logged_finished = finished
     if channel is not None:
         channel.close()
     if connection is not None:

@@ -1,0 +1,5 @@
+config,epsilon_start,model_dir,notes
+experiments/configs/epsilon_eps005_top5.json,0.05,Results/Models/20260425104442-2el192fd128.128GRUh-allCharts-RL,2x4090 regenerated PlotlyTable2Charts
+experiments/configs/epsilon_eps010_top5.json,0.10,Results/Models/20260425110039-2el192fd128.128GRUh-allCharts-RL,2x4090 regenerated PlotlyTable2Charts
+experiments/configs/epsilon_eps020_top5.json,0.20,Results/Models/20260425111651-2el192fd128.128GRUh-allCharts-RL,2x4090 regenerated PlotlyTable2Charts
+experiments/configs/epsilon_eps030_top5.json,0.30,Results/Models/20260425113303-2el192fd128.128GRUh-allCharts-RL,2x4090 regenerated PlotlyTable2Charts

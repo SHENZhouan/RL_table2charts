@@ -1,0 +1,541 @@
+run_id=20260426T052504Z
+root=/root/RL_table2charts
+code_dir=/root/RL_table2charts/Table2Charts
+python_bin=python
+corpus_path=/root/RL_table2charts/Data/PlotlyTable2Charts
+sft_ckpt=/root/RL_table2charts/Results/Models/sft_states_ep0.pt
+model_save_path=/root/RL_table2charts/Results/Models
+summary_path=/root/RL_table2charts/Results/summary
+gpu_ids=0,1
+rl_nprocs=2
+eval_nprocs=2
+master_port=29641
+dry_run=0
+run_log=/root/RL_table2charts/experiments/results/raw_logs/hard_greedy_20260426T052504Z.log
+result_file=/root/RL_table2charts/experiments/results/raw_logs/hard_greedy_20260426T052504Z.results
+config=experiments/configs/baseline_rl_greedy_train_eval.json
+
+=== running experiments/configs/baseline_rl_greedy_train_eval.json ===
+=== baseline_rl_greedy_train_eval ===
+config: /root/RL_table2charts/experiments/configs/baseline_rl_greedy_train_eval.json
+status: runnable
+todo: Training command shape is implemented; helper scripts must discover the produced RL model directory and run test_agent_mp.py for final test-set evaluation.
+resolved_env:
+  ROOT=/root/RL_table2charts
+  PYTHON_BIN=python
+  CORPUS_PATH=/root/RL_table2charts/Data/PlotlyTable2Charts
+  SFT_CKPT=/root/RL_table2charts/Results/Models/sft_states_ep0.pt
+  MODEL_SAVE_PATH=/root/RL_table2charts/Results/Models
+  SUMMARY_PATH=/root/RL_table2charts/Results/summary
+  GPU_IDS=0,1
+commands:
+  1. python -m torch.distributed.launch --nproc_per_node 2 --master_port 29641 script.py --corpus_path /root/RL_table2charts/Data/PlotlyTable2Charts --model_size=small --model_name=cp --features=all-fast --negative_weight=0.8 --search_limits=e50-b4-na --epochs=1 -m /root/RL_table2charts/Results/Models -p /root/RL_table2charts/Results/Models/sft_states_ep0.pt --summary_path /root/RL_table2charts/Results/summary --search_type allCharts --input_type allCharts --previous_type allCharts --lang=en --queue_mode=local --log_freq_agent=500 --log_freq_batch=100 --max_tables=64 --min_memory=1000 --memory_sample_size=64 --memory_sample_rounds=2
+  2. # TODO: helper-managed final evaluation: discover the produced RL checkpoint directory after training, then run test_agent_mp.py on the test split.
+
+/root/anaconda3/envs/t2c/lib/python3.10/site-packages/torch/distributed/launch.py:183: FutureWarning: The module torch.distributed.launch is deprecated
+and will be removed in future. Use torchrun.
+Note that --use-env is set by default in torchrun.
+If your script expects `--local-rank` argument to be set, please
+change it to read from `os.environ['LOCAL_RANK']` instead. See 
+https://pytorch.org/docs/stable/distributed.html#launch-utility for 
+further instructions
+
+  warnings.warn(
+[2026-04-26 13:25:07,352] torch.distributed.run: [WARNING] 
+[2026-04-26 13:25:07,352] torch.distributed.run: [WARNING] *****************************************
+[2026-04-26 13:25:07,352] torch.distributed.run: [WARNING] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+[2026-04-26 13:25:07,352] torch.distributed.run: [WARNING] *****************************************
+04/26/2026 13:25:11 - INFO - Rank 0(1468947)|main -   Started: Namespace(pre_model_file='/root/RL_table2charts/Results/Models/sft_states_ep0.pt', model_save_path='/root/RL_table2charts/Results/Models', log_save_path='evaluations', corpus_path='/root/RL_table2charts/Data/PlotlyTable2Charts', lang='en', model_name='cp', model_size='small', features='all-fast', log_freq_batch=100, log_freq_agent=500, epochs=1, restart_epoch=-1, summary_path='/root/RL_table2charts/Results/summary', search_type='allCharts', input_type='allCharts', previous_type='allCharts', field_permutation=False, unified_ana_token=False, freeze_embed=False, freeze_encoder=False, fresh_decoder=False, negative_weight=0.8, memory_size=150000, min_memory=1000, memory_sample_size=64, memory_sample_rounds=2, num_train_analysis=None, random_train=False, max_tables=64, search_limits='e50-b4-na', apex=False, local_rank=0, amqp_addr='127.0.0.1', amqp_port=5672, amqp_routing_key='TUID_QUEUE', amqp_user='dist', amqp_pwd='CommonAnalysis', queue_mode='local', mode=None)
+04/26/2026 13:25:11 - INFO - Rank 0(1468947)|main -   DataConfig: {'corpus_path': '/root/RL_table2charts/Data/PlotlyTable2Charts', 'encoding': 'utf-8-sig', 'lang': 'en', 'english_only': True, 'max_field_num': 128, 'max_val_num': 4, 'max_dim_num': 4, 'need_field_indices': True, 'field_permutation': False, 'unified_ana_token': False, 'allow_multiple_values': True, 'limit_search_group': False, 'use_field_type': True, 'use_field_role': True, 'use_binary_tags': True, 'use_data_features': True, 'use_semantic_embeds': True, 'load_at_most': None, 'num_train_analysis': None, 'embed_model': 'fasttext', 'embed_len': 50, 'embed_in_json': True, 'embed_layer': '0', 'embed_reduce_type': 'mean', 'data_len': 31, 'data_cleanup_fn': <function cleanup_data_features_nn at 0x7e9ef42539a0>, 'train_ratio': 0.7, 'valid_ratio': 0.1, 'test_ratio': 0.2, 'empirical_study': False, 'cat_nums': [5, 3, 3, 3, 3, 3, 3, 3], 'search_all_types': True, 'search_types': [<AnaType.LineChart: 1>, <AnaType.BarChart: 2>, <AnaType.ScatterChart: 3>, <AnaType.PieChart: 4>], 'model_types': [<AnaType.LineChart: 1>, <AnaType.BarChart: 2>, <AnaType.ScatterChart: 3>, <AnaType.PieChart: 4>], 'input_types': [<AnaType.LineChart: 1>, <AnaType.BarChart: 2>, <AnaType.ScatterChart: 3>, <AnaType.PieChart: 4>], 'consider_grouping_operations': True, 'top_freq_func': 0, 'cat_len': 8, 'empty_embed': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'empty_cat': [0, 0, 0, 0, 0, 0, 0, 0], 'empty_data': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'num_permute_samples': [0, 1, 2, 4, 8]}
+04/26/2026 13:25:11 - INFO - Rank 0(1468947)|main -   Loading index...
+04/26/2026 13:25:11 - INFO - Rank 1(1468948)|main -   Loading index...
+04/26/2026 13:25:27 - INFO - Index init() -   Total schemas is 72939
+04/26/2026 13:25:27 - INFO - Index init() -   Total schemas is 72939
+04/26/2026 13:25:27 - INFO - Index init() -   file filtered by language: 0
+04/26/2026 13:25:27 - INFO - Index init() -   file filtered by language: 0
+04/26/2026 13:25:27 - INFO - Index init() -   file filtered by openfile: 0
+04/26/2026 13:25:27 - INFO - Index init() -   file filtered by openfile: 0
+04/26/2026 13:25:27 - INFO - Index init() -   table filtered by no embedding: 0
+04/26/2026 13:25:27 - INFO - Index init() -   table filtered by no embedding: 0
+04/26/2026 13:25:27 - INFO - Index init() -   table filtered by too many fields: 0
+04/26/2026 13:25:27 - INFO - Index init() -   table filtered by too many fields: 0
+04/26/2026 13:25:27 - INFO - Index init() -   table filtered by no valid analysis: 3902
+04/26/2026 13:25:27 - INFO - Index init() -   table filtered by no valid analysis: 3902
+04/26/2026 13:25:27 - INFO - Index init() -   chart filtered by no valnum: 0
+04/26/2026 13:25:27 - INFO - Index init() -   chart filtered by no valnum: 0
+04/26/2026 13:25:27 - INFO - Index init() -   chart filtered by too many values: 4484
+04/26/2026 13:25:27 - INFO - Index init() -   chart filtered by too many values: 4484
+04/26/2026 13:25:27 - INFO - Index init() -   pivot filtered by too many dimensions: 0
+04/26/2026 13:25:27 - INFO - Index init() -   pivot filtered by too many dimensions: 0
+04/26/2026 13:25:27 - INFO - Index init() -   Total tables is 69037
+04/26/2026 13:25:27 - INFO - Index init() -   Total tables is 69037
+04/26/2026 13:25:27 - INFO - Index init() -   Total charts is 104635
+04/26/2026 13:25:27 - INFO - Index init() -   Total charts is 104635
+04/26/2026 13:25:27 - INFO - Index init() -   Total pivot tables is 0
+04/26/2026 13:25:27 - INFO - Index init() -   Total pivot tables is 0
+04/26/2026 13:25:27 - INFO - Rank 0(1468947)|main -   Preparing DDP model...
+04/26/2026 13:25:27 - INFO - Rank 1(1468948)|main -   Preparing DDP model...
+04/26/2026 13:25:27 - INFO - create_model(0) -   CopyNetConfig: {'encoder_layers': 2, 'decoder_layers': 1, 'num_cmd_tokens': 3, 'encoder_GRU_hidden': 128, 'decoder_GRU_hidden': 128, 'feature_dim': 192, 'decoder_hidden_size': 192, 'embed_len': 50, 'data_len': 31, 'cat_len': 8, 'positional': False, 'num_token_type': 14, 'num_segment_type': 9, 'num_categories': [5, 3, 3, 3, 3, 3, 3, 3], 'hidden': 192, 'dropout': 0.1}
+04/26/2026 13:25:27 - INFO - Rank 0(1468947)|main -   cp #parameters = 836651
+04/26/2026 13:25:27 - INFO - prepare_model(0) -   Loading pre-trained / previous model from /root/RL_table2charts/Results/Models/sft_states_ep0.pt...
+04/26/2026 13:25:27 - INFO - Rank 1(1468948)|main -   cp #parameters = 836651
+04/26/2026 13:25:27 - INFO - prepare_model(1) -   Loading pre-trained / previous model from /root/RL_table2charts/Results/Models/sft_states_ep0.pt...
+04/26/2026 13:25:34 - INFO - Rank 0(1468947)|main -   StudentConfig: {'optimizer': AdamW (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.0001
+    maximize: False
+    weight_decay: 0.01
+), 'criterion': NLLLoss(), 'scale_start': 0.9, 'scale_end': 0.001, 'scale_decay': 0.8, 'memory_size': 150000, 'min_memory': 1000, 'random_train': False, 'log_tag': '0(1468947)', 'log_freq': 100, 'log_dir': '/root/RL_table2charts/Results/Models/20260426132527-2el192fd128.128GRUh-allCharts-RL/evaluations'}
+04/26/2026 13:25:34 - INFO - Rank 0(1468947)|main -   SearchConfig: {'load_ground_truth': True, 'search_all_types': True, 'search_single_type': None, 'test_field_selections': False, 'test_design_choices': False, 'max_rc': (1000, 1000), 'expand_limit': 50, 'time_limit': inf, 'dim_count': 600, 'com_count': 1100, 'frontier_size': 300, 'beam_size': 4, 'min_threshold': 0.0, 'log_path': None}
+04/26/2026 13:25:34 - INFO - Rank 0(1468947)|main -   Starting epoch 0
+04/26/2026 13:25:34 - INFO - Rank 1(1468948)|main -   Starting epoch 0
+/root/RL_table2charts/Table2Charts/data/sequence.py:146: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at ../torch/csrc/utils/tensor_new.cpp:275.)
+  "data_characters": 0 if len(config.empty_data) == 0 else torch.tensor(append_padding(
+/root/RL_table2charts/Table2Charts/data/sequence.py:146: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at ../torch/csrc/utils/tensor_new.cpp:275.)
+  "data_characters": 0 if len(config.empty_data) == 0 else torch.tensor(append_padding(
+04/26/2026 13:26:14 - INFO - Student 0(1468947) -   EP-0 train B100: loss=38.26149368286133| (tn, fp, fn, tp)=[13089   390   817   164] all_prf1=(0.296029, 0.167176, 0.213681) avg_loss=32.967217 all_acc=0.916528| process=40.5s elapsed=39.8s
+04/26/2026 13:26:14 - INFO - Student 1(1468948) -   EP-0 train B100: loss=40.56000900268555| (tn, fp, fn, tp)=[12593   354   864   166] all_prf1=(0.319231, 0.161165, 0.214194) avg_loss=33.910156 all_acc=0.912857| process=40.7s elapsed=39.8s
+04/26/2026 13:26:30 - INFO - Student 1(1468948) -   Agents finished=501 remaining=58 error=39! EP-0 (train) elapsed time: 55.7s
+04/26/2026 13:26:34 - INFO - Student 0(1468947) -   Agents finished=503 remaining=55 error=25! EP-0 (train) elapsed time: 59.6s
+04/26/2026 13:26:46 - INFO - Student 1(1468948) -   EP-0 train B200: loss=30.52037811279297| (tn, fp, fn, tp)=[26570   526  1624   297] all_prf1=(0.360875, 0.154607, 0.216472) avg_loss=28.628242 all_acc=0.925906| process=73.3s elapsed=72.0s
+04/26/2026 13:26:46 - INFO - Student 0(1468947) -   EP-0 train B200: loss=27.798744201660156| (tn, fp, fn, tp)=[26646   571  1580   335] all_prf1=(0.369757, 0.174935, 0.237504) avg_loss=28.071400 all_acc=0.926164| process=73.1s elapsed=72.0s
+04/26/2026 13:27:18 - INFO - Student 1(1468948) -   EP-0 train B300: loss=15.622735023498535| (tn, fp, fn, tp)=[39759   714  2293   458] all_prf1=(0.390785, 0.166485, 0.233495) avg_loss=25.726483 all_acc=0.930432| process=105.9s elapsed=104.2s
+04/26/2026 13:27:18 - INFO - Student 0(1468947) -   EP-0 train B300: loss=11.090814590454102| (tn, fp, fn, tp)=[39549   765  2269   527] all_prf1=(0.407895, 0.188484, 0.257828) avg_loss=25.466581 all_acc=0.929622| process=105.6s elapsed=104.2s
+04/26/2026 13:27:21 - INFO - Student 1(1468948) -   Agents finished=1001 remaining=55 error=71! EP-0 (train) elapsed time: 106.8s
+04/26/2026 13:27:22 - INFO - Student 0(1468947) -   Agents finished=1007 remaining=58 error=63! EP-0 (train) elapsed time: 108.2s
+04/26/2026 13:27:53 - INFO - Student 1(1468948) -   EP-0 train B400: loss=16.578123092651367| (tn, fp, fn, tp)=[53124   946  2978   671] all_prf1=(0.414966, 0.183886, 0.254842) avg_loss=24.520793 all_acc=0.932015| process=141.5s elapsed=139.3s
+04/26/2026 13:27:53 - INFO - Student 0(1468947) -   EP-0 train B400: loss=11.775768280029297| (tn, fp, fn, tp)=[52581   986  2971   742] all_prf1=(0.429398, 0.199838, 0.272744) avg_loss=24.133467 all_acc=0.930918| process=141.0s elapsed=139.3s
+04/26/2026 13:28:12 - INFO - Student 1(1468948) -   Agents finished=1512 remaining=51 error=108! EP-0 (train) elapsed time: 158.1s
+04/26/2026 13:28:13 - INFO - Student 0(1468947) -   Agents finished=1512 remaining=55 error=103! EP-0 (train) elapsed time: 158.9s
+04/26/2026 13:28:26 - INFO - Student 1(1468948) -   EP-0 train B500: loss=14.814554214477539| (tn, fp, fn, tp)=[66321  1136  3594   902] all_prf1=(0.442591, 0.200623, 0.276094) avg_loss=23.378626 all_acc=0.934263| process=174.0s elapsed=171.4s
+04/26/2026 13:28:26 - INFO - Student 0(1468947) -   EP-0 train B500: loss=9.678683280944824| (tn, fp, fn, tp)=[65501  1189  3630   930] all_prf1=(0.438886, 0.203947, 0.278485) avg_loss=23.135064 all_acc=0.932365| process=173.5s elapsed=171.4s
+04/26/2026 13:29:04 - INFO - Student 1(1468948) -   EP-0 train B600: loss=19.5539608001709| (tn, fp, fn, tp)=[79832  1404  4318  1199] all_prf1=(0.460622, 0.217328, 0.295320) avg_loss=23.010447 all_acc=0.934043| process=212.3s elapsed=209.3s
+04/26/2026 13:29:04 - INFO - Student 0(1468947) -   EP-0 train B600: loss=15.208306312561035| (tn, fp, fn, tp)=[78556  1463  4294  1231] all_prf1=(0.456941, 0.222805, 0.299550) avg_loss=22.715452 all_acc=0.932701| process=211.9s elapsed=209.3s
+04/26/2026 13:29:07 - INFO - Student 1(1468948) -   Agents finished=2012 remaining=57 error=159! EP-0 (train) elapsed time: 212.9s
+04/26/2026 13:29:08 - INFO - Student 0(1468947) -   Agents finished=2015 remaining=59 error=154! EP-0 (train) elapsed time: 213.8s
+04/26/2026 13:29:42 - INFO - Student 0(1468947) -   EP-0 train B700: loss=7.470663070678711| (tn, fp, fn, tp)=[91791  1695  4919  1513] all_prf1=(0.471633, 0.235230, 0.313900) avg_loss=22.062854 all_acc=0.933806| process=250.8s elapsed=247.7s
+04/26/2026 13:29:42 - INFO - Student 1(1468948) -   EP-0 train B700: loss=30.23797607421875| (tn, fp, fn, tp)=[93721  1642  4955  1502] all_prf1=(0.477735, 0.232616, 0.312884) avg_loss=22.603145 all_acc=0.935209| process=251.2s elapsed=247.7s
+04/26/2026 13:30:07 - INFO - Student 1(1468948) -   Agents finished=2512 remaining=62 error=194! EP-0 (train) elapsed time: 273.2s
+04/26/2026 13:30:09 - INFO - Student 0(1468947) -   Agents finished=2516 remaining=56 error=186! EP-0 (train) elapsed time: 274.9s
+04/26/2026 13:30:17 - INFO - Student 0(1468947) -   EP-0 train B800: loss=22.65964126586914| (tn, fp, fn, tp)=[105053   1931   5573   1843] all_prf1=(0.488341, 0.248517, 0.329401) avg_loss=21.709462 all_acc=0.934406| process=286.0s elapsed=282.5s
+04/26/2026 13:30:17 - INFO - Student 1(1468948) -   EP-0 train B800: loss=23.609106063842773| (tn, fp, fn, tp)=[106824   1922   5566   1860] all_prf1=(0.491803, 0.250471, 0.331906) avg_loss=22.168712 all_acc=0.935544| process=286.4s elapsed=282.5s
+04/26/2026 13:31:04 - INFO - Student 0(1468947) -   EP-0 train B900: loss=15.18930435180664| (tn, fp, fn, tp)=[118044   2185   6152   2202] all_prf1=(0.501938, 0.263586, 0.345656) avg_loss=21.312023 all_acc=0.935163| process=333.9s elapsed=329.8s
+04/26/2026 13:31:04 - INFO - Student 1(1468948) -   EP-0 train B900: loss=25.315227508544922| (tn, fp, fn, tp)=[120081   2185   6157   2217] all_prf1=(0.503635, 0.264748, 0.347057) avg_loss=21.722678 all_acc=0.936145| process=334.3s elapsed=329.8s
+04/26/2026 13:31:09 - INFO - Student 1(1468948) -   Agents finished=3020 remaining=55 error=236! EP-0 (train) elapsed time: 335.2s
+04/26/2026 13:31:12 - INFO - Student 0(1468947) -   Agents finished=3018 remaining=56 error=222! EP-0 (train) elapsed time: 338.1s
+04/26/2026 13:31:44 - INFO - Student 1(1468948) -   EP-0 train B1000: loss=16.32793617248535| (tn, fp, fn, tp)=[133746   2478   6742   2584] all_prf1=(0.510470, 0.277075, 0.359188) avg_loss=21.417713 all_acc=0.936654| process=374.5s elapsed=369.5s
+04/26/2026 13:31:44 - INFO - Student 0(1468947) -   EP-0 train B1000: loss=22.64653205871582| (tn, fp, fn, tp)=[131231   2455   6729   2582] all_prf1=(0.512607, 0.277306, 0.359911) avg_loss=21.011039 all_acc=0.935775| process=374.0s elapsed=369.5s
+04/26/2026 13:32:20 - INFO - Student 1(1468948) -   Agents finished=3521 remaining=57 error=263! EP-0 (train) elapsed time: 405.6s
+04/26/2026 13:32:25 - INFO - Student 0(1468947) -   Agents finished=3521 remaining=57 error=259! EP-0 (train) elapsed time: 410.3s
+04/26/2026 13:32:28 - INFO - Student 1(1468948) -   EP-0 train B1100: loss=20.909191131591797| (tn, fp, fn, tp)=[147239   2787   7300   2931] all_prf1=(0.512592, 0.286482, 0.367547) avg_loss=21.071709 all_acc=0.937057| process=419.7s elapsed=414.2s
+04/26/2026 13:32:28 - INFO - Student 0(1468947) -   EP-0 train B1100: loss=26.276714324951172| (tn, fp, fn, tp)=[144123   2723   7380   2975] all_prf1=(0.522113, 0.287301, 0.370647) avg_loss=20.847955 all_acc=0.935732| process=419.1s elapsed=414.2s
+04/26/2026 13:33:14 - INFO - Student 0(1468947) -   EP-0 train B1200: loss=6.5489277839660645| (tn, fp, fn, tp)=[157482   2983   7950   3367] all_prf1=(0.530236, 0.297517, 0.381163) avg_loss=20.599336 all_acc=0.936355| process=465.5s elapsed=460.2s
+04/26/2026 13:33:14 - INFO - Student 1(1468948) -   EP-0 train B1200: loss=13.645819664001465| (tn, fp, fn, tp)=[160742   3106   7874   3315] all_prf1=(0.516275, 0.296273, 0.376491) avg_loss=20.836538 all_acc=0.937270| process=466.2s elapsed=460.2s
+04/26/2026 13:33:25 - INFO - Student 1(1468948) -   Agents finished=4025 remaining=56 error=308! EP-0 (train) elapsed time: 470.8s
+04/26/2026 13:33:33 - INFO - Student 0(1468947) -   Agents finished=4025 remaining=58 error=292! EP-0 (train) elapsed time: 478.4s
+04/26/2026 13:33:55 - INFO - Student 1(1468948) -   EP-0 train B1300: loss=21.496475219726562| (tn, fp, fn, tp)=[174815   3391   8476   3691] all_prf1=(0.521180, 0.303362, 0.383500) avg_loss=20.645167 all_acc=0.937664| process=507.4s elapsed=501.0s
+04/26/2026 13:33:55 - INFO - Student 0(1468947) -   EP-0 train B1300: loss=14.084709167480469| (tn, fp, fn, tp)=[170955   3320   8506   3730] all_prf1=(0.529078, 0.304838, 0.386809) avg_loss=20.386028 all_acc=0.936594| process=506.7s elapsed=501.0s
+04/26/2026 13:34:27 - INFO - Student 1(1468948) -   Agents finished=4537 remaining=51 error=351! EP-0 (train) elapsed time: 533.3s
+04/26/2026 13:34:38 - INFO - Student 1(1468948) -   EP-0 train B1400: loss=14.209548950195312| (tn, fp, fn, tp)=[188560   3724   9102   4121] all_prf1=(0.525303, 0.311654, 0.391209) avg_loss=20.567856 all_acc=0.937589| process=550.5s elapsed=543.6s
+04/26/2026 13:34:38 - INFO - Student 0(1468947) -   EP-0 train B1400: loss=24.96678924560547| (tn, fp, fn, tp)=[184126   3647   9101   4128] all_prf1=(0.530932, 0.312042, 0.393068) avg_loss=20.246371 all_acc=0.936578| process=549.8s elapsed=543.6s
+04/26/2026 13:34:38 - INFO - Student 0(1468947) -   Agents finished=4525 remaining=61 error=328! EP-0 (train) elapsed time: 543.9s
+04/26/2026 13:35:15 - INFO - Student 0(1468947) -   EP-0 train B1500: loss=21.67268180847168| (tn, fp, fn, tp)=[197796   3941   9663   4521] all_prf1=(0.534271, 0.318739, 0.399276) avg_loss=20.107433 all_acc=0.936995| process=587.9s elapsed=581.3s
+04/26/2026 13:35:15 - INFO - Student 1(1468948) -   EP-0 train B1500: loss=11.509676933288574| (tn, fp, fn, tp)=[202116   4019   9651   4494] all_prf1=(0.527899, 0.317709, 0.396681) avg_loss=20.366518 all_acc=0.937943| process=588.7s elapsed=581.3s
+04/26/2026 13:35:39 - INFO - Student 1(1468948) -   Agents finished=5043 remaining=56 error=379! EP-0 (train) elapsed time: 604.4s
+04/26/2026 13:35:43 - INFO - Student 0(1468947) -   Agents finished=5032 remaining=54 error=356! EP-0 (train) elapsed time: 608.8s
+04/26/2026 13:35:58 - INFO - Student 1(1468948) -   EP-0 train B1600: loss=14.249809265136719| (tn, fp, fn, tp)=[215825   4314  10292   4891] all_prf1=(0.531342, 0.322137, 0.401099) avg_loss=20.341010 all_acc=0.937932| process=632.1s elapsed=624.1s
+04/26/2026 13:35:58 - INFO - Student 0(1468947) -   EP-0 train B1600: loss=10.524821281433105| (tn, fp, fn, tp)=[211097   4233  10225   4893] all_prf1=(0.536160, 0.323654, 0.403646) avg_loss=19.965923 all_acc=0.937261| process=631.3s elapsed=624.1s
+04/26/2026 13:36:41 - INFO - Student 1(1468948) -   EP-0 train B1700: loss=22.00002098083496| (tn, fp, fn, tp)=[229521   4617  10894   5339] all_prf1=(0.536260, 0.328898, 0.407728) avg_loss=20.290445 all_acc=0.938048| process=674.7s elapsed=666.3s
+04/26/2026 13:36:41 - INFO - Student 0(1468947) -   EP-0 train B1700: loss=23.318578720092773| (tn, fp, fn, tp)=[224792   4555  10815   5324] all_prf1=(0.538921, 0.329884, 0.409255) avg_loss=19.918004 all_acc=0.937390| process=674.0s elapsed=666.3s
+04/26/2026 13:36:41 - INFO - Student 1(1468948) -   Agents finished=5549 remaining=56 error=389! EP-0 (train) elapsed time: 667.2s
+04/26/2026 13:36:56 - INFO - Student 0(1468947) -   Agents finished=5540 remaining=54 error=362! EP-0 (train) elapsed time: 681.8s
+04/26/2026 13:37:28 - INFO - Student 1(1468948) -   EP-0 train B1800: loss=14.551319122314453| (tn, fp, fn, tp)=[243393   4890  11498   5750] all_prf1=(0.540414, 0.333372, 0.412364) avg_loss=20.185761 all_acc=0.938282| process=722.6s elapsed=713.7s
+04/26/2026 13:37:28 - INFO - Student 0(1468947) -   EP-0 train B1800: loss=11.897421836853027| (tn, fp, fn, tp)=[238671   4889  11395   5683] all_prf1=(0.537552, 0.332767, 0.411067) avg_loss=19.818542 all_acc=0.937523| process=721.8s elapsed=713.7s
+04/26/2026 13:37:59 - INFO - Student 1(1468948) -   Agents finished=6054 remaining=55 error=401! EP-0 (train) elapsed time: 745.2s
+04/26/2026 13:38:07 - INFO - Student 0(1468947) -   Agents finished=6047 remaining=55 error=370! EP-0 (train) elapsed time: 752.9s
+04/26/2026 13:38:11 - INFO - Student 0(1468947) -   EP-0 train B1900: loss=11.844318389892578| (tn, fp, fn, tp)=[252305   5199  11965   6084] all_prf1=(0.539218, 0.337082, 0.414837) avg_loss=19.754762 all_acc=0.937711| process=765.0s elapsed=756.5s
+04/26/2026 13:38:11 - INFO - Student 1(1468948) -   EP-0 train B1900: loss=30.920785903930664| (tn, fp, fn, tp)=[256421   5167  12083   6112] all_prf1=(0.541892, 0.335916, 0.414738) avg_loss=20.114109 all_acc=0.938345| process=765.9s elapsed=756.5s
+04/26/2026 13:38:56 - INFO - Student 1(1468948) -   EP-0 train B2000: loss=16.313556671142578| (tn, fp, fn, tp)=[270124   5494  12693   6442] all_prf1=(0.539712, 0.336661, 0.414663) avg_loss=20.068926 all_acc=0.938297| process=811.4s elapsed=801.5s
+04/26/2026 13:38:56 - INFO - Student 0(1468947) -   EP-0 train B2000: loss=29.653629302978516| (tn, fp, fn, tp)=[266467   5440  12614   6444] all_prf1=(0.542242, 0.338126, 0.416521) avg_loss=19.759871 all_acc=0.937951| process=810.5s elapsed=801.5s
+04/26/2026 13:39:05 - INFO - Student 1(1468948) -   Agents finished=6557 remaining=58 error=414! EP-0 (train) elapsed time: 810.7s
+04/26/2026 13:39:16 - INFO - Student 0(1468947) -   Agents finished=6551 remaining=58 error=386! EP-0 (train) elapsed time: 821.9s
+04/26/2026 13:39:42 - INFO - Student 1(1468948) -   EP-0 train B2100: loss=36.28753662109375| (tn, fp, fn, tp)=[283896   5785  13313   6717] all_prf1=(0.537274, 0.335347, 0.412947) avg_loss=19.973589 all_acc=0.938336| process=858.8s elapsed=848.3s
+04/26/2026 13:39:42 - INFO - Student 0(1468947) -   EP-0 train B2100: loss=33.50850296020508| (tn, fp, fn, tp)=[279964   5720  13251   6796] all_prf1=(0.542985, 0.339003, 0.417406) avg_loss=19.770220 all_acc=0.937949| process=857.7s elapsed=848.3s
+04/26/2026 13:40:18 - INFO - Student 1(1468948) -   Agents finished=7061 remaining=56 error=424! EP-0 (train) elapsed time: 884.2s
+04/26/2026 13:40:24 - INFO - Student 0(1468947) -   EP-0 train B2200: loss=21.01837921142578| (tn, fp, fn, tp)=[293540   6009  13872   7101] all_prf1=(0.541648, 0.338578, 0.416689) avg_loss=19.722321 all_acc=0.937973| process=900.0s elapsed=890.1s
+04/26/2026 13:40:24 - INFO - Student 1(1468948) -   EP-0 train B2200: loss=19.1705322265625| (tn, fp, fn, tp)=[297458   6060  13941   7030] all_prf1=(0.537051, 0.335225, 0.412789) avg_loss=19.927496 all_acc=0.938362| process=901.0s elapsed=890.1s
+04/26/2026 13:40:29 - INFO - Student 0(1468947) -   Agents finished=7055 remaining=57 error=396! EP-0 (train) elapsed time: 894.4s
+04/26/2026 13:41:08 - INFO - Student 1(1468948) -   EP-0 train B2300: loss=12.599642753601074| (tn, fp, fn, tp)=[310688   6329  14548   7313] all_prf1=(0.536065, 0.334523, 0.411965) avg_loss=19.845517 all_acc=0.938394| process=945.6s elapsed=934.2s
+04/26/2026 13:41:08 - INFO - Student 0(1468947) -   EP-0 train B2300: loss=17.000032424926758| (tn, fp, fn, tp)=[306776   6289  14522   7430] all_prf1=(0.541585, 0.338466, 0.416585) avg_loss=19.700058 all_acc=0.937881| process=944.5s elapsed=934.2s
+04/26/2026 13:41:21 - INFO - Student 1(1468948) -   Agents finished=7562 remaining=59 error=440! EP-0 (train) elapsed time: 947.1s
+04/26/2026 13:41:38 - INFO - Student 0(1468947) -   Agents finished=7564 remaining=52 error=412! EP-0 (train) elapsed time: 963.8s
+04/26/2026 13:41:53 - INFO - Student 0(1468947) -   EP-0 train B2400: loss=16.563501358032227| (tn, fp, fn, tp)=[319687   6607  15149   7816] all_prf1=(0.541912, 0.340344, 0.418102) avg_loss=19.685086 all_acc=0.937708| process=989.4s elapsed=978.8s
+04/26/2026 13:41:53 - INFO - Student 1(1468948) -   EP-0 train B2400: loss=14.92597484588623| (tn, fp, fn, tp)=[323877   6638  15179   7695] all_prf1=(0.536873, 0.336408, 0.413632) avg_loss=19.817568 all_acc=0.938263| process=990.7s elapsed=978.8s
+04/26/2026 13:42:33 - INFO - Student 1(1468948) -   Agents finished=8063 remaining=58 error=450! EP-0 (train) elapsed time: 1018.9s
+04/26/2026 13:42:34 - INFO - Student 1(1468948) -   EP-0 train B2500: loss=13.252397537231445| (tn, fp, fn, tp)=[336503   6943  15748   8000] all_prf1=(0.535368, 0.336870, 0.413533) avg_loss=19.738558 all_acc=0.938204| process=1031.6s elapsed=1019.3s
+04/26/2026 13:42:34 - INFO - Student 0(1468947) -   EP-0 train B2500: loss=19.943159103393555| (tn, fp, fn, tp)=[333124   6916  15791   8139] all_prf1=(0.540618, 0.340117, 0.417545) avg_loss=19.646879 all_acc=0.937613| process=1030.5s elapsed=1019.3s
+04/26/2026 13:42:51 - INFO - Student 0(1468947) -   Agents finished=8065 remaining=59 error=423! EP-0 (train) elapsed time: 1036.8s
+04/26/2026 13:43:18 - INFO - Student 0(1468947) -   EP-0 train B2600: loss=20.454635620117188| (tn, fp, fn, tp)=[346127   7195  16470   8412] all_prf1=(0.538989, 0.338076, 0.415520) avg_loss=19.639031 all_acc=0.937428| process=1075.3s elapsed=1063.7s
+04/26/2026 13:43:18 - INFO - Student 1(1468948) -   EP-0 train B2600: loss=16.749147415161133| (tn, fp, fn, tp)=[349419   7225  16359   8283] all_prf1=(0.534111, 0.336133, 0.412603) avg_loss=19.659796 all_acc=0.938146| process=1076.4s elapsed=1063.7s
+04/26/2026 13:43:43 - INFO - Student 1(1468948) -   Agents finished=8570 remaining=55 error=465! EP-0 (train) elapsed time: 1089.0s
+04/26/2026 13:43:59 - INFO - Student 0(1468947) -   Agents finished=8566 remaining=53 error=440! EP-0 (train) elapsed time: 1104.8s
+04/26/2026 13:44:05 - INFO - Student 1(1468948) -   EP-0 train B2700: loss=12.933504104614258| (tn, fp, fn, tp)=[362327   7518  17014   8587] all_prf1=(0.533188, 0.335417, 0.411787) avg_loss=19.641511 all_acc=0.937964| process=1123.8s elapsed=1110.4s
+04/26/2026 13:44:05 - INFO - Student 0(1468947) -   EP-0 train B2700: loss=24.578706741333008| (tn, fp, fn, tp)=[358768   7511  17142   8704] all_prf1=(0.536787, 0.336764, 0.413875) avg_loss=19.655811 all_acc=0.937130| process=1122.5s elapsed=1110.4s
+04/26/2026 13:44:51 - INFO - Student 1(1468948) -   EP-0 train B2800: loss=17.102285385131836| (tn, fp, fn, tp)=[375409   7816  17705   8857] all_prf1=(0.531218, 0.333446, 0.409714) avg_loss=19.635170 all_acc=0.937721| process=1171.1s elapsed=1157.3s
+04/26/2026 13:44:51 - INFO - Student 0(1468947) -   EP-0 train B2800: loss=15.31828784942627| (tn, fp, fn, tp)=[371606   7790  17828   8976] all_prf1=(0.535369, 0.334875, 0.412027) avg_loss=19.632897 all_acc=0.936933| process=1169.8s elapsed=1157.3s
+04/26/2026 13:45:05 - INFO - Student 1(1468948) -   Agents finished=9072 remaining=58 error=483! EP-0 (train) elapsed time: 1170.4s
+04/26/2026 13:45:15 - INFO - Student 0(1468947) -   Agents finished=9076 remaining=50 error=468! EP-0 (train) elapsed time: 1181.1s
+04/26/2026 13:45:41 - INFO - Student 1(1468948) -   EP-0 train B2900: loss=11.19090747833252| (tn, fp, fn, tp)=[388746   8117  18298   9171] all_prf1=(0.530484, 0.333867, 0.409813) avg_loss=19.585083 all_acc=0.937749| process=1221.1s elapsed=1206.7s
+04/26/2026 13:45:41 - INFO - Student 0(1468947) -   EP-0 train B2900: loss=15.430323600769043| (tn, fp, fn, tp)=[384670   8061  18478   9284] all_prf1=(0.535255, 0.334414, 0.411643) avg_loss=19.578668 all_acc=0.936886| process=1219.7s elapsed=1206.7s
+04/26/2026 13:46:17 - INFO - Student 1(1468948) -   Agents finished=9581 remaining=54 error=508! EP-0 (train) elapsed time: 1242.9s
+04/26/2026 13:46:23 - INFO - Student 0(1468947) -   EP-0 train B3000: loss=21.563262939453125| (tn, fp, fn, tp)=[397490   8370  19088   9633] all_prf1=(0.535077, 0.335399, 0.412336) avg_loss=19.562967 all_acc=0.936817| process=1262.5s elapsed=1249.1s
+04/26/2026 13:46:23 - INFO - Student 1(1468948) -   EP-0 train B3000: loss=10.595833778381348| (tn, fp, fn, tp)=[402012   8414  18937   9450] all_prf1=(0.528997, 0.332899, 0.408640) avg_loss=19.538558 all_acc=0.937670| process=1263.9s elapsed=1249.1s
+04/26/2026 13:46:27 - INFO - Student 0(1468947) -   Agents finished=9579 remaining=56 error=489! EP-0 (train) elapsed time: 1253.3s
+04/26/2026 13:47:11 - INFO - Student 0(1468947) -   EP-0 train B3100: loss=20.13336181640625| (tn, fp, fn, tp)=[410509   8644  19714   9921] all_prf1=(0.534393, 0.334773, 0.411660) avg_loss=19.498044 all_acc=0.936812| process=1310.6s elapsed=1296.7s
+04/26/2026 13:47:11 - INFO - Student 1(1468948) -   EP-0 train B3100: loss=27.750688552856445| (tn, fp, fn, tp)=[415267   8687  19560   9747] all_prf1=(0.528751, 0.332583, 0.408328) avg_loss=19.508747 all_acc=0.937680| process=1312.0s elapsed=1296.7s
+04/26/2026 13:47:35 - INFO - Student 1(1468948) -   Agents finished=10083 remaining=55 error=532! EP-0 (train) elapsed time: 1321.0s
+04/26/2026 13:47:45 - INFO - Student 0(1468947) -   Agents finished=10084 remaining=58 error=509! EP-0 (train) elapsed time: 1330.8s
+04/26/2026 13:47:58 - INFO - Student 0(1468947) -   EP-0 train B3200: loss=12.169671058654785| (tn, fp, fn, tp)=[423544   8975  20304  10304] all_prf1=(0.534468, 0.336644, 0.413094) avg_loss=19.460186 all_acc=0.936780| process=1358.4s elapsed=1344.1s
+04/26/2026 13:47:58 - INFO - Student 1(1468948) -   EP-0 train B3200: loss=8.689628601074219| (tn, fp, fn, tp)=[428655   9012  20135  10111] all_prf1=(0.528735, 0.334292, 0.409609) avg_loss=19.463684 all_acc=0.937709| process=1359.9s elapsed=1344.1s
+04/26/2026 13:48:38 - INFO - Student 0(1468947) -   EP-0 train B3300: loss=12.090176582336426| (tn, fp, fn, tp)=[436929   9250  20950  10610] all_prf1=(0.534240, 0.336185, 0.412680) avg_loss=19.425737 all_acc=0.936786| process=1398.7s elapsed=1383.8s
+04/26/2026 13:48:38 - INFO - Student 1(1468948) -   EP-0 train B3300: loss=15.89889144897461| (tn, fp, fn, tp)=[442538   9322  20737  10437] all_prf1=(0.528215, 0.334798, 0.409833) avg_loss=19.435773 all_acc=0.937770| process=1400.1s elapsed=1383.9s
+04/26/2026 13:48:38 - INFO - Student 1(1468948) -   Agents finished=10589 remaining=55 error=566! EP-0 (train) elapsed time: 1384.2s
+04/26/2026 13:48:54 - INFO - Student 0(1468947) -   Agents finished=10586 remaining=56 error=540! EP-0 (train) elapsed time: 1399.8s
+04/26/2026 13:49:25 - INFO - Student 0(1468947) -   EP-0 train B3400: loss=13.22782039642334| (tn, fp, fn, tp)=[450161   9523  21508  10980] all_prf1=(0.535531, 0.337971, 0.414410) avg_loss=19.355519 all_acc=0.936951| process=1445.6s elapsed=1430.4s
+04/26/2026 13:49:25 - INFO - Student 1(1468948) -   EP-0 train B3400: loss=17.827638626098633| (tn, fp, fn, tp)=[456263   9635  21304  10803] all_prf1=(0.528574, 0.336469, 0.411190) avg_loss=19.361064 all_acc=0.937874| process=1447.2s elapsed=1430.4s
+04/26/2026 13:49:55 - INFO - Student 1(1468948) -   Agents finished=11094 remaining=58 error=593! EP-0 (train) elapsed time: 1460.5s
+04/26/2026 13:50:11 - INFO - Student 0(1468947) -   Agents finished=11089 remaining=60 error=563! EP-0 (train) elapsed time: 1476.4s
+04/26/2026 13:50:15 - INFO - Student 0(1468947) -   EP-0 train B3500: loss=18.017887115478516| (tn, fp, fn, tp)=[463686   9802  22103  11288] all_prf1=(0.535230, 0.338055, 0.414383) avg_loss=19.306020 all_acc=0.937056| process=1496.2s elapsed=1480.4s
+04/26/2026 13:50:15 - INFO - Student 1(1468948) -   EP-0 train B3500: loss=18.64850616455078| (tn, fp, fn, tp)=[470372   9933  21915  11140] all_prf1=(0.528639, 0.337014, 0.411617) avg_loss=19.339560 all_acc=0.937962| process=1497.7s elapsed=1480.4s
+04/26/2026 13:51:08 - INFO - Student 1(1468948) -   EP-0 train B3600: loss=16.5037899017334| (tn, fp, fn, tp)=[484281  10230  22515  11515] all_prf1=(0.529547, 0.338378, 0.412909) avg_loss=19.302364 all_acc=0.938046| process=1552.0s elapsed=1534.1s
+04/26/2026 13:51:08 - INFO - Student 0(1468947) -   EP-0 train B3600: loss=20.176626205444336| (tn, fp, fn, tp)=[476967  10120  22691  11595] all_prf1=(0.533963, 0.338185, 0.414100) avg_loss=19.259689 all_acc=0.937068| process=1550.4s elapsed=1534.1s
+04/26/2026 13:51:16 - INFO - Student 1(1468948) -   Agents finished=11595 remaining=56 error=606! EP-0 (train) elapsed time: 1542.0s
+04/26/2026 13:51:26 - INFO - Student 0(1468947) -   Agents finished=11595 remaining=56 error=577! EP-0 (train) elapsed time: 1551.7s
+04/26/2026 13:51:50 - INFO - Student 1(1468948) -   EP-0 train B3700: loss=11.225421905517578| (tn, fp, fn, tp)=[498521  10576  23140  11958] all_prf1=(0.530665, 0.340703, 0.414978) avg_loss=19.303892 all_acc=0.938044| process=1594.0s elapsed=1575.6s
+04/26/2026 13:51:50 - INFO - Student 0(1468947) -   EP-0 train B3700: loss=19.276578903198242| (tn, fp, fn, tp)=[490667  10460  23264  11959] all_prf1=(0.533431, 0.339522, 0.414940) avg_loss=19.219066 all_acc=0.937123| process=1592.4s elapsed=1575.6s
+04/26/2026 13:52:29 - INFO - Student 1(1468948) -   Agents finished=12099 remaining=56 error=628! EP-0 (train) elapsed time: 1614.5s
+04/26/2026 13:52:39 - INFO - Student 0(1468947) -   EP-0 train B3800: loss=6.953446865081787| (tn, fp, fn, tp)=[504218  10752  23855  12324] all_prf1=(0.534061, 0.340640, 0.415965) avg_loss=19.181463 all_acc=0.937209| process=1641.8s elapsed=1624.6s
+04/26/2026 13:52:39 - INFO - Student 1(1468948) -   EP-0 train B3800: loss=14.46827220916748| (tn, fp, fn, tp)=[512653  10938  23753  12345] all_prf1=(0.530215, 0.341986, 0.415790) avg_loss=19.307968 all_acc=0.938017| process=1643.5s elapsed=1624.6s
+04/26/2026 13:52:42 - INFO - Student 0(1468947) -   Agents finished=12101 remaining=55 error=600! EP-0 (train) elapsed time: 1627.6s
+04/26/2026 13:53:31 - INFO - Student 0(1468947) -   EP-0 train B3900: loss=19.50884437561035| (tn, fp, fn, tp)=[518002  11091  24444  12724] all_prf1=(0.534285, 0.342337, 0.417297) avg_loss=19.167902 all_acc=0.937246| process=1695.1s elapsed=1677.3s
+04/26/2026 13:53:31 - INFO - Student 1(1468948) -   EP-0 train B3900: loss=13.83676815032959| (tn, fp, fn, tp)=[526769  11247  24367  12760] all_prf1=(0.531512, 0.343685, 0.417444) avg_loss=19.289155 all_acc=0.938078| process=1696.8s elapsed=1677.3s
+04/26/2026 13:53:46 - INFO - Student 1(1468948) -   Agents finished=12599 remaining=61 error=640! EP-0 (train) elapsed time: 1692.0s
+04/26/2026 13:54:04 - INFO - Student 0(1468947) -   Agents finished=12607 remaining=57 error=612! EP-0 (train) elapsed time: 1710.0s
+04/26/2026 13:54:16 - INFO - Student 1(1468948) -   EP-0 train B4000: loss=20.33620262145996| (tn, fp, fn, tp)=[540207  11612  24987  13132] all_prf1=(0.530715, 0.344500, 0.417797) avg_loss=19.293640 all_acc=0.937961| process=1741.6s elapsed=1721.5s
+04/26/2026 13:54:16 - INFO - Student 0(1468947) -   EP-0 train B4000: loss=16.802711486816406| (tn, fp, fn, tp)=[531646  11442  25109  13071] all_prf1=(0.533227, 0.342352, 0.416984) avg_loss=19.170989 all_acc=0.937119| process=1739.9s elapsed=1721.5s
+04/26/2026 13:55:10 - INFO - Student 1(1468948) -   Agents finished=13102 remaining=60 error=652! EP-0 (train) elapsed time: 1775.5s
+04/26/2026 13:55:10 - INFO - Student 1(1468948) -   EP-0 train B4100: loss=18.733543395996094| (tn, fp, fn, tp)=[554251  11914  25649  13509] all_prf1=(0.531369, 0.344987, 0.418358) avg_loss=19.288042 all_acc=0.937946| process=1796.7s elapsed=1775.8s
+04/26/2026 13:55:10 - INFO - Student 0(1468947) -   EP-0 train B4100: loss=31.199108123779297| (tn, fp, fn, tp)=[545210  11777  25669  13408] all_prf1=(0.532380, 0.343117, 0.417292) avg_loss=19.127141 all_acc=0.937178| process=1794.8s elapsed=1775.8s
+04/26/2026 13:55:20 - INFO - Student 0(1468947) -   Agents finished=13107 remaining=59 error=624! EP-0 (train) elapsed time: 1786.2s
+04/26/2026 13:55:55 - INFO - Student 1(1468948) -   EP-0 train B4200: loss=19.71912956237793| (tn, fp, fn, tp)=[568234  12280  26225  13899] all_prf1=(0.530922, 0.346401, 0.419257) avg_loss=19.278961 all_acc=0.937959| process=1842.4s elapsed=1821.0s
+04/26/2026 13:55:55 - INFO - Student 0(1468947) -   EP-0 train B4200: loss=23.860774993896484| (tn, fp, fn, tp)=[559224  12120  26282  13831] all_prf1=(0.532966, 0.344801, 0.418715) avg_loss=19.127103 all_acc=0.937196| process=1840.6s elapsed=1821.0s
+04/26/2026 13:56:17 - INFO - Student 1(1468948) -   Agents finished=13608 remaining=55 error=687! EP-0 (train) elapsed time: 1842.7s
+04/26/2026 13:56:35 - INFO - Student 0(1468947) -   Agents finished=13613 remaining=57 error=658! EP-0 (train) elapsed time: 1860.6s
+04/26/2026 13:56:42 - INFO - Student 0(1468947) -   EP-0 train B4300: loss=22.181440353393555| (tn, fp, fn, tp)=[572759  12452  26904  14242] all_prf1=(0.533528, 0.346133, 0.419870) avg_loss=19.117857 all_acc=0.937167| process=1887.7s elapsed=1867.5s
+04/26/2026 13:56:42 - INFO - Student 1(1468948) -   EP-0 train B4300: loss=13.4157133102417| (tn, fp, fn, tp)=[581683  12604  26839  14309] all_prf1=(0.531676, 0.347745, 0.420476) avg_loss=19.256723 all_acc=0.937928| process=1889.6s elapsed=1867.5s
+04/26/2026 13:57:20 - INFO - Student 1(1468948) -   Agents finished=14112 remaining=58 error=750! EP-0 (train) elapsed time: 1906.1s
+04/26/2026 13:57:23 - INFO - Student 1(1468948) -   EP-0 train B4400: loss=11.431533813476562| (tn, fp, fn, tp)=[595606  12944  27443  14674] all_prf1=(0.531320, 0.348410, 0.420850) avg_loss=19.252650 all_acc=0.937930| process=1931.7s elapsed=1908.9s
+04/26/2026 13:57:23 - INFO - Student 0(1468947) -   EP-0 train B4400: loss=15.649887084960938| (tn, fp, fn, tp)=[586438  12811  27507  14638] all_prf1=(0.533280, 0.347325, 0.420668) avg_loss=19.115179 all_acc=0.937140| process=1929.7s elapsed=1908.9s
+04/26/2026 13:57:42 - INFO - Student 0(1468947) -   Agents finished=14118 remaining=54 error=705! EP-0 (train) elapsed time: 1927.4s
+04/26/2026 13:58:17 - INFO - Student 1(1468948) -   EP-0 train B4500: loss=16.723241806030273| (tn, fp, fn, tp)=[609360  13271  28048  15058] all_prf1=(0.531540, 0.349325, 0.421586) avg_loss=19.231876 all_acc=0.937935| process=1986.0s elapsed=1962.5s
+04/26/2026 13:58:17 - INFO - Student 0(1468947) -   EP-0 train B4500: loss=11.414396286010742| (tn, fp, fn, tp)=[599799  13119  28175  14971] all_prf1=(0.532965, 0.346985, 0.420321) avg_loss=19.109161 all_acc=0.937058| process=1983.9s elapsed=1962.5s
+04/26/2026 13:58:44 - INFO - Student 1(1468948) -   Agents finished=14614 remaining=57 error=771! EP-0 (train) elapsed time: 1989.4s
+04/26/2026 13:59:03 - INFO - Student 0(1468947) -   Agents finished=14618 remaining=57 error=727! EP-0 (train) elapsed time: 2008.7s
+04/26/2026 13:59:05 - INFO - Student 1(1468948) -   EP-0 train B4600: loss=22.882356643676758| (tn, fp, fn, tp)=[623343  13605  28686  15436] all_prf1=(0.531524, 0.349848, 0.421962) avg_loss=19.232094 all_acc=0.937905| process=2035.0s elapsed=2011.0s
+04/26/2026 13:59:05 - INFO - Student 0(1468947) -   EP-0 train B4600: loss=12.126532554626465| (tn, fp, fn, tp)=[613503  13457  28781  15382] all_prf1=(0.533375, 0.348301, 0.421413) avg_loss=19.094507 all_acc=0.937064| process=2033.2s elapsed=2011.0s
+04/26/2026 13:59:58 - INFO - Student 1(1468948) -   EP-0 train B4700: loss=8.810616493225098| (tn, fp, fn, tp)=[637129  13947  29305  15827] all_prf1=(0.531571, 0.350682, 0.422583) avg_loss=19.232470 all_acc=0.937875| process=2088.9s elapsed=2064.2s
+04/26/2026 13:59:58 - INFO - Student 0(1468947) -   EP-0 train B4700: loss=13.733642578125| (tn, fp, fn, tp)=[627115  13765  29350  15783] all_prf1=(0.534148, 0.349700, 0.422678) avg_loss=19.061789 all_acc=0.937151| process=2087.0s elapsed=2064.2s
+04/26/2026 14:00:04 - INFO - Student 1(1468948) -   Agents finished=15118 remaining=55 error=792! EP-0 (train) elapsed time: 2070.0s
+04/26/2026 14:00:24 - INFO - Student 0(1468947) -   Agents finished=15124 remaining=55 error=740! EP-0 (train) elapsed time: 2089.7s
+04/26/2026 14:00:48 - INFO - Student 0(1468947) -   EP-0 train B4800: loss=11.938314437866211| (tn, fp, fn, tp)=[641046  14102  29927  16201] all_prf1=(0.534634, 0.351218, 0.423938) avg_loss=19.028151 all_acc=0.937216| process=2137.0s elapsed=2113.5s
+04/26/2026 14:00:48 - INFO - Student 1(1468948) -   EP-0 train B4800: loss=16.512466430664062| (tn, fp, fn, tp)=[651106  14274  29891  16242] all_prf1=(0.532245, 0.352069, 0.423802) avg_loss=19.208836 all_acc=0.937928| process=2138.9s elapsed=2113.6s
+04/26/2026 14:01:31 - INFO - Student 1(1468948) -   Agents finished=15624 remaining=56 error=810! EP-0 (train) elapsed time: 2157.3s
+04/26/2026 14:01:38 - INFO - Student 1(1468948) -   EP-0 train B4900: loss=30.824583053588867| (tn, fp, fn, tp)=[665152  14638  30452  16707] all_prf1=(0.533004, 0.354270, 0.425634) avg_loss=19.185238 all_acc=0.937974| process=2189.6s elapsed=2163.7s
+04/26/2026 14:01:38 - INFO - Student 0(1468947) -   EP-0 train B4900: loss=19.910860061645508| (tn, fp, fn, tp)=[654989  14436  30495  16701] all_prf1=(0.536372, 0.353865, 0.426410) avg_loss=19.009486 all_acc=0.937302| process=2187.8s elapsed=2163.7s
+04/26/2026 14:01:50 - INFO - Student 0(1468947) -   Agents finished=15624 remaining=57 error=755! EP-0 (train) elapsed time: 2175.5s
+04/26/2026 14:02:25 - INFO - Student 1(1468948) -   EP-0 train B5000: loss=12.049644470214844| (tn, fp, fn, tp)=[679298  14932  31065  17090] all_prf1=(0.533696, 0.354896, 0.426307) avg_loss=19.170976 all_acc=0.938042| process=2237.1s elapsed=2210.6s
+04/26/2026 14:02:25 - INFO - Student 0(1468947) -   EP-0 train B5000: loss=9.722412109375| (tn, fp, fn, tp)=[669064  14725  31069  17088] all_prf1=(0.537139, 0.354839, 0.427360) avg_loss=18.975809 all_acc=0.937435| process=2235.3s elapsed=2210.6s
+04/26/2026 14:02:48 - INFO - Student 1(1468948) -   Agents finished=16128 remaining=55 error=829! EP-0 (train) elapsed time: 2234.0s
+04/26/2026 14:03:12 - INFO - Student 0(1468947) -   Agents finished=16130 remaining=55 error=762! EP-0 (train) elapsed time: 2258.2s
+04/26/2026 14:03:18 - INFO - Student 1(1468948) -   EP-0 train B5100: loss=13.164754867553711| (tn, fp, fn, tp)=[693018  15267  31711  17442] all_prf1=(0.533248, 0.354851, 0.426132) avg_loss=19.166702 all_acc=0.937978| process=2290.9s elapsed=2263.8s
+04/26/2026 14:03:18 - INFO - Student 0(1468947) -   EP-0 train B5100: loss=12.504276275634766| (tn, fp, fn, tp)=[683049  14995  31611  17491] all_prf1=(0.538417, 0.356218, 0.428764) avg_loss=18.946670 all_acc=0.937621| process=2289.0s elapsed=2263.8s
+04/26/2026 14:04:05 - INFO - Student 1(1468948) -   EP-0 train B5200: loss=14.056845664978027| (tn, fp, fn, tp)=[707056  15581  32283  17829] all_prf1=(0.533643, 0.355783, 0.426929) avg_loss=19.137616 all_acc=0.938060| process=2338.9s elapsed=2311.1s
+04/26/2026 14:04:05 - INFO - Student 0(1468947) -   EP-0 train B5200: loss=17.96293067932129| (tn, fp, fn, tp)=[696804  15290  32170  17895] all_prf1=(0.539250, 0.357435, 0.429910) avg_loss=18.914801 all_acc=0.937730| process=2336.8s elapsed=2311.1s
+04/26/2026 14:04:06 - INFO - Student 1(1468948) -   Agents finished=16631 remaining=59 error=850! EP-0 (train) elapsed time: 2311.8s
+04/26/2026 14:04:27 - INFO - Student 0(1468947) -   Agents finished=16633 remaining=57 error=780! EP-0 (train) elapsed time: 2332.8s
+04/26/2026 14:04:49 - INFO - Student 0(1468947) -   EP-0 train B5300: loss=17.74863052368164| (tn, fp, fn, tp)=[710299  15590  32730  18252] all_prf1=(0.539330, 0.358009, 0.430350) avg_loss=18.879541 all_acc=0.937802| process=2381.3s elapsed=2354.9s
+04/26/2026 14:04:49 - INFO - Student 1(1468948) -   EP-0 train B5300: loss=12.015935897827148| (tn, fp, fn, tp)=[720767  15907  32913  18272] all_prf1=(0.534597, 0.356980, 0.428096) avg_loss=19.139994 all_acc=0.938035| process=2383.3s elapsed=2354.9s
+04/26/2026 14:05:34 - INFO - Student 1(1468948) -   Agents finished=17136 remaining=57 error=859! EP-0 (train) elapsed time: 2400.2s
+04/26/2026 14:05:47 - INFO - Student 1(1468948) -   EP-0 train B5400: loss=15.754372596740723| (tn, fp, fn, tp)=[734479  16200  33470  18703] all_prf1=(0.535857, 0.358480, 0.429579) avg_loss=19.110024 all_acc=0.938133| process=2441.3s elapsed=2412.3s
+04/26/2026 14:05:47 - INFO - Student 0(1468947) -   EP-0 train B5400: loss=14.612579345703125| (tn, fp, fn, tp)=[723604  15900  33280  18668] all_prf1=(0.540037, 0.359359, 0.431550) avg_loss=18.844698 all_acc=0.937861| process=2439.3s elapsed=2412.3s
+04/26/2026 14:05:49 - INFO - Student 0(1468947) -   Agents finished=17135 remaining=56 error=792! EP-0 (train) elapsed time: 2414.5s
+04/26/2026 14:06:36 - INFO - Student 1(1468948) -   EP-0 train B5500: loss=28.945154190063477| (tn, fp, fn, tp)=[747928  16526  34050  19142] all_prf1=(0.536672, 0.359866, 0.430835) avg_loss=19.099251 all_acc=0.938144| process=2491.6s elapsed=2462.0s
+04/26/2026 14:06:36 - INFO - Student 0(1468947) -   EP-0 train B5500: loss=26.749008178710938| (tn, fp, fn, tp)=[736945  16228  33861  19088] all_prf1=(0.540492, 0.360498, 0.432516) avg_loss=18.828374 all_acc=0.937864| process=2489.5s elapsed=2462.0s
+04/26/2026 14:06:47 - INFO - Student 1(1468948) -   Agents finished=17639 remaining=57 error=876! EP-0 (train) elapsed time: 2472.7s
+04/26/2026 14:07:12 - INFO - Student 0(1468947) -   Agents finished=17646 remaining=51 error=812! EP-0 (train) elapsed time: 2497.5s
+04/26/2026 14:07:22 - INFO - Student 0(1468947) -   EP-0 train B5600: loss=13.211202621459961| (tn, fp, fn, tp)=[750484  16505  34502  19435] all_prf1=(0.540762, 0.360328, 0.432480) avg_loss=18.815533 all_acc=0.937867| process=2536.3s elapsed=2508.2s
+04/26/2026 14:07:22 - INFO - Student 1(1468948) -   EP-0 train B5600: loss=13.079130172729492| (tn, fp, fn, tp)=[761821  16842  34605  19526] all_prf1=(0.536901, 0.360718, 0.431519) avg_loss=19.078081 all_acc=0.938224| process=2538.4s elapsed=2508.2s
+04/26/2026 14:08:03 - INFO - Student 1(1468948) -   Agents finished=18144 remaining=58 error=908! EP-0 (train) elapsed time: 2548.6s
+04/26/2026 14:08:17 - INFO - Student 0(1468947) -   EP-0 train B5700: loss=13.95979118347168| (tn, fp, fn, tp)=[764405  16826  35091  19864] all_prf1=(0.541401, 0.361459, 0.433499) avg_loss=18.798757 all_acc=0.937912| process=2591.5s elapsed=2562.8s
+04/26/2026 14:08:17 - INFO - Student 1(1468948) -   EP-0 train B5700: loss=18.662397384643555| (tn, fp, fn, tp)=[775224  17202  35189  19942] all_prf1=(0.536883, 0.361720, 0.432230) avg_loss=19.071643 all_acc=0.938186| process=2593.7s elapsed=2562.8s
+04/26/2026 14:08:28 - INFO - Student 0(1468947) -   Agents finished=18152 remaining=54 error=841! EP-0 (train) elapsed time: 2573.8s
+04/26/2026 14:09:03 - INFO - Student 1(1468948) -   EP-0 train B5800: loss=22.250818252563477| (tn, fp, fn, tp)=[788510  17514  35762  20310] all_prf1=(0.536961, 0.362213, 0.432606) avg_loss=19.044032 all_acc=0.938202| process=2640.4s elapsed=2609.0s
+04/26/2026 14:09:03 - INFO - Student 0(1468947) -   EP-0 train B5800: loss=11.736096382141113| (tn, fp, fn, tp)=[778581  17133  35714  20279] all_prf1=(0.542045, 0.362170, 0.434217) avg_loss=18.789364 all_acc=0.937952| process=2638.3s elapsed=2609.0s
+04/26/2026 14:09:35 - INFO - Student 1(1468948) -   Agents finished=18648 remaining=55 error=941! EP-0 (train) elapsed time: 2641.0s
+04/26/2026 14:09:57 - INFO - Student 0(1468947) -   Agents finished=18652 remaining=55 error=876! EP-0 (train) elapsed time: 2662.4s
+04/26/2026 14:10:01 - INFO - Student 0(1468947) -   EP-0 train B5900: loss=13.668088912963867| (tn, fp, fn, tp)=[792431  17471  36284  20702] all_prf1=(0.542320, 0.363282, 0.435103) avg_loss=18.774071 all_acc=0.937991| process=2696.5s elapsed=2666.5s
+04/26/2026 14:10:01 - INFO - Student 1(1468948) -   EP-0 train B5900: loss=9.432689666748047| (tn, fp, fn, tp)=[802165  17831  36389  20705] all_prf1=(0.537290, 0.362648, 0.433023) avg_loss=19.044062 all_acc=0.938182| process=2698.6s elapsed=2666.5s
+04/26/2026 14:10:49 - INFO - Student 0(1468947) -   EP-0 train B6000: loss=15.509860038757324| (tn, fp, fn, tp)=[806450  17782  36896  21124] all_prf1=(0.542950, 0.364081, 0.435879) avg_loss=18.765356 all_acc=0.938025| process=2745.0s elapsed=2714.4s
+04/26/2026 14:10:49 - INFO - Student 1(1468948) -   EP-0 train B6000: loss=19.159414291381836| (tn, fp, fn, tp)=[815730  18171  36950  21148] all_prf1=(0.537857, 0.364006, 0.434175) avg_loss=19.028289 all_acc=0.938205| process=2747.2s elapsed=2714.4s
+04/26/2026 14:10:51 - INFO - Student 1(1468948) -   Agents finished=19149 remaining=59 error=958! EP-0 (train) elapsed time: 2716.5s
+04/26/2026 14:11:15 - INFO - Student 0(1468947) -   Agents finished=19157 remaining=56 error=895! EP-0 (train) elapsed time: 2740.4s
+04/26/2026 14:11:47 - INFO - Student 0(1468947) -   EP-0 train B6100: loss=7.177586555480957| (tn, fp, fn, tp)=[820526  18062  37462  21508] all_prf1=(0.543543, 0.364728, 0.436533) avg_loss=18.742443 all_acc=0.938139| process=2804.4s elapsed=2773.3s
+04/26/2026 14:11:47 - INFO - Student 1(1468948) -   EP-0 train B6100: loss=14.294013977050781| (tn, fp, fn, tp)=[829363  18493  37557  21506] all_prf1=(0.537663, 0.364120, 0.434193) avg_loss=19.018286 all_acc=0.938197| process=2806.7s elapsed=2773.3s
+04/26/2026 14:12:13 - INFO - Student 1(1468948) -   Agents finished=19658 remaining=54 error=970! EP-0 (train) elapsed time: 2799.3s
+04/26/2026 14:12:38 - INFO - Student 1(1468948) -   EP-0 train B6200: loss=13.079527854919434| (tn, fp, fn, tp)=[842840  18790  38170  21862] all_prf1=(0.537784, 0.364172, 0.434270) avg_loss=19.001480 all_acc=0.938199| process=2857.4s elapsed=2823.4s
+04/26/2026 14:12:38 - INFO - Student 0(1468947) -   EP-0 train B6200: loss=46.47285842895508| (tn, fp, fn, tp)=[834858  18354  38080  21900] all_prf1=(0.544045, 0.365122, 0.436977) avg_loss=18.753162 all_acc=0.938201| process=2855.0s elapsed=2823.4s
+04/26/2026 14:12:42 - INFO - Student 0(1468947) -   Agents finished=19662 remaining=58 error=907! EP-0 (train) elapsed time: 2828.2s
+04/26/2026 14:13:26 - INFO - Student 1(1468948) -   EP-0 train B6300: loss=15.865091323852539| (tn, fp, fn, tp)=[856251  19093  38795  22253] all_prf1=(0.538214, 0.364516, 0.434654) avg_loss=18.985181 all_acc=0.938180| process=2906.6s elapsed=2872.0s
+04/26/2026 14:13:26 - INFO - Student 0(1468947) -   EP-0 train B6300: loss=22.387041091918945| (tn, fp, fn, tp)=[848883  18666  38679  22294] all_prf1=(0.544287, 0.365637, 0.437425) avg_loss=18.747104 all_acc=0.938241| process=2904.4s elapsed=2872.0s
+04/26/2026 14:13:41 - INFO - Student 1(1468948) -   Agents finished=20160 remaining=59 error=993! EP-0 (train) elapsed time: 2886.9s
+04/26/2026 14:13:59 - INFO - Student 0(1468947) -   Agents finished=20167 remaining=58 error=929! EP-0 (train) elapsed time: 2905.1s
+04/26/2026 14:14:25 - INFO - Student 0(1468947) -   EP-0 train B6400: loss=17.895137786865234| (tn, fp, fn, tp)=[862856  19004  39256  22705] all_prf1=(0.544367, 0.366440, 0.438025) avg_loss=18.737482 all_acc=0.938272| process=2963.5s elapsed=2930.6s
+04/26/2026 14:14:25 - INFO - Student 1(1468948) -   EP-0 train B6400: loss=18.112611770629883| (tn, fp, fn, tp)=[869890  19408  39434  22632] all_prf1=(0.538344, 0.364644, 0.434788) avg_loss=18.982423 all_acc=0.938150| process=2965.7s elapsed=2930.6s
+04/26/2026 14:15:09 - INFO - Student 1(1468948) -   Agents finished=20662 remaining=58 error=1007! EP-0 (train) elapsed time: 2974.8s
+04/26/2026 14:15:18 - INFO - Student 1(1468948) -   EP-0 train B6500: loss=21.3375301361084| (tn, fp, fn, tp)=[883337  19700  39995  23067] all_prf1=(0.539364, 0.365783, 0.435930) avg_loss=18.953724 all_acc=0.938210| process=3020.4s elapsed=2984.1s
+04/26/2026 14:15:18 - INFO - Student 0(1468947) -   EP-0 train B6500: loss=16.829713821411133| (tn, fp, fn, tp)=[876577  19321  39871  23186] all_prf1=(0.545463, 0.367699, 0.439279) avg_loss=18.742254 all_acc=0.938274| process=3017.6s elapsed=2984.1s
+04/26/2026 14:15:43 - INFO - Student 0(1468947) -   Agents finished=20670 remaining=56 error=944! EP-0 (train) elapsed time: 3009.0s
+04/26/2026 14:16:41 - INFO - Student 1(1468948) -   EP-0 train B6600: loss=27.795852661132812| (tn, fp, fn, tp)=[897085  20034  40573  23531] all_prf1=(0.540135, 0.367075, 0.437099) avg_loss=18.935123 all_acc=0.938233| process=3103.7s elapsed=3067.0s
+04/26/2026 14:16:41 - INFO - Student 0(1468947) -   EP-0 train B6600: loss=17.14383888244629| (tn, fp, fn, tp)=[890180  19666  40479  23612] all_prf1=(0.545589, 0.368414, 0.439829) avg_loss=18.733585 all_acc=0.938245| process=3100.8s elapsed=3067.0s
+04/26/2026 14:16:54 - INFO - Student 1(1468948) -   Agents finished=21163 remaining=56 error=1021! EP-0 (train) elapsed time: 3079.6s
+04/26/2026 14:17:09 - INFO - Student 0(1468947) -   Agents finished=21175 remaining=55 error=957! EP-0 (train) elapsed time: 3095.1s
+04/26/2026 14:17:12 - INFO - Student 0(1468947) -   EP-0 train B6700: loss=13.324539184570312| (tn, fp, fn, tp)=[903884  20005  41065  24076] all_prf1=(0.546176, 0.369598, 0.440864) avg_loss=18.738442 all_acc=0.938253| process=3131.6s elapsed=3097.4s
+04/26/2026 14:17:12 - INFO - Student 1(1468948) -   EP-0 train B6700: loss=23.731075286865234| (tn, fp, fn, tp)=[910827  20369  41151  23975] all_prf1=(0.540659, 0.368133, 0.438020) avg_loss=18.924245 all_acc=0.938253| process=3134.3s elapsed=3097.4s
+04/26/2026 14:17:36 - INFO - Student 1(1468948) -   Agents finished=21664 remaining=60 error=1070! EP-0 (train) elapsed time: 3121.3s
+04/26/2026 14:17:39 - INFO - Student 0(1468947) -   EP-0 train B6800: loss=11.994397163391113| (tn, fp, fn, tp)=[917637  20327  41696  24551] all_prf1=(0.547061, 0.370598, 0.441863) avg_loss=18.741045 all_acc=0.938237| process=3159.3s elapsed=3124.9s
+04/26/2026 14:17:39 - INFO - Student 1(1468948) -   EP-0 train B6800: loss=13.10452938079834| (tn, fp, fn, tp)=[924333  20729  41689  24420] all_prf1=(0.540876, 0.369390, 0.438980) avg_loss=18.906972 all_acc=0.938272| process=3162.1s elapsed=3124.9s
+04/26/2026 14:17:52 - INFO - Student 0(1468947) -   Agents finished=21676 remaining=57 error=1004! EP-0 (train) elapsed time: 3137.7s
+04/26/2026 14:18:06 - INFO - Student 1(1468948) -   EP-0 train B6900: loss=13.379243850708008| (tn, fp, fn, tp)=[937916  21012  42267  24866] all_prf1=(0.542003, 0.370399, 0.440063) avg_loss=18.888589 all_acc=0.938328| process=3189.0s elapsed=3151.6s
+04/26/2026 14:18:06 - INFO - Student 0(1468947) -   EP-0 train B6900: loss=11.561833381652832| (tn, fp, fn, tp)=[931449  20642  42260  24981] all_prf1=(0.547553, 0.371514, 0.442674) avg_loss=18.729051 all_acc=0.938291| process=3186.3s elapsed=3151.6s
+04/26/2026 14:18:16 - INFO - Student 1(1468948) -   Agents finished=22164 remaining=57 error=1131! EP-0 (train) elapsed time: 3161.8s
+04/26/2026 14:18:34 - INFO - Student 0(1468947) -   Agents finished=22180 remaining=56 error=1048! EP-0 (train) elapsed time: 3179.5s
+04/26/2026 14:18:35 - INFO - Student 0(1468947) -   EP-0 train B7000: loss=27.872310638427734| (tn, fp, fn, tp)=[945364  20981  42840  25412] all_prf1=(0.547755, 0.372326, 0.443316) avg_loss=18.717364 all_acc=0.938313| process=3215.8s elapsed=3180.9s
+04/26/2026 14:18:35 - INFO - Student 1(1468948) -   EP-0 train B7000: loss=10.193733215332031| (tn, fp, fn, tp)=[951643  21307  42818  25327] all_prf1=(0.543102, 0.371663, 0.441318) avg_loss=18.859523 all_acc=0.938406| process=3218.5s elapsed=3180.9s
+04/26/2026 14:18:57 - INFO - Student 1(1468948) -   Agents finished=22667 remaining=57 error=1188! EP-0 (train) elapsed time: 3202.5s
+04/26/2026 14:19:02 - INFO - Student 1(1468948) -   EP-0 train B7100: loss=18.8641300201416| (tn, fp, fn, tp)=[964927  21619  43335  25793] all_prf1=(0.544018, 0.373119, 0.442646) avg_loss=18.831418 all_acc=0.938472| process=3245.3s elapsed=3207.5s
+04/26/2026 14:19:02 - INFO - Student 0(1468947) -   EP-0 train B7100: loss=18.540145874023438| (tn, fp, fn, tp)=[959138  21296  43355  25950] all_prf1=(0.549253, 0.374432, 0.445299) avg_loss=18.694485 all_acc=0.938412| process=3242.6s elapsed=3207.5s
+04/26/2026 14:19:15 - INFO - Student 0(1468947) -   Agents finished=22682 remaining=61 error=1097! EP-0 (train) elapsed time: 3220.7s
+04/26/2026 14:19:27 - INFO - Student 0(1468947) -   EP-0 train B7200: loss=28.513751983642578| (tn, fp, fn, tp)=[972627  21631  43862  26455] all_prf1=(0.550160, 0.376225, 0.446864) avg_loss=18.669514 all_acc=0.938480| process=3268.4s elapsed=3233.0s
+04/26/2026 14:19:27 - INFO - Student 1(1468948) -   EP-0 train B7200: loss=15.991486549377441| (tn, fp, fn, tp)=[977881  21937  43841  26361] all_prf1=(0.545799, 0.375502, 0.444911) avg_loss=18.803152 all_acc=0.938526| process=3271.0s elapsed=3233.0s
+04/26/2026 14:19:37 - INFO - Student 1(1468948) -   Agents finished=23170 remaining=58 error=1233! EP-0 (train) elapsed time: 3243.1s
+04/26/2026 14:19:54 - INFO - Student 0(1468947) -   Agents finished=23186 remaining=58 error=1138! EP-0 (train) elapsed time: 3260.2s
+04/26/2026 14:19:56 - INFO - Student 0(1468947) -   EP-0 train B7300: loss=21.34661293029785| (tn, fp, fn, tp)=[986192  21949  44338  26926] all_prf1=(0.550916, 0.377835, 0.448247) avg_loss=18.635920 all_acc=0.938589| process=3297.2s elapsed=3261.6s
+04/26/2026 14:19:56 - INFO - Student 1(1468948) -   EP-0 train B7300: loss=13.933947563171387| (tn, fp, fn, tp)=[991188  22233  44366  26864] all_prf1=(0.547162, 0.377144, 0.446517) avg_loss=18.766869 all_acc=0.938599| process=3299.8s elapsed=3261.6s
+04/26/2026 14:20:19 - INFO - Student 1(1468948) -   Agents finished=23676 remaining=56 error=1271! EP-0 (train) elapsed time: 3284.4s
+04/26/2026 14:20:22 - INFO - Student 0(1468947) -   EP-0 train B7400: loss=23.996654510498047| (tn, fp, fn, tp)=[999726  22323  44863  27419] all_prf1=(0.551224, 0.379334, 0.449403) avg_loss=18.612518 all_acc=0.938605| process=3323.8s elapsed=3288.1s
+04/26/2026 14:20:22 - INFO - Student 1(1468948) -   EP-0 train B7400: loss=10.57722282409668| (tn, fp, fn, tp)=[1004673   22566   44842   27403] all_prf1=(0.548400, 0.379307, 0.448443) avg_loss=18.734439 all_acc=0.938691| process=3326.4s elapsed=3288.1s
+04/26/2026 14:20:36 - INFO - Student 0(1468947) -   Agents finished=23688 remaining=56 error=1160! EP-0 (train) elapsed time: 3302.2s
+04/26/2026 14:20:49 - INFO - Student 0(1468947) -   EP-0 train B7500: loss=15.908361434936523| (tn, fp, fn, tp)=[1013730   22692   45395   27898] all_prf1=(0.551453, 0.380637, 0.450393) avg_loss=18.604841 all_acc=0.938645| process=3350.3s elapsed=3314.3s
+04/26/2026 14:20:49 - INFO - Student 1(1468948) -   EP-0 train B7500: loss=15.275104522705078| (tn, fp, fn, tp)=[1018588   22909   45327   27904] all_prf1=(0.549151, 0.381041, 0.449905) avg_loss=18.703778 all_acc=0.938787| process=3352.9s elapsed=3314.3s
+04/26/2026 14:21:02 - INFO - Student 1(1468948) -   Agents finished=24176 remaining=1 error=1291! EP-0 (train) elapsed time: 3328.3s
+04/26/2026 14:21:15 - INFO - Student 1(1468948) -   EP-0 train B7600: loss=13.526745796203613| (tn, fp, fn, tp)=[1032073   23248   45845   28397] all_prf1=(0.549850, 0.382492, 0.451151) avg_loss=18.675176 all_acc=0.938832| process=3379.9s elapsed=3341.3s
+04/26/2026 14:21:15 - INFO - Student 0(1468947) -   EP-0 train B7600: loss=27.103050231933594| (tn, fp, fn, tp)=[1027352   23026   45895   28376] all_prf1=(0.552041, 0.382060, 0.451585) avg_loss=18.578137 all_acc=0.938718| process=3377.3s elapsed=3341.3s
+04/26/2026 14:21:20 - INFO - Student 0(1468947) -   EP-0 train SUMMARY: elapsed=3343.4s | avg_loss=18.622933 (tn, fp, fn, tp)=[2063240   46378   91874   56920] precision=0.551027 recall=0.382542 f1=0.451581 | total_cnt=15228success_cnt=45884 #states(expanded, reached, cut, dropped, complete)=(41.13, 99.86, 0.00, 4.34, 22.28) t(perf, process)=(8.74s, 8.83s) final_stage_cnt=45884 R@1=0.2191395693487926 R@3=0.41312875948042893 R@5=0.5169775956760526 R@10=0.6667247842385146
+04/26/2026 14:21:20 - INFO - Rank 0(1468947)|main -   EP-0 model saved at: /root/RL_table2charts/Results/Models/20260426132527-2el192fd128.128GRUh-allCharts-RL/states_ep0.pt
+04/26/2026 14:21:43 - INFO - Student 0(1468947) -   Agents finished=505 remaining=53 error=48! EP-0 (test/valid) elapsed time: 22.9s
+04/26/2026 14:21:43 - INFO - Student 1(1468948) -   Agents finished=500 remaining=58 error=47! EP-0 (test/valid) elapsed time: 23.5s
+04/26/2026 14:21:48 - INFO - Student 0(1468947) -   EP-0 test/valid B100: loss=105.1668472290039| (tn, fp, fn, tp)=[56437  2544  2878  2038] all_prf1=(0.444784, 0.414565, 0.429143) avg_loss=116.712726 all_acc=0.915145| process=28.7s elapsed=28.3s
+04/26/2026 14:21:48 - INFO - Student 1(1468948) -   EP-0 test/valid B100: loss=124.71355438232422| (tn, fp, fn, tp)=[58209  2491  2815  2011] all_prf1=(0.446690, 0.416701, 0.431175) avg_loss=113.509835 all_acc=0.919025| process=28.7s elapsed=28.4s
+04/26/2026 14:22:08 - INFO - Student 0(1468947) -   Agents finished=1006 remaining=55 error=97! EP-0 (test/valid) elapsed time: 47.7s
+04/26/2026 14:22:09 - INFO - Student 1(1468948) -   Agents finished=1004 remaining=55 error=87! EP-0 (test/valid) elapsed time: 48.8s
+04/26/2026 14:22:20 - INFO - Student 0(1468947) -   EP-0 test/valid B200: loss=89.25719451904297| (tn, fp, fn, tp)=[111531   5186   5562   4152] all_prf1=(0.444635, 0.427424, 0.435860) avg_loss=112.395687 all_acc=0.914989| process=61.1s elapsed=60.3s
+04/26/2026 14:22:20 - INFO - Student 1(1468948) -   EP-0 test/valid B200: loss=60.627132415771484| (tn, fp, fn, tp)=[119838   5298   5746   3996] all_prf1=(0.429955, 0.410183, 0.419836) avg_loss=115.976663 all_acc=0.918119| process=61.1s elapsed=60.4s
+04/26/2026 14:22:30 - INFO - Student 0(1468947) -   Agents finished=1510 remaining=53 error=117! EP-0 (test/valid) elapsed time: 70.5s
+04/26/2026 14:22:33 - INFO - Student 1(1468948) -   Agents finished=1505 remaining=58 error=104! EP-0 (test/valid) elapsed time: 73.4s
+04/26/2026 14:22:49 - INFO - Student 1(1468948) -   EP-0 test/valid B300: loss=89.114013671875| (tn, fp, fn, tp)=[173757   7710   8187   6556] all_prf1=(0.459554, 0.444686, 0.451998) avg_loss=109.305287 all_acc=0.918980| process=90.8s elapsed=89.7s
+04/26/2026 14:22:49 - INFO - Student 0(1468947) -   EP-0 test/valid B300: loss=118.74282836914062| (tn, fp, fn, tp)=[162455   7271   7943   6980] all_prf1=(0.489790, 0.467734, 0.478508) avg_loss=105.453019 all_acc=0.917606| process=90.9s elapsed=89.6s
+04/26/2026 14:22:54 - INFO - Student 0(1468947) -   Agents finished=2011 remaining=57 error=134! EP-0 (test/valid) elapsed time: 94.1s
+04/26/2026 14:22:57 - INFO - Student 1(1468948) -   Agents finished=2008 remaining=57 error=114! EP-0 (test/valid) elapsed time: 96.9s
+04/26/2026 14:23:19 - INFO - Student 0(1468947) -   EP-0 test/valid B400: loss=93.46411895751953| (tn, fp, fn, tp)=[214525   9529  10410   9726] all_prf1=(0.505116, 0.483015, 0.493818) avg_loss=102.812417 all_acc=0.918346| process=121.3s elapsed=119.7s
+04/26/2026 14:23:19 - INFO - Student 1(1468948) -   EP-0 test/valid B400: loss=90.5480728149414| (tn, fp, fn, tp)=[225651  10159  10560   9117] all_prf1=(0.472972, 0.463333, 0.468103) avg_loss=105.748714 all_acc=0.918904| process=121.3s elapsed=119.8s
+04/26/2026 14:23:19 - INFO - Student 0(1468947) -   Agents finished=2511 remaining=63 error=150! EP-0 (test/valid) elapsed time: 119.3s
+04/26/2026 14:23:21 - INFO - Student 1(1468948) -   Agents finished=2511 remaining=56 error=126! EP-0 (test/valid) elapsed time: 120.9s
+04/26/2026 14:23:42 - INFO - Student 0(1468947) -   Agents finished=3015 remaining=58 error=166! EP-0 (test/valid) elapsed time: 142.2s
+04/26/2026 14:23:45 - INFO - Student 1(1468948) -   Agents finished=3012 remaining=55 error=154! EP-0 (test/valid) elapsed time: 144.8s
+04/26/2026 14:23:49 - INFO - Student 0(1468947) -   EP-0 test/valid B500: loss=87.99713897705078| (tn, fp, fn, tp)=[262633  11641  12679  12243] all_prf1=(0.512603, 0.491253, 0.501701) avg_loss=99.724606 all_acc=0.918715| process=151.2s elapsed=149.2s
+04/26/2026 14:23:49 - INFO - Student 1(1468948) -   EP-0 test/valid B500: loss=147.27183532714844| (tn, fp, fn, tp)=[277128  12533  13067  11256] all_prf1=(0.473160, 0.462772, 0.467908) avg_loss=103.865250 all_acc=0.918467| process=151.2s elapsed=149.4s
+04/26/2026 14:24:00 - INFO - Rank 1(1468948)|main -   Finished!
+04/26/2026 14:24:00 - INFO - Student 0(1468947) -   EP-0 test/valid SUMMARY: elapsed=160.4s | avg_loss=98.892963 (tn, fp, fn, tp)=[575131  25493  27224  25009] precision=0.495208 recall=0.478797 f1=0.486864 | total_cnt=1088success_cnt=6431 #states(expanded, reached, cut, dropped, complete)=(41.28, 105.52, 0.00, 4.94, 23.61) t(perf, process)=(3.06s, 3.10s) final_stage_cnt=6431 R@1=0.42248483906079926 R@3=0.7179287824599596 R@5=0.8017415642979319 R@10=0.887731301508319
+04/26/2026 14:24:00 - INFO - Rank 0(1468947)|main -   Finished!
+resolved_train_command=python -m torch.distributed.launch --nproc_per_node 2 --master_port 29641 script.py --corpus_path /root/RL_table2charts/Data/PlotlyTable2Charts --model_size=small --model_name=cp --features=all-fast --negative_weight=0.8 --search_limits=e50-b4-na --epochs=1 -m /root/RL_table2charts/Results/Models -p /root/RL_table2charts/Results/Models/sft_states_ep0.pt --summary_path /root/RL_table2charts/Results/summary --search_type allCharts --input_type allCharts --previous_type allCharts --lang=en --queue_mode=local --log_freq_agent=500 --log_freq_batch=100 --max_tables=64 --min_memory=1000 --memory_sample_size=64 --memory_sample_rounds=2
+discovered_rl_dir=/root/RL_table2charts/Results/Models/20260426132527-2el192fd128.128GRUh-allCharts-RL
+discovered_rl_ckpt=/root/RL_table2charts/Results/Models/20260426132527-2el192fd128.128GRUh-allCharts-RL/states_ep0.pt
+04/26/2026 14:24:04 - INFO - test() -   Test Args: Namespace(empirical_study=False, empirical_corpus_path='/home/exp/pivot-clean-data/', empirical_log_path='/home/exp/empirical_result', corpus_path='/root/RL_table2charts/Data/PlotlyTable2Charts', lang='en', model_name='cp', model_dir_path='/root/RL_table2charts/Results/Models/20260426132527-2el192fd128.128GRUh-allCharts-RL', model_file='states_ep0.pt', log_save_path='evaluations/test-baseline_rl_greedy_train_eval-20260426T052504Z', model_size='small', features='all-fast', search_type='allCharts', test_type=None, input_type='allCharts', previous_type='allCharts', limit_search_group=True, mode=None, log_freq_agent=100, use_valid_set=False, test_whole_plotly=False, web_table=False, unified_ana_token=False, search_algo='drill_down', nprocs=2, nagents=64, nthreads=5, search_limits='e50-b4-na', add_sep_to_dim=False, force_keep_empty_dim=False, test_field_selections=False, test_design_choices=False)
+04/26/2026 14:24:04 - INFO - test() -   DataConfig: {'corpus_path': '/root/RL_table2charts/Data/PlotlyTable2Charts', 'encoding': 'utf-8-sig', 'lang': 'en', 'english_only': True, 'max_field_num': 128, 'max_val_num': 4, 'max_dim_num': 4, 'need_field_indices': True, 'field_permutation': False, 'unified_ana_token': False, 'allow_multiple_values': True, 'limit_search_group': True, 'use_field_type': True, 'use_field_role': True, 'use_binary_tags': True, 'use_data_features': True, 'use_semantic_embeds': True, 'load_at_most': None, 'num_train_analysis': None, 'embed_model': 'fasttext', 'embed_len': 50, 'embed_in_json': True, 'embed_layer': '0', 'embed_reduce_type': 'mean', 'data_len': 31, 'data_cleanup_fn': <function cleanup_data_features_nn at 0x75e5a32a8f70>, 'train_ratio': 0.7, 'valid_ratio': 0.1, 'test_ratio': 0.2, 'empirical_study': False, 'cat_nums': [5, 3, 3, 3, 3, 3, 3, 3], 'search_all_types': True, 'search_types': [<AnaType.LineChart: 1>, <AnaType.BarChart: 2>, <AnaType.ScatterChart: 3>, <AnaType.PieChart: 4>], 'model_types': [<AnaType.LineChart: 1>, <AnaType.BarChart: 2>, <AnaType.ScatterChart: 3>, <AnaType.PieChart: 4>], 'input_types': [<AnaType.LineChart: 1>, <AnaType.BarChart: 2>, <AnaType.ScatterChart: 3>, <AnaType.PieChart: 4>], 'consider_grouping_operations': True, 'top_freq_func': 0, 'cat_len': 8, 'empty_embed': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'empty_cat': [0, 0, 0, 0, 0, 0, 0, 0], 'empty_data': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'num_permute_samples': [0, 1, 2, 4, 8]}
+04/26/2026 14:24:04 - INFO - test() -   CPConfig: {'encoder_layers': 2, 'decoder_layers': 1, 'num_cmd_tokens': 3, 'encoder_GRU_hidden': 128, 'decoder_GRU_hidden': 128, 'feature_dim': 192, 'decoder_hidden_size': 192, 'embed_len': 50, 'data_len': 31, 'cat_len': 8, 'positional': False, 'num_token_type': 14, 'num_segment_type': 9, 'num_categories': [5, 3, 3, 3, 3, 3, 3, 3], 'hidden': 192, 'dropout': 0.1}
+04/26/2026 14:24:04 - INFO - test() -   SearchConfig: {'load_ground_truth': True, 'search_all_types': True, 'search_single_type': None, 'test_field_selections': False, 'test_design_choices': False, 'max_rc': (1000, 1000), 'expand_limit': 50, 'time_limit': inf, 'dim_count': 600, 'com_count': 1100, 'frontier_size': 300, 'beam_size': 4, 'min_threshold': 0.0, 'log_path': None}
+04/26/2026 14:24:04 - INFO - test() -   Loading index...
+04/26/2026 14:24:11 - INFO - Index init() -   Total schemas is 72939
+04/26/2026 14:24:11 - INFO - Index init() -   file filtered by language: 0
+04/26/2026 14:24:11 - INFO - Index init() -   file filtered by openfile: 0
+04/26/2026 14:24:11 - INFO - Index init() -   table filtered by no embedding: 0
+04/26/2026 14:24:11 - INFO - Index init() -   table filtered by too many fields: 0
+04/26/2026 14:24:11 - INFO - Index init() -   table filtered by no valid analysis: 3902
+04/26/2026 14:24:11 - INFO - Index init() -   chart filtered by no valnum: 0
+04/26/2026 14:24:11 - INFO - Index init() -   chart filtered by too many values: 4484
+04/26/2026 14:24:11 - INFO - Index init() -   pivot filtered by too many dimensions: 0
+04/26/2026 14:24:11 - INFO - Index init() -   Total tables is 69037
+04/26/2026 14:24:11 - INFO - Index init() -   Total charts is 104635
+04/26/2026 14:24:11 - INFO - Index init() -   Total pivot tables is 0
+04/26/2026 14:24:11 - INFO - test() -   Testing 13893 files from /root/RL_table2charts/Data/PlotlyTable2Charts/index/schema_ids.json
+04/26/2026 14:24:11 - INFO - summary(@1538111) -   Start to summarize info.
+04/26/2026 14:24:13 - INFO - model config() -   CopyNetConfig: {'encoder_layers': 2, 'decoder_layers': 1, 'num_cmd_tokens': 3, 'encoder_GRU_hidden': 128, 'decoder_GRU_hidden': 128, 'feature_dim': 192, 'decoder_hidden_size': 192, 'embed_len': 50, 'data_len': 31, 'cat_len': 8, 'positional': False, 'num_token_type': 14, 'num_segment_type': 9, 'num_categories': [5, 3, 3, 3, 3, 3, 3, 3], 'hidden': 192, 'dropout': 0.1}
+04/26/2026 14:24:13 - INFO - model config() -   CopyNetConfig: {'encoder_layers': 2, 'decoder_layers': 1, 'num_cmd_tokens': 3, 'encoder_GRU_hidden': 128, 'decoder_GRU_hidden': 128, 'feature_dim': 192, 'decoder_hidden_size': 192, 'embed_len': 50, 'data_len': 31, 'cat_len': 8, 'positional': False, 'num_token_type': 14, 'num_segment_type': 9, 'num_categories': [5, 3, 3, 3, 3, 3, 3, 3], 'hidden': 192, 'dropout': 0.1}
+04/26/2026 14:24:13 - INFO - process_parallel (0@1538308) -   Start to search on 0.
+04/26/2026 14:24:13 - INFO - process_parallel (1@1538309) -   Start to search on 1.
+/root/RL_table2charts/Table2Charts/data/sequence.py:146: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at ../torch/csrc/utils/tensor_new.cpp:275.)
+  "data_characters": 0 if len(config.empty_data) == 0 else torch.tensor(append_padding(
+/root/RL_table2charts/Table2Charts/data/sequence.py:146: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at ../torch/csrc/utils/tensor_new.cpp:275.)
+  "data_characters": 0 if len(config.empty_data) == 0 else torch.tensor(append_padding(
+04/26/2026 14:24:17 - INFO - summary(@1538111) -   100th done. 6.0s passed.
+04/26/2026 14:24:20 - INFO - summary(@1538111) -   200th done. 8.7s passed.
+04/26/2026 14:24:22 - INFO - summary(@1538111) -   300th done. 10.7s passed.
+04/26/2026 14:24:24 - INFO - summary(@1538111) -   400th done. 12.7s passed.
+04/26/2026 14:24:26 - INFO - summary(@1538111) -   500th done. 15.2s passed.
+04/26/2026 14:24:28 - INFO - summary(@1538111) -   600th done. 17.4s passed.
+04/26/2026 14:24:30 - INFO - summary(@1538111) -   700th done. 19.4s passed.
+04/26/2026 14:24:33 - INFO - summary(@1538111) -   800th done. 21.5s passed.
+04/26/2026 14:24:35 - INFO - summary(@1538111) -   900th done. 24.0s passed.
+04/26/2026 14:24:37 - INFO - summary(@1538111) -   1000th done. 26.0s passed.
+04/26/2026 14:24:39 - INFO - summary(@1538111) -   1100th done. 28.1s passed.
+04/26/2026 14:24:41 - INFO - summary(@1538111) -   1200th done. 30.3s passed.
+04/26/2026 14:24:44 - INFO - summary(@1538111) -   1300th done. 32.7s passed.
+04/26/2026 14:24:46 - INFO - summary(@1538111) -   1400th done. 34.6s passed.
+04/26/2026 14:24:48 - INFO - summary(@1538111) -   1500th done. 36.7s passed.
+04/26/2026 14:24:50 - INFO - summary(@1538111) -   1600th done. 39.1s passed.
+04/26/2026 14:24:53 - INFO - summary(@1538111) -   1700th done. 41.8s passed.
+04/26/2026 14:24:55 - INFO - summary(@1538111) -   1800th done. 44.2s passed.
+04/26/2026 14:24:57 - INFO - summary(@1538111) -   1900th done. 46.4s passed.
+04/26/2026 14:25:00 - INFO - summary(@1538111) -   2000th done. 48.7s passed.
+04/26/2026 14:25:02 - INFO - summary(@1538111) -   2100th done. 51.2s passed.
+04/26/2026 14:25:05 - INFO - summary(@1538111) -   2200th done. 53.9s passed.
+04/26/2026 14:25:07 - INFO - summary(@1538111) -   2300th done. 56.0s passed.
+04/26/2026 14:25:09 - INFO - summary(@1538111) -   2400th done. 58.1s passed.
+04/26/2026 14:25:11 - INFO - summary(@1538111) -   2500th done. 60.1s passed.
+04/26/2026 14:25:13 - INFO - summary(@1538111) -   2600th done. 62.3s passed.
+04/26/2026 14:25:16 - INFO - summary(@1538111) -   2700th done. 64.5s passed.
+04/26/2026 14:25:18 - INFO - summary(@1538111) -   2800th done. 66.9s passed.
+04/26/2026 14:25:20 - INFO - summary(@1538111) -   2900th done. 69.2s passed.
+04/26/2026 14:25:22 - INFO - summary(@1538111) -   3000th done. 71.2s passed.
+04/26/2026 14:25:25 - INFO - summary(@1538111) -   3100th done. 73.9s passed.
+04/26/2026 14:25:27 - INFO - summary(@1538111) -   3200th done. 75.9s passed.
+04/26/2026 14:25:29 - INFO - summary(@1538111) -   3300th done. 78.0s passed.
+04/26/2026 14:25:32 - INFO - summary(@1538111) -   3400th done. 80.5s passed.
+04/26/2026 14:25:34 - INFO - summary(@1538111) -   3500th done. 83.1s passed.
+04/26/2026 14:25:37 - INFO - summary(@1538111) -   3600th done. 85.6s passed.
+04/26/2026 14:25:39 - INFO - summary(@1538111) -   3700th done. 88.0s passed.
+04/26/2026 14:25:41 - INFO - summary(@1538111) -   3800th done. 90.3s passed.
+04/26/2026 14:25:43 - INFO - summary(@1538111) -   3900th done. 92.4s passed.
+04/26/2026 14:25:46 - INFO - summary(@1538111) -   4000th done. 94.9s passed.
+04/26/2026 14:25:48 - INFO - summary(@1538111) -   4100th done. 97.3s passed.
+04/26/2026 14:25:51 - INFO - summary(@1538111) -   4200th done. 99.6s passed.
+04/26/2026 14:25:53 - INFO - summary(@1538111) -   4300th done. 101.6s passed.
+04/26/2026 14:25:55 - INFO - summary(@1538111) -   4400th done. 103.8s passed.
+04/26/2026 14:25:57 - INFO - summary(@1538111) -   4500th done. 106.0s passed.
+04/26/2026 14:25:59 - INFO - summary(@1538111) -   4600th done. 108.4s passed.
+04/26/2026 14:26:02 - INFO - summary(@1538111) -   4700th done. 110.8s passed.
+04/26/2026 14:26:03 - INFO - summary(@1538111) -   4800th done. 112.4s passed.
+04/26/2026 14:26:06 - INFO - summary(@1538111) -   4900th done. 114.7s passed.
+04/26/2026 14:26:08 - INFO - summary(@1538111) -   5000th done. 117.2s passed.
+04/26/2026 14:26:11 - INFO - summary(@1538111) -   5100th done. 119.5s passed.
+04/26/2026 14:26:13 - INFO - summary(@1538111) -   5200th done. 121.9s passed.
+04/26/2026 14:26:15 - INFO - summary(@1538111) -   5300th done. 124.3s passed.
+04/26/2026 14:26:18 - INFO - summary(@1538111) -   5400th done. 126.8s passed.
+04/26/2026 14:26:20 - INFO - summary(@1538111) -   5500th done. 128.9s passed.
+04/26/2026 14:26:22 - INFO - summary(@1538111) -   5600th done. 130.8s passed.
+04/26/2026 14:26:24 - INFO - summary(@1538111) -   5700th done. 132.9s passed.
+04/26/2026 14:26:26 - INFO - summary(@1538111) -   5800th done. 135.0s passed.
+04/26/2026 14:26:28 - INFO - summary(@1538111) -   5900th done. 137.2s passed.
+04/26/2026 14:26:31 - INFO - summary(@1538111) -   6000th done. 139.5s passed.
+04/26/2026 14:26:33 - INFO - summary(@1538111) -   6100th done. 142.0s passed.
+04/26/2026 14:26:35 - INFO - summary(@1538111) -   6200th done. 143.8s passed.
+04/26/2026 14:26:37 - INFO - summary(@1538111) -   6300th done. 146.0s passed.
+04/26/2026 14:26:40 - INFO - summary(@1538111) -   6400th done. 148.7s passed.
+04/26/2026 14:26:42 - INFO - summary(@1538111) -   6500th done. 150.8s passed.
+04/26/2026 14:26:45 - INFO - summary(@1538111) -   6600th done. 153.5s passed.
+04/26/2026 14:26:47 - INFO - summary(@1538111) -   6700th done. 156.2s passed.
+04/26/2026 14:26:50 - INFO - summary(@1538111) -   6800th done. 159.0s passed.
+04/26/2026 14:26:53 - INFO - summary(@1538111) -   6900th done. 161.6s passed.
+04/26/2026 14:26:55 - INFO - summary(@1538111) -   7000th done. 164.0s passed.
+04/26/2026 14:26:57 - INFO - summary(@1538111) -   7100th done. 166.3s passed.
+04/26/2026 14:26:59 - INFO - summary(@1538111) -   7200th done. 168.5s passed.
+04/26/2026 14:27:02 - INFO - summary(@1538111) -   7300th done. 170.6s passed.
+04/26/2026 14:27:04 - INFO - summary(@1538111) -   7400th done. 173.2s passed.
+04/26/2026 14:27:07 - INFO - summary(@1538111) -   7500th done. 175.5s passed.
+04/26/2026 14:27:09 - INFO - summary(@1538111) -   7600th done. 178.1s passed.
+04/26/2026 14:27:11 - INFO - summary(@1538111) -   7700th done. 180.2s passed.
+04/26/2026 14:27:13 - INFO - summary(@1538111) -   7800th done. 182.3s passed.
+04/26/2026 14:27:16 - INFO - summary(@1538111) -   7900th done. 184.8s passed.
+04/26/2026 14:27:18 - INFO - summary(@1538111) -   8000th done. 186.9s passed.
+04/26/2026 14:27:21 - INFO - summary(@1538111) -   8100th done. 189.6s passed.
+04/26/2026 14:27:23 - INFO - summary(@1538111) -   8200th done. 191.9s passed.
+04/26/2026 14:27:25 - INFO - summary(@1538111) -   8300th done. 194.3s passed.
+04/26/2026 14:27:28 - INFO - summary(@1538111) -   8400th done. 196.8s passed.
+04/26/2026 14:27:30 - INFO - summary(@1538111) -   8500th done. 199.1s passed.
+04/26/2026 14:27:33 - INFO - summary(@1538111) -   8600th done. 201.6s passed.
+04/26/2026 14:27:35 - INFO - summary(@1538111) -   8700th done. 203.5s passed.
+04/26/2026 14:27:37 - INFO - summary(@1538111) -   8800th done. 206.1s passed.
+04/26/2026 14:27:40 - INFO - summary(@1538111) -   8900th done. 208.5s passed.
+04/26/2026 14:27:42 - INFO - summary(@1538111) -   9000th done. 210.8s passed.
+04/26/2026 14:27:44 - INFO - summary(@1538111) -   9100th done. 212.8s passed.
+04/26/2026 14:27:46 - INFO - summary(@1538111) -   9200th done. 215.2s passed.
+04/26/2026 14:27:49 - INFO - summary(@1538111) -   9300th done. 217.9s passed.
+04/26/2026 14:27:51 - INFO - summary(@1538111) -   9400th done. 220.1s passed.
+04/26/2026 14:27:53 - INFO - summary(@1538111) -   9500th done. 222.3s passed.
+04/26/2026 14:27:56 - INFO - summary(@1538111) -   9600th done. 224.7s passed.
+04/26/2026 14:27:58 - INFO - summary(@1538111) -   9700th done. 227.1s passed.
+04/26/2026 14:28:01 - INFO - summary(@1538111) -   9800th done. 229.6s passed.
+04/26/2026 14:28:03 - INFO - summary(@1538111) -   9900th done. 232.0s passed.
+04/26/2026 14:28:06 - INFO - summary(@1538111) -   10000th done. 234.6s passed.
+04/26/2026 14:28:08 - INFO - summary(@1538111) -   10100th done. 236.6s passed.
+04/26/2026 14:28:10 - INFO - summary(@1538111) -   10200th done. 239.2s passed.
+04/26/2026 14:28:12 - INFO - summary(@1538111) -   10300th done. 241.4s passed.
+04/26/2026 14:28:15 - INFO - summary(@1538111) -   10400th done. 244.2s passed.
+04/26/2026 14:28:18 - INFO - summary(@1538111) -   10500th done. 246.7s passed.
+04/26/2026 14:28:20 - INFO - summary(@1538111) -   10600th done. 249.2s passed.
+04/26/2026 14:28:22 - INFO - summary(@1538111) -   10700th done. 251.3s passed.
+04/26/2026 14:28:25 - INFO - summary(@1538111) -   10800th done. 253.6s passed.
+04/26/2026 14:28:27 - INFO - summary(@1538111) -   10900th done. 256.0s passed.
+04/26/2026 14:28:29 - INFO - summary(@1538111) -   11000th done. 258.3s passed.
+04/26/2026 14:28:32 - INFO - summary(@1538111) -   11100th done. 260.5s passed.
+04/26/2026 14:28:34 - INFO - summary(@1538111) -   11200th done. 262.8s passed.
+04/26/2026 14:28:36 - INFO - summary(@1538111) -   11300th done. 265.1s passed.
+04/26/2026 14:28:38 - INFO - summary(@1538111) -   11400th done. 267.3s passed.
+04/26/2026 14:28:41 - INFO - summary(@1538111) -   11500th done. 269.8s passed.
+04/26/2026 14:28:43 - INFO - summary(@1538111) -   11600th done. 272.1s passed.
+04/26/2026 14:28:45 - INFO - summary(@1538111) -   11700th done. 274.2s passed.
+04/26/2026 14:28:48 - INFO - summary(@1538111) -   11800th done. 276.7s passed.
+04/26/2026 14:28:50 - INFO - summary(@1538111) -   11900th done. 279.0s passed.
+04/26/2026 14:28:52 - INFO - summary(@1538111) -   12000th done. 281.3s passed.
+04/26/2026 14:28:54 - INFO - summary(@1538111) -   12100th done. 283.4s passed.
+04/26/2026 14:28:57 - INFO - summary(@1538111) -   12200th done. 285.6s passed.
+04/26/2026 14:28:59 - INFO - summary(@1538111) -   12300th done. 287.7s passed.
+04/26/2026 14:29:01 - INFO - summary(@1538111) -   12400th done. 289.6s passed.
+04/26/2026 14:29:03 - INFO - summary(@1538111) -   12500th done. 291.6s passed.
+04/26/2026 14:29:05 - INFO - summary(@1538111) -   12600th done. 293.9s passed.
+04/26/2026 14:29:07 - INFO - summary(@1538111) -   12700th done. 296.1s passed.
+04/26/2026 14:29:09 - INFO - summary(@1538111) -   12800th done. 298.3s passed.
+04/26/2026 14:29:12 - INFO - summary(@1538111) -   12900th done. 300.7s passed.
+04/26/2026 14:29:42 - INFO - process_parallel (1@1538309) -   Finish 6863. 329.4s passed.
+04/26/2026 14:29:42 - INFO - process_parallel (0@1538308) -   Finish 7030. 329.6s passed.
+04/26/2026 14:29:44 - INFO - summary(@1538111) -   Finish summarize 12946 info into /root/RL_table2charts/Results/Models/20260426132527-2el192fd128.128GRUh-allCharts-RL/evaluations/test-baseline_rl_greedy_train_eval-20260426T052504Z/[test-summary]20260426T1424.log. 332.5s passed.
+04/26/2026 14:29:44 - INFO - summary(@1538111) -   Complete recall info: {'recall': {'@03': 0.759771357948401, '@01': 0.4005870539162676, '@05': 0.8312219990730728, '@10': 0.9093928626602812, 'all': 0.9519542715896802, '@20': 0.9507956125444152}, 'first_rank': '2.93*12324', 'reached': 21.040707554456976, 'targets': 2.396647613162367, 'top': [1, 3, 5, 10, 20], 't_cnt': 12946}
+04/26/2026 14:29:44 - INFO - test() -   Test finished!
+discovered_eval_summary=/root/RL_table2charts/Results/Models/20260426132527-2el192fd128.128GRUh-allCharts-RL/evaluations/test-baseline_rl_greedy_train_eval-20260426T052504Z/[test-summary]20260426T1424.log

@@ -150,8 +150,10 @@ Data/Data2VisRaw/
 Data/Data2VisTable2Charts/
 Data/MiniTrain/
 Data/PlotlyTable2Charts/
+Data/PlotlyTable2Charts_smoke/
 Data/PlotlyTable2ChartsSmoke/
 Data/PlotlyTable2ChartsSmokeFast/
+Data/raw_data_all.csv
 
 # Third-party baseline clones / duplicated external repositories
 Baselines/VizML/
@@ -163,6 +165,16 @@ vizml/
 
 # Model checkpoints and evaluation folders can be very large.
 Results/Models/
+!Results/Models/
+Results/Models/*
+!Results/Models/sft_states_ep0.pt
+!Results/Models/*/
+Results/Models/*/*
+!Results/Models/*/evaluations/
+Results/Models/*/evaluations/*
+!Results/Models/*/evaluations/test-*/
+Results/Models/*/evaluations/test-*/*
+!Results/Models/*/evaluations/test-*/[[]test-summary]*.log
 
 # TensorBoard event files and generated summaries.
 Results/summary/
@@ -172,3 +184,8 @@ Results/summary/
 Results/run_logs/*
 !Results/run_logs/
 !Results/run_logs/*.sh
+
+# Track experiment raw logs under experiments/results/raw_logs
+!experiments/results/raw_logs/
+!experiments/results/raw_logs/**
+experiments/results/raw_logs/reward_intensity_20260426T021230Z.log

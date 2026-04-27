@@ -51,6 +51,8 @@ def parse_args():
     parser.add_argument('-f', '--model_file', type=str, metavar='FILENAME')
     parser.add_argument('-l', '--log_save_path', default="evaluations/test", type=str, metavar='PATH',
                         help='subdir path of model_dir_path to log the evaluation metrics during testing')
+    parser.add_argument('--recommend_log_path', type=str, default=None, metavar='PATH',
+                        help='optional directory for per-table ranked recommendation JSON logs')
 
     # Experiment settings
     parser.add_argument('--model_size', choices=DEFAULT_MODEL_SIZES, required=True, type=str)
@@ -104,6 +106,10 @@ def parse_args():
                         help='set this flag if we only want to test field selection')
     parser.add_argument('--test_design_choices', action='store_true',
                         help='set this flag if we only want to test charting (visualization)')
+    parser.add_argument('--score_mode', choices=['actor', 'critic', 'blend'], default='actor',
+                        help='Scoring source for eval-only actor-critic diagnostics.')
+    parser.add_argument('--critic_score_weight', default=0.5, type=float,
+                        help='Blend weight for critic scores when --score_mode=blend.')
 
     return parser.parse_args()
 
@@ -114,6 +120,8 @@ def construct_data_config(args) -> DataConfig:
                                   args.unified_ana_token, None, False, lang=args.lang,
                                   empirical_study=args.empirical_study, mode=args.mode,
                                   limit_search_group=args.limit_search_group)
+    data_config.score_mode = args.score_mode
+    data_config.critic_score_weight = args.critic_score_weight
     if args.model_name == "cp":
         data_config.need_field_indices = True
     if args.empirical_study:
@@ -125,11 +133,14 @@ def construct_data_config(args) -> DataConfig:
 
 def construct_search_config(args, data_config) -> SearchConfig:
     load_ground_truth = False if args.web_table or getattr(args, "inline_table_inference", False) else True
+    recommend_log_path = args.recommend_log_path
+    if recommend_log_path is None and (args.empirical_study or args.web_table):
+        recommend_log_path = args.empirical_log_path
     search_config = get_search_config(load_ground_truth, args.search_limits,
                                       search_all_types=data_config.search_all_types,
                                       search_single_type=AnaType.from_raw_str(args.test_type)
                                       if args.test_type is not None else None,
-                                      log_path=args.empirical_log_path if args.empirical_study or args.web_table else None,
+                                      log_path=recommend_log_path,
                                       test_field_selections=args.test_field_selections,
                                       test_design_choices=args.test_design_choices)
     # TODO: args.log_save_path currently not used
@@ -173,8 +184,18 @@ def feed_batch_nn(samples: List[QValue], model: torch.nn.Module, device: str, co
         del data["values"]  # Not useful in evaluation
         data = to_device(data, device)
         output = model(data["state"], data["actions"])
-        return output["actor_logits"].masked_fill(torch.logical_not(data["actions"]["mask"].bool()), -1e9) \
-            .softmax(dim=-1).cpu()
+        valid_mask = data["actions"]["mask"].bool()
+        actor_scores = output["actor_logits"].masked_fill(torch.logical_not(valid_mask), -1e9).softmax(dim=-1)
+        critic_scores = output["critic_log_probs"][:, :, 1].exp()
+
+        if config.score_mode == 'actor':
+            scores = actor_scores
+        elif config.score_mode == 'critic':
+            scores = critic_scores
+        else:
+            scores = config.critic_score_weight * critic_scores + (1.0 - config.critic_score_weight) * actor_scores
+
+        return scores.masked_fill(torch.logical_not(valid_mask), -1e9).cpu()
 
 
 def process_parallel(index, device_count, special_tokens: SpecialTokens,

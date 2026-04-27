@@ -1,0 +1,311 @@
+# Reward Intensity Interaction Runbook
+
+## Scope
+
+This runbook prepares the reward-intensity × sampling interaction stage on the Plotly-only Table2Charts setup.
+
+Fixed experiment settings:
+
+- `CORPUS_PATH=$ROOT/Data/PlotlyTable2Charts`
+- `SFT_CKPT=$ROOT/Results/Models/sft_states_ep0.pt`
+- `search_limits=e50-b4-na`
+- `model_size=small`
+- `features=all-fast`
+- `search_type=input_type=previous_type=allCharts`
+- `limit_search_group=true`
+- current remote machine target: `2 GPUs`
+- `RL_NPROCS=2`
+- `EVAL_NPROCS=2`
+
+## Why The Old 2x2 Was Too Coarse
+
+The previous coarse framing mostly tested reward on/off against sampling on/off. That was useful as a first pass, but it does not isolate whether the interaction appears only when dense reward becomes stronger.
+
+The new question is more specific:
+
+- do epsilon exploration and denser reward shaping interfere because both encourage near-positive or intermediate actions?
+
+That requires comparing multiple reward intensities, not just hard vs one soft setting.
+
+## Reward Intensity × Sampling Matrix
+
+Core matrix:
+
+1. `hard reward + greedy`
+2. `hard reward + epsilon=0.20`
+3. `conservative soft reward + greedy`
+4. `conservative soft reward + epsilon=0.20`
+5. `current soft reward + greedy`
+6. `current soft reward + epsilon=0.20`
+
+Optional extra matrix:
+
+7. `aggressive soft reward + greedy`
+8. `aggressive soft reward + epsilon=0.20`
+
+## Reward Parameter Design
+
+The reward-intensity experiment changes the strength of dense intermediate
+rewards while keeping the exact-match reward, default reward, and positive
+classification threshold fixed.
+
+The hard-reward baseline is the original sparse/baseline reward:
+
+| setting | config family | reward mode | exact reward | default reward | same-token reward | field reward | same-field-type reward | positive threshold |
+| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| hard | `baseline_rl_greedy_train_eval`, epsilon baseline | `baseline` | code default | code default | not used | not used | not used | code default |
+| conservative | `reward_conservative_*` | `soft_reward` | `0.95` | `0.05` | `0.07` | `0.10` | `0.20` | `0.50` |
+| current | `reward_current_*` | `soft_reward` | `0.95` | `0.05` | `0.10` | `0.15` | `0.35` | `0.50` |
+| aggressive | `reward_aggressive_*` | `soft_reward` | `0.95` | `0.05` | `0.15` | `0.25` | `0.50` | `0.50` |
+
+Interpretation:
+
+- `exact_reward`: reward for an exact positive action match.
+- `default_reward`: fallback reward for ordinary non-matching actions.
+- `same_token_reward`: small reward for matching the command/token family.
+- `field_reward`: intermediate reward for matching the field.
+- `same_field_type_reward`: stronger partial reward for matching a compatible field type.
+- `positive_threshold`: threshold used by the reward-update training objective when turning shaped rewards into positive/negative labels.
+
+Only the partial-credit terms increase across the three soft-reward levels:
+
+```text
+conservative: same_token=0.07, field=0.10, same_field_type=0.20
+current:      same_token=0.10, field=0.15, same_field_type=0.35
+aggressive:   same_token=0.15, field=0.25, same_field_type=0.50
+```
+
+For each soft-reward level, there are two sampling variants:
+
+| sampling label | config suffix | strategy | epsilon start | epsilon end | epsilon decay | top-M |
+| --- | --- | --- | ---: | ---: | ---: | ---: |
+| greedy | `_greedy` | `greedy` | not used | not used | not used | not used |
+| epsilon | `_epsilon` | `epsilon_top_m` | `0.20` | `0.02` | `0.80` | `5` |
+
+This design isolates two effects:
+
+- reward intensity: hard vs conservative vs current vs aggressive;
+- sampling interaction: greedy vs the same epsilon-top-5 exploration schedule.
+
+## Existing Relevant Results
+
+Completed:
+
+- hard reward + epsilon=0.20:
+  [final_eval_epsilon_sweep_20260425.csv](/home/lyl610/RL_table2charts/experiments/results/final_eval_epsilon_sweep_20260425.csv)
+
+Represented by config but not automatically counted as completed on the regenerated corpus:
+
+- hard reward + greedy:
+  `experiments/configs/baseline_rl_greedy_train_eval.json`
+
+This should be treated as **needs to run** unless a matching regenerated-corpus final evaluation result is present.
+The dedicated one-command helper for this case is:
+
+- `experiments/scripts/run_remote_hard_greedy.sh`
+
+The reward helper had the same historical pipeline gap as the epsilon helper: older training runs could stop after RL training and leave only training-time `EP-0 test/valid SUMMARY` lines. Those summaries are provisional only. Formal report metrics must come from `test_agent_mp.py` `[test-summary]` logs.
+
+Formal final-eval file now exists for the four completed soft-reward runs, but the report source of truth is now defined more strictly:
+
+- [final_eval_reward_intensity_20260425.csv](/home/lyl610/RL_table2charts/experiments/results/final_eval_reward_intensity_20260425.csv)
+
+The earlier reward `[test-summary]` files existed before helper auto-eval was added. They are formal test logs, but they do not prove the old helper was complete. For that reason:
+
+- [final_eval_reward_intensity_pre_helper_20260425.csv](/home/lyl610/RL_table2charts/experiments/results/final_eval_reward_intensity_pre_helper_20260425.csv) preserves the pre-helper-fix reward final-eval rows for audit purposes only
+- [reward_intensity_rerun_manifest_20260425.csv](/home/lyl610/RL_table2charts/experiments/results/reward_intensity_rerun_manifest_20260425.csv) is the rerun manifest used to rebuild the report-facing reward final-eval CSV from authoritative rerun logs only
+
+The current operator decision is:
+
+- full rerun with the current helper-managed `train -> discover RL dir -> test_agent_mp.py` pipeline is the report source of truth
+- pre-helper-fix reward final-eval artifacts remain in the repo as history, not as the preferred report source
+- the helper now updates the rerun manifest and refreshes the formal reward final-eval CSV automatically after a non-dry-run execution
+
+Completed on regenerated corpus with formal final eval:
+
+- `reward_conservative_greedy`
+- `reward_conservative_epsilon`
+- `reward_current_greedy`
+- `reward_current_epsilon`
+
+Still needs to run:
+
+- `hard + greedy` unless a regenerated-corpus final eval artifact is available
+- `reward_aggressive_greedy`
+- `reward_aggressive_epsilon`
+
+Historical next-run list before the formal eval catch-up was:
+
+- `reward_conservative_greedy`
+- `reward_conservative_epsilon`
+- `reward_current_greedy`
+- `reward_current_epsilon`
+
+Optional runs:
+
+- `reward_aggressive_greedy`
+- `reward_aggressive_epsilon`
+
+## Runtime Override Rule
+
+Configs may still contain older default process counts, but the runner now resolves runtime values from environment variables first:
+
+- `RL_NPROCS` overrides `config["runtime"]["rl_nprocs"]`
+- `EVAL_NPROCS` overrides `config["runtime"]["eval_nprocs"]`
+- `MASTER_PORT` overrides `config["runtime"]["master_port"]`
+
+For the current 2-GPU server, always export:
+
+```bash
+RL_NPROCS=2
+EVAL_NPROCS=2
+```
+
+## Dry-Run
+
+Preview the reward-intensity stage:
+
+```bash
+ROOT="$PWD" \
+PYTHON_BIN=python \
+CORPUS_PATH="$PWD/Data/PlotlyTable2Charts" \
+SFT_CKPT="$PWD/Results/Models/sft_states_ep0.pt" \
+MODEL_SAVE_PATH="$PWD/Results/Models" \
+SUMMARY_PATH="$PWD/Results/summary" \
+GPU_IDS=0,1 \
+RL_NPROCS=2 \
+EVAL_NPROCS=2 \
+MASTER_PORT=29649 \
+DRY_RUN=1 \
+bash experiments/scripts/run_remote_reward_intensity_sweep.sh
+```
+
+## Default Remote Launch
+
+When ready to run on the current 2-GPU server:
+
+```bash
+ROOT="$PWD" \
+PYTHON_BIN=python \
+CORPUS_PATH="$PWD/Data/PlotlyTable2Charts" \
+SFT_CKPT="$PWD/Results/Models/sft_states_ep0.pt" \
+MODEL_SAVE_PATH="$PWD/Results/Models" \
+SUMMARY_PATH="$PWD/Results/summary" \
+GPU_IDS=0,1 \
+RL_NPROCS=2 \
+EVAL_NPROCS=2 \
+MASTER_PORT=29649 \
+bash experiments/scripts/run_remote_reward_intensity_sweep.sh
+```
+
+To run the full 6-run reward rerun, including aggressive:
+
+```bash
+ROOT="$PWD" \
+PYTHON_BIN=python \
+CORPUS_PATH="$PWD/Data/PlotlyTable2Charts" \
+SFT_CKPT="$PWD/Results/Models/sft_states_ep0.pt" \
+MODEL_SAVE_PATH="$PWD/Results/Models" \
+SUMMARY_PATH="$PWD/Results/summary" \
+GPU_IDS=0,1 \
+RL_NPROCS=2 \
+EVAL_NPROCS=2 \
+MASTER_PORT=29649 \
+RUN_AGGRESSIVE=1 \
+bash experiments/scripts/run_remote_reward_intensity_sweep.sh
+```
+
+To run only the standalone hard-reward greedy RL baseline:
+
+```bash
+ROOT="$PWD" \
+PYTHON_BIN=python \
+CORPUS_PATH="$PWD/Data/PlotlyTable2Charts" \
+SFT_CKPT="$PWD/Results/Models/sft_states_ep0.pt" \
+MODEL_SAVE_PATH="$PWD/Results/Models" \
+SUMMARY_PATH="$PWD/Results/summary" \
+GPU_IDS=0,1 \
+RL_NPROCS=2 \
+EVAL_NPROCS=2 \
+MASTER_PORT=29641 \
+bash experiments/scripts/run_remote_hard_greedy.sh
+```
+
+For `tmux`:
+
+```bash
+tmux new-session -d -s reward_intensity \
+  "cd /path/to/RL_table2charts && \
+   ROOT=\$PWD \
+   PYTHON_BIN=python \
+   CORPUS_PATH=\$PWD/Data/PlotlyTable2Charts \
+   SFT_CKPT=\$PWD/Results/Models/sft_states_ep0.pt \
+   MODEL_SAVE_PATH=\$PWD/Results/Models \
+   SUMMARY_PATH=\$PWD/Results/summary \
+   GPU_IDS=0,1 \
+   RL_NPROCS=2 \
+   EVAL_NPROCS=2 \
+   MASTER_PORT=29649 \
+   bash experiments/scripts/run_remote_reward_intensity_sweep.sh"
+```
+
+In current helper behavior, one config is only considered fully completed after:
+
+1. RL training finishes
+2. the fresh RL model directory is discovered
+3. `test_agent_mp.py` runs on the test split
+4. the helper records the model dir and eval log dir
+5. the helper updates the reward rerun manifest with the authoritative `[test-summary]` path
+
+After the full helper run finishes, it automatically rebuilds:
+
+- [final_eval_reward_intensity_20260425.csv](/home/lyl610/RL_table2charts/experiments/results/final_eval_reward_intensity_20260425.csv)
+
+## Files Produced
+
+Use these result tables for this stage:
+
+- [reward_intensity_model_dirs_20260425.csv](/home/lyl610/RL_table2charts/experiments/results/reward_intensity_model_dirs_20260425.csv)
+- [final_eval_reward_intensity_20260425.csv](/home/lyl610/RL_table2charts/experiments/results/final_eval_reward_intensity_20260425.csv)
+
+`reward_intensity_model_dirs_20260425.csv` is for discovered RL output directories.
+
+`final_eval_reward_intensity_20260425.csv` is only for metrics produced by `test_agent_mp.py` final evaluation. Do not backfill this file from training-time `test/valid SUMMARY` lines.
+
+The extractor interface is shared with epsilon:
+
+```bash
+python experiments/scripts/extract_test_summary.py \
+  --family reward_intensity \
+  --output experiments/results/final_eval_reward_intensity_20260425.csv \
+  --overwrite
+```
+
+For the reward rerun, the extractor reads the rerun manifest by default:
+
+- [reward_intensity_rerun_manifest_20260425.csv](/home/lyl610/RL_table2charts/experiments/results/reward_intensity_rerun_manifest_20260425.csv)
+
+Each rerun row in that manifest records:
+
+- config
+- reward mode
+- sampling strategy
+- epsilon start
+- model dir
+- authoritative rerun log path
+- notes
+
+After the full 6-run rerun completes through the helper, the aggressive rows are added to that manifest automatically and the final reward CSV is refreshed automatically.
+
+## Common Failure Modes
+
+- missing processed corpus under `Data/PlotlyTable2Charts`
+- `RL_NPROCS` not matching visible GPU count
+- reusing an occupied `MASTER_PORT`
+- on lower-memory GPUs such as `2080`, reduce concurrency or training-state size if you hit OOM:
+  - first try `RL_NPROCS=2` with `GPU_IDS=0,1`
+  - if that still fails, lower `max_tables` and `memory_sample_size`, or fall back to `RL_NPROCS=1`
+- forgetting that `hard reward + epsilon=0.20` is already available from the epsilon sweep and rerunning it unnecessarily
+- assuming `hard reward + greedy` is completed just because the config exists; that still requires a regenerated-corpus final eval artifact or a completed `run_remote_hard_greedy.sh` run
+- treating training-time `EP-0 test/valid SUMMARY` as if it were the formal final test-set result
+- extracting from mixed old+rereun reward logs without a rerun manifest
