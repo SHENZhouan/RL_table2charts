@@ -339,7 +339,7 @@ class UpdateActorNewStudent:
             avg_loss = loss_sum_tensor.item() / cnt_tensor[0].item() if cnt_tensor[0].item() > 0 else 0
             confusion_sum = confusion_sum_tensor.cpu().numpy()
             precision, recall, f1 = scores_from_confusion(confusion_sum)
-            info_tensor = (info_tensor[:, 0] / info_tensor[:, 1].clamp_min(1)).cpu().numpy()
+            info_tensor = info_tensor.cpu().numpy()
 
             tfnp = confusion_sum.ravel()
             self.logger.info(f"EP-{self.current_epoch} {'test/valid' if self.is_testing else 'train'} SUMMARY: " +

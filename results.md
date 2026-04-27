@@ -128,3 +128,147 @@
 04/24/2026 23:09:13 - INFO - Student 0(2972364) -   EP-0 train SUMMARY: elapsed=25288.8s | avg_loss=23.154825 (tn, fp, fn, tp)=[2054503   54740  113780   71742] precision=0.567211 recall=0.386703 f1=0.459879 | total_cnt=15288success_cnt=45883 #states(expanded, reached, cut, dropped, complete)=(41.14, 101.11, 0.00, 3.72, 23.21) t(perf, process)=(33.36s, 6.88s) final_stage_cnt=45883 R@1=0.47191770372469105 R@3=0.7875465858814812 R@5=0.8511431249046488 R@10=0.9133230172395005
 04/24/2026 23:42:51 - INFO - Student 0(2972364) -   EP-0 test/valid SUMMARY: elapsed=2014.5s | avg_loss=98.133532 (tn, fp, fn, tp)=[585440  16713  33657  19992] precision=0.544667 recall=0.372644 f1=0.442526 | total_cnt=1081success_cnt=6430 #states(expanded, reached, cut, dropped, complete)=(41.27, 105.99, 0.00, 4.32, 23.43) t(perf, process)=(19.46s, 4.43s) final_stage_cnt=6430 R@1=0.4499222395023328 R@3=0.7662519440124417 R@5=0.836547433903577 R@10=0.8996889580093312
 ```
+
+## Plotly Update MC 20260425T104158Z
+
+- started_utc: 2026-04-25T10:41:59Z
+- gpu_ids: 1
+- sft_ckpt: /ssd/shenzhouan/Table2Charts/Results/Models/plotly_finetuned_0420_sft/states_ep0.pt
+- mc_top_k: 3
+- mc_rollout_depth: 2
+- mc_num_rollouts: 2
+- mc_discount: 0.9
+- mc_rollout_weight: 0.5
+- epochs: 1
+- log_file: /ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_update_MC_rl_20260425T104158Z.log
+
+### Update UCB Eval Only 20260425T100910Z
+
+- finished_utc: 2026-04-25T11:57:23Z
+- model_dir: /ssd/shenzhouan/Table2Charts/Results/Models/20260425000722-2el192fd128.128GRUh-allCharts-UCB-RL
+- model_ckpt: /ssd/shenzhouan/Table2Charts/Results/Models/20260425000722-2el192fd128.128GRUh-allCharts-UCB-RL/states_ep0.pt
+- eval_log_dir: /ssd/shenzhouan/Table2Charts/Results/Models/20260425000722-2el192fd128.128GRUh-allCharts-UCB-RL/evaluations/test-update-UCB-plotly-small-20260425T100910Z
+- log_file: /ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_update_UCB_eval_only_20260425T100910Z.log
+
+```text
+04/25/2026 11:57:19 - INFO - summary(@1377576) -   Complete recall info: {'recall': {'@01': 0.4433801946547196, '@05': 0.8859879499459292, '@10': 0.9317936042020701, 'all': 0.9595241773520778, '@03': 0.8330758535454966, '@20': 0.9585972501158659}, 'first_rank': '2.40*12422', 'reached': 20.87077089448478, 'targets': 2.396647613162367, 'top': [1, 3, 5, 10, 20], 't_cnt': 12946}
+04/25/2026 11:57:19 - INFO - summary(@1377576) -   Complete recall info: {'recall': {'@01': 0.4433801946547196, '@05': 0.8859879499459292, '@10': 0.9317936042020701, 'all': 0.9595241773520778, '@03': 0.8330758535454966, '@20': 0.9585972501158659}, 'first_rank': '2.40*12422', 'reached': 20.87077089448478, 'targets': 2.396647613162367, 'top': [1, 3, 5, 10, 20], 't_cnt': 12946}
+```
+
+### Plotly Update MC failed
+
+- failed_utc: 2026-04-26T13:01:09Z
+- exit_code: 1
+- log_file: /ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_update_MC_rl_20260425T104158Z.log
+
+## Plotly Update Actor New 20260427T014928Z
+
+- started_utc: 2026-04-27T01:49:29Z
+- gpu_ids: 3,4
+- sft_ckpt: /ssd/shenzhouan/Table2Charts/Results/Models/plotly_finetuned_0420_sft/states_ep0.pt
+- actor_loss_weight: 0.1
+- entropy_weight: 0.001
+- actor_sampling_temperature: 1.0
+- actor_policy_seed: 20260424
+- epochs: 1
+- log_file: /ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_update_actor_new_rl_20260427T014928Z.log
+
+## Plotly Update Actor New 20260427T020340Z
+
+- started_utc: 2026-04-27T02:03:41Z
+- gpu_ids: 3,4
+- sft_ckpt: /ssd/shenzhouan/Table2Charts/Results/Models/plotly_finetuned_0420_sft/states_ep0.pt
+- actor_loss_weight: 0.1
+- entropy_weight: 0.001
+- actor_sampling_temperature: 1.0
+- actor_policy_seed: 20260424
+- epochs: 1
+- log_file: /ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_update_actor_new_rl_20260427T020340Z.log
+
+## Plotly Update Teacher Collect 20260427T054358Z
+
+- started_utc: 2026-04-27T05:43:59Z
+- gpu_ids: 5
+- teacher_data_path: ../Results/teacher_data/plotly_teacher_collect_20260427T054358Z
+- teacher_collect_ratio: 0.05
+- log_file: /ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_update_teacher_collect_20260427T054358Z.log
+
+### Update Teacher Collect
+
+- finished_utc: 2026-04-27T06:06:07Z
+- teacher_data_path: ../Results/teacher_data/plotly_teacher_collect_20260427T054358Z
+
+## Plotly Update MC Light PoC smoke_mc_light_poc_20260427T000000Z
+
+- started_utc: 2026-04-27T08:46:21Z
+- goal: 3-hour proof-of-concept subset run
+- gpu_ids: 3
+- train_table_limit: 2
+- valid_table_limit: 1
+- max_eval_tables: 1
+
+## Plotly Update MC Light PoC smoke_mc_light_poc_20260427T000000Z
+
+- started_utc: 2026-04-27T08:50:28Z
+- goal: 3-hour proof-of-concept subset run
+- gpu_ids: 3
+- train_table_limit: 2
+- valid_table_limit: 1
+- max_eval_tables: 1
+
+### Update Teacher Eval valid smoke_mc_light_poc_20260427T000000Z
+
+- finished_utc: 2026-04-27T08:52:14Z
+- model_dir: /ssd/shenzhouan/Table2Charts/Results/Models/20260427165050-2el192fd128.128GRUh-allCharts-MC-light-RL
+- model_ckpt: /ssd/shenzhouan/Table2Charts/Results/Models/20260427165050-2el192fd128.128GRUh-allCharts-MC-light-RL/states_ep0.pt
+- eval_log_dir: /ssd/shenzhouan/Table2Charts/Results/Models/20260427165050-2el192fd128.128GRUh-allCharts-MC-light-RL/evaluations/valid-update_teacher-plotly-small-smoke_mc_light_poc_20260427T000000Z
+- log_file: /ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_update_teacher_eval_only_valid_smoke_mc_light_poc_20260427T000000Z.log
+
+```text
+04/27/2026 08:52:13 - INFO - summary(@388844) -   Complete recall info: {'recall': {'@03': 0.0, 'all': 1.0, '@01': 0.0, '@05': 0.0, '@20': 1.0, '@10': 1.0}, 'first_rank': '9.00*1', 'reached': 32.0, 'targets': 1.0, 'top': [1, 3, 5, 10, 20], 't_cnt': 1}
+04/27/2026 08:52:13 - INFO - summary(@388844) -   Complete recall info: {'recall': {'@03': 0.0, 'all': 1.0, '@01': 0.0, '@05': 0.0, '@20': 1.0, '@10': 1.0}, 'first_rank': '9.00*1', 'reached': 32.0, 'targets': 1.0, 'top': [1, 3, 5, 10, 20], 't_cnt': 1}
+```
+
+## Plotly Update MC Light PoC 20260427T085326Z
+
+- started_utc: 2026-04-27T08:53:26Z
+- goal: 3-hour proof-of-concept subset run
+- gpu_ids: 3
+- train_table_limit: 128
+- valid_table_limit: 32
+- max_eval_tables: 32
+
+### Update Teacher Eval valid 20260427T085326Z
+
+- finished_utc: 2026-04-27T08:55:47Z
+- model_dir: /ssd/shenzhouan/Table2Charts/Results/Models/20260427165354-2el192fd128.128GRUh-allCharts-MC-light-RL
+- model_ckpt: /ssd/shenzhouan/Table2Charts/Results/Models/20260427165354-2el192fd128.128GRUh-allCharts-MC-light-RL/states_ep0.pt
+- eval_log_dir: /ssd/shenzhouan/Table2Charts/Results/Models/20260427165354-2el192fd128.128GRUh-allCharts-MC-light-RL/evaluations/valid-update_teacher-plotly-small-20260427T085326Z
+- log_file: /ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_update_teacher_eval_only_valid_20260427T085326Z.log
+
+```text
+04/27/2026 08:55:45 - INFO - summary(@397409) -   Complete recall info: {'recall': {'@01': 0.034482758620689655, 'all': 0.8275862068965517, '@10': 0.7586206896551724, '@03': 0.20689655172413793, '@20': 0.8275862068965517, '@05': 0.5862068965517241}, 'first_rank': '5.33*24', 'reached': 21.413793103448278, 'targets': 2.1724137931034484, 'top': [1, 3, 5, 10, 20], 't_cnt': 29}
+04/27/2026 08:55:45 - INFO - summary(@397409) -   Complete recall info: {'recall': {'@01': 0.034482758620689655, 'all': 0.8275862068965517, '@10': 0.7586206896551724, '@03': 0.20689655172413793, '@20': 0.8275862068965517, '@05': 0.5862068965517241}, 'first_rank': '5.33*24', 'reached': 21.413793103448278, 'targets': 2.1724137931034484, 'top': [1, 3, 5, 10, 20], 't_cnt': 29}
+```
+
+## Plotly Baseline RL PoC 20260427T090948Z
+
+- started_utc: 2026-04-27T09:09:49Z
+- goal: standard RL baseline on the same subset as MC-light
+- gpu_ids: 4
+- train_table_limit: 128
+- valid_table_limit: 32
+- max_eval_tables: 32
+
+### Update Teacher Eval valid 20260427T090948Z
+
+- finished_utc: 2026-04-27T09:18:04Z
+- model_dir: /ssd/shenzhouan/Table2Charts/Results/Models/20260427171113-2el192fd128.128GRUh-allCharts-RL
+- model_ckpt: /ssd/shenzhouan/Table2Charts/Results/Models/20260427171113-2el192fd128.128GRUh-allCharts-RL/states_ep0.pt
+- eval_log_dir: /ssd/shenzhouan/Table2Charts/Results/Models/20260427171113-2el192fd128.128GRUh-allCharts-RL/evaluations/valid-update_teacher-plotly-small-20260427T090948Z
+- log_file: /ssd/shenzhouan/Table2Charts/Results/run_logs/plotly_update_teacher_eval_only_valid_20260427T090948Z.log
+
+```text
+04/27/2026 09:17:55 - INFO - summary(@449885) -   Complete recall info: {'recall': {'@01': 0.0, '@03': 0.2413793103448276, '@20': 0.8275862068965517, '@05': 0.5172413793103449, 'all': 0.8620689655172413, '@10': 0.8275862068965517}, 'first_rank': '5.56*25', 'reached': 21.96551724137931, 'targets': 2.1724137931034484, 'top': [1, 3, 5, 10, 20], 't_cnt': 29}
+04/27/2026 09:17:55 - INFO - summary(@449885) -   Complete recall info: {'recall': {'@01': 0.0, '@03': 0.2413793103448276, '@20': 0.8275862068965517, '@05': 0.5172413793103449, 'all': 0.8620689655172413, '@10': 0.8275862068965517}, 'first_rank': '5.56*25', 'reached': 21.96551724137931, 'targets': 2.1724137931034484, 'top': [1, 3, 5, 10, 20], 't_cnt': 29}
+```

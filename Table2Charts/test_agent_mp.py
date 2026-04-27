@@ -28,6 +28,19 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(name)s -   %(message
 AGENT_NAMES = sorted(["drill_down"])
 
 
+def _slice_eval_tuids(tuids: List[str], max_eval_tables: int = None,
+                      eval_table_offset: int = 0, eval_table_stride: int = 1) -> List[str]:
+    if eval_table_stride <= 0:
+        raise ValueError("--eval_table_stride must be >= 1")
+    if eval_table_offset < 0:
+        raise ValueError("--eval_table_offset must be >= 0")
+
+    selected = tuids[eval_table_offset::eval_table_stride]
+    if max_eval_tables is not None and max_eval_tables >= 0:
+        selected = selected[:max_eval_tables]
+    return selected
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description="Concurrent Test Search Agents")
 
@@ -74,6 +87,12 @@ def parse_args():
                         help='set this flag if test whole Plotly dataset.')
     parser.add_argument('--web_table', action='store_true',
                         help='set this flag if test web table dataset.')
+    parser.add_argument('--max_eval_tables', default=None, type=int, metavar='N',
+                        help='optionally limit evaluation to the first N tables after offset/stride slicing')
+    parser.add_argument('--eval_table_offset', default=0, type=int, metavar='N',
+                        help='skip the first N tables before evaluation subset selection')
+    parser.add_argument('--eval_table_stride', default=1, type=int, metavar='N',
+                        help='evaluate every Nth table after the offset to build a lighter subset')
     parser.add_argument('--unified_ana_token', default=False, dest='unified_ana_token', action='store_true',
                         help="Whether to use unified analysis token [ANA] instead of concrete type tokens.")
 
@@ -172,6 +191,37 @@ def feed_batch_nn(samples: List[QValue], model: torch.nn.Module, device: str, co
         return model(data["state"], data["actions"]).detach()[:, :, 1].exp().cpu()
 
 
+def _format_eval_report(summary_info: dict, total_count: int, elapsed_seconds: float) -> str:
+    lines = [
+        f"tables={total_count}",
+        f"elapsed_seconds={elapsed_seconds:.1f}",
+    ]
+    for key in ["expanded_states", "reached_states", "complete_states", "cut_states", "dropped_states",
+                "perf_time", "process_time", "t_cnt"]:
+        if key in summary_info:
+            lines.append(f"{key}={summary_info[key]}")
+
+    evaluation = summary_info.get("evaluation")
+    if evaluation is None:
+        return "\n".join(lines) + "\n"
+
+    stages = evaluation.get("stages", {})
+    complete_info = stages.get("complete")
+    if complete_info is not None:
+        lines.append("")
+        lines.append("complete_recall_info=" + json.dumps(complete_info, sort_keys=True))
+
+    for stage_name in ["00p", "01p", "02p", "complete"]:
+        stage_info = stages.get(stage_name)
+        if stage_info is None:
+            continue
+        lines.append("")
+        lines.append(f"[stage:{stage_name}]")
+        lines.append(json.dumps(stage_info, sort_keys=True, indent=2))
+
+    return "\n".join(lines) + "\n"
+
+
 def process_parallel(index, device_count, special_tokens: SpecialTokens,
                      tuid_queue: mp.Queue, info_queue: mp.Queue, args):
     """
@@ -229,6 +279,7 @@ def summary(info_queue: mp.Queue, args):
     info_list = []
     finished_proc = 0
     log_file_path = os.path.join(args.log_save_path, f"[test-summary]{time_str()}.log")
+    report_file_path = log_file_path.replace("[test-summary]", "[test-report]")
     with open(log_file_path, "w") as log_file:
         while True:
             info = info_queue.get()
@@ -252,9 +303,16 @@ def summary(info_queue: mp.Queue, args):
         log_file.write("[all {}]\n".format(len(info_list)))
         summary_info = merge_eval_info(info_list)
         log_file.write(json.dumps(summary_info, sort_keys=True, indent=4))
+        log_file.write("\n\n[human-readable summary]\n")
+        log_file.write(_format_eval_report(summary_info, len(info_list), perf_counter() - start_time))
         log_file.flush()
+
+        with open(report_file_path, "w") as report_file:
+            report_file.write(_format_eval_report(summary_info, len(info_list), perf_counter() - start_time))
+
         logger.info(f"Finish summarize {len(info_list)} info into {log_file_path}. "
                     f"{perf_counter() - start_time:.1f}s passed.")
+        logger.info(f"Human-readable evaluation report saved to {report_file_path}.")
         if "evaluation" in summary_info:
             complete_info = summary_info["evaluation"]["stages"]["complete"]
             logger.info(f"Complete recall info: {complete_info}")
@@ -292,6 +350,13 @@ def test(args):
     else:
         tUIDs = index.test_tUIDs()
 
+    original_tuid_count = len(tUIDs)
+    tUIDs = _slice_eval_tuids(tUIDs, args.max_eval_tables, args.eval_table_offset, args.eval_table_stride)
+    if len(tUIDs) != original_tuid_count:
+        logger.info("Evaluation subset enabled: selected %d / %d tables "
+                    "(offset=%d, stride=%d, max_eval_tables=%s).",
+                    len(tUIDs), original_tuid_count,
+                    args.eval_table_offset, args.eval_table_stride, args.max_eval_tables)
     logger.info(f"Testing {len(tUIDs)} files from {index.config.index_path()}")
     if args.nprocs > 1 and device_count:  # Will start args.nprocs processes, evenly distributed on all GPUs.
         context = mp.get_context(method='spawn')

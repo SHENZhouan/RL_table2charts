@@ -32,6 +32,18 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(name)s -   %(message
 logging.getLogger("pika").setLevel(logging.WARNING)
 
 
+def _slice_tuids(tuids, limit=None, offset=0, stride=1):
+    if stride <= 0:
+        raise ValueError("table stride must be >= 1")
+    if offset < 0:
+        raise ValueError("table offset must be >= 0")
+
+    selected = tuids[offset::stride]
+    if limit is not None and limit >= 0:
+        selected = selected[:limit]
+    return selected
+
+
 def parse_args():
     """
     Helper function parsing the command line options
@@ -107,6 +119,18 @@ def parse_args():
                         help="Set the flag if training samples will be generated randomly.")
     parser.add_argument('--max_tables', default=64, type=int, metavar='N',
                         help='number of tables to handle at the same time')
+    parser.add_argument('--train_table_limit', default=None, type=int, metavar='N',
+                        help='optionally limit training to the first N tables after offset/stride slicing')
+    parser.add_argument('--valid_table_limit', default=None, type=int, metavar='N',
+                        help='optionally limit validation to the first N tables after offset/stride slicing')
+    parser.add_argument('--train_table_offset', default=0, type=int, metavar='N',
+                        help='skip the first N training tables before subset selection')
+    parser.add_argument('--valid_table_offset', default=0, type=int, metavar='N',
+                        help='skip the first N validation tables before subset selection')
+    parser.add_argument('--train_table_stride', default=1, type=int, metavar='N',
+                        help='keep every Nth training table after the offset')
+    parser.add_argument('--valid_table_stride', default=1, type=int, metavar='N',
+                        help='keep every Nth validation table after the offset')
     parser.add_argument('--search_limits', choices=DEFAULT_SEARCH_LIMITS, default="e200-b8-r4c2", type=str,
                         help="Search config option")
 
@@ -307,8 +331,20 @@ def main(args):
     index = Index(data_config)
     train_tuids = index.train_tUIDs()
     valid_tuids = index.valid_tUIDs()
+    original_train_size = len(train_tuids)
+    original_valid_size = len(valid_tuids)
+    train_tuids = _slice_tuids(train_tuids, args.train_table_limit,
+                               args.train_table_offset, args.train_table_stride)
+    valid_tuids = _slice_tuids(valid_tuids, args.valid_table_limit,
+                               args.valid_table_offset, args.valid_table_stride)
     train_size = len(train_tuids)
     valid_size = len(valid_tuids)
+    logger.info("Training subset: %d / %d tables (offset=%d, stride=%d, limit=%s)",
+                train_size, original_train_size,
+                args.train_table_offset, args.train_table_stride, args.train_table_limit)
+    logger.info("Validation subset: %d / %d tables (offset=%d, stride=%d, limit=%s)",
+                valid_size, original_valid_size,
+                args.valid_table_offset, args.valid_table_stride, args.valid_table_limit)
 
     global_rank = dist.get_rank()
     world_size = dist.get_world_size()
