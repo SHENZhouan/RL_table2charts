@@ -195,3 +195,7 @@ experiments/results/raw_logs/reward_intensity_20260426T021230Z.log
 # Keep the aggregate CSV outputs in experiments/results/, but do not track the
 # raw recommendation directories.
 experiments/results/recommendations/
+experiments/results/raw_logs/failed_actor_critic_train_eval_20260426T133113Z.log
+.gitignore
+experiments/results/raw_logs/failed_actor_critic_train_eval_20260426T132301Z.log
+experiments/results/raw_logs/failed_actor_critic_train_eval_20260426T132923Z.log

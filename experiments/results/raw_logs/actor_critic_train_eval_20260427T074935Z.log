@@ -1,0 +1,824 @@
+run_id=20260427T074935Z
+root=/root/RL_table2charts
+code_dir=/root/RL_table2charts/Table2Charts
+python_bin=python
+corpus_path=/root/RL_table2charts/Data/PlotlyTable2Charts
+sft_ckpt=/root/RL_table2charts/Results/Models/sft_states_ep0.pt
+model_save_path=/root/RL_table2charts/Results/Models
+summary_path=/root/RL_table2charts/Results/summary
+gpu_ids=0
+rl_nprocs=1
+eval_nprocs=1
+master_port=29653
+dry_run=0
+run_log=/root/RL_table2charts/experiments/results/raw_logs/actor_critic_train_eval_20260427T074935Z.log
+result_file=/root/RL_table2charts/experiments/results/raw_logs/actor_critic_train_eval_20260427T074935Z.results
+/root/anaconda3/envs/t2c/lib/python3.10/site-packages/torch/distributed/launch.py:183: FutureWarning: The module torch.distributed.launch is deprecated
+and will be removed in future. Use torchrun.
+Note that --use-env is set by default in torchrun.
+If your script expects `--local-rank` argument to be set, please
+change it to read from `os.environ['LOCAL_RANK']` instead. See 
+https://pytorch.org/docs/stable/distributed.html#launch-utility for 
+further instructions
+
+  warnings.warn(
+04/27/2026 15:49:40 - INFO - main -   Started: Namespace(pre_model_file='/root/RL_table2charts/Results/Models/sft_states_ep0.pt', model_save_path='/root/RL_table2charts/Results/Models', log_save_path='evaluations', corpus_path='/root/RL_table2charts/Data/PlotlyTable2Charts', lang='en', model_name='cp', model_size='small', features='all-fast', log_freq_batch=100, log_freq_agent=500, epochs=1, restart_epoch=-1, summary_path='/root/RL_table2charts/Results/summary', search_type='allCharts', input_type='allCharts', previous_type='allCharts', field_permutation=False, unified_ana_token=False, freeze_embed=False, freeze_encoder=False, fresh_decoder=False, negative_weight=0.8, actor_loss_weight=0.1, entropy_weight=0.001, actor_sampling_temperature=1.0, actor_eval_greedy=True, actor_policy_seed=20260424, memory_size=150000, min_memory=1000, memory_sample_size=64, memory_sample_rounds=2, num_train_analysis=None, random_train=False, max_tables=64, search_limits='e50-b4-na', apex=False, local_rank=0, amqp_addr='127.0.0.1', amqp_port=5672, amqp_routing_key='TUID_QUEUE', amqp_user='dist', amqp_pwd='CommonAnalysis', queue_mode='local', mode='train')
+04/27/2026 15:49:40 - INFO - main -   DataConfig: {'corpus_path': '/root/RL_table2charts/Data/PlotlyTable2Charts', 'encoding': 'utf-8-sig', 'lang': 'en', 'english_only': True, 'max_field_num': 128, 'max_val_num': 4, 'max_dim_num': 4, 'need_field_indices': True, 'field_permutation': False, 'unified_ana_token': False, 'allow_multiple_values': True, 'limit_search_group': False, 'use_field_type': True, 'use_field_role': True, 'use_binary_tags': True, 'use_data_features': True, 'use_semantic_embeds': True, 'load_at_most': None, 'num_train_analysis': None, 'embed_model': 'fasttext', 'embed_len': 50, 'embed_in_json': True, 'embed_layer': '0', 'embed_reduce_type': 'mean', 'data_len': 31, 'data_cleanup_fn': <function cleanup_data_features_nn at 0x798c253e8280>, 'train_ratio': 0.7, 'valid_ratio': 0.1, 'test_ratio': 0.2, 'empirical_study': False, 'cat_nums': [5, 3, 3, 3, 3, 3, 3, 3], 'search_all_types': True, 'search_types': [<AnaType.LineChart: 1>, <AnaType.BarChart: 2>, <AnaType.ScatterChart: 3>, <AnaType.PieChart: 4>], 'model_types': [<AnaType.LineChart: 1>, <AnaType.BarChart: 2>, <AnaType.ScatterChart: 3>, <AnaType.PieChart: 4>], 'input_types': [<AnaType.LineChart: 1>, <AnaType.BarChart: 2>, <AnaType.ScatterChart: 3>, <AnaType.PieChart: 4>], 'consider_grouping_operations': True, 'top_freq_func': 0, 'cat_len': 8, 'empty_embed': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'empty_cat': [0, 0, 0, 0, 0, 0, 0, 0], 'empty_data': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'num_permute_samples': [0, 1, 2, 4, 8]}
+04/27/2026 15:49:40 - INFO - main -   Loading index...
+04/27/2026 15:49:46 - INFO - Index init() -   Total schemas is 72939
+04/27/2026 15:49:46 - INFO - Index init() -   file filtered by language: 0
+04/27/2026 15:49:46 - INFO - Index init() -   file filtered by openfile: 0
+04/27/2026 15:49:46 - INFO - Index init() -   table filtered by no embedding: 0
+04/27/2026 15:49:46 - INFO - Index init() -   table filtered by too many fields: 0
+04/27/2026 15:49:46 - INFO - Index init() -   table filtered by no valid analysis: 3902
+04/27/2026 15:49:46 - INFO - Index init() -   chart filtered by no valnum: 0
+04/27/2026 15:49:46 - INFO - Index init() -   chart filtered by too many values: 4484
+04/27/2026 15:49:46 - INFO - Index init() -   pivot filtered by too many dimensions: 0
+04/27/2026 15:49:46 - INFO - Index init() -   Total tables is 69037
+04/27/2026 15:49:46 - INFO - Index init() -   Total charts is 104635
+04/27/2026 15:49:46 - INFO - Index init() -   Total pivot tables is 0
+04/27/2026 15:49:46 - INFO - main -   Preparing DDP model...
+04/27/2026 15:49:46 - INFO - create_model(0) -   UpdateActorNewCopyNetConfig: {'encoder_layers': 2, 'decoder_layers': 1, 'num_cmd_tokens': 3, 'encoder_GRU_hidden': 128, 'decoder_GRU_hidden': 128, 'feature_dim': 192, 'decoder_hidden_size': 192, 'embed_len': 50, 'data_len': 31, 'cat_len': 8, 'positional': False, 'num_token_type': 14, 'num_segment_type': 9, 'num_categories': [5, 3, 3, 3, 3, 3, 3, 3], 'hidden': 192, 'dropout': 0.1}
+04/27/2026 15:49:46 - INFO - main -   cp #parameters = 853550
+04/27/2026 15:49:46 - INFO - prepare_model(0) -   Loading pre-trained / previous model from /root/RL_table2charts/Results/Models/sft_states_ep0.pt...
+04/27/2026 15:49:46 - INFO - load_update_actor_new_checkpoint(0) -   Missing keys while loading checkpoint into update_actor_new model: ['_actor_generation_layer.weight', '_actor_generation_layer.bias', '_actor_copying_layer.weight', '_actor_copying_layer.bias']
+04/27/2026 15:49:47 - INFO - main -   StudentConfig: {'optimizer': AdamW (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.0001
+    maximize: False
+    weight_decay: 0.01
+), 'criterion': NLLLoss(), 'actor_loss_weight': 0.1, 'entropy_weight': 0.001, 'actor_sampling_temperature': 1.0, 'actor_eval_greedy': True, 'actor_policy_seed': 20260424, 'scale_start': 0.9, 'scale_end': 0.001, 'scale_decay': 0.8, 'memory_size': 150000, 'min_memory': 1000, 'random_train': False, 'log_tag': '0(14473)', 'log_freq': 100, 'log_dir': '/root/RL_table2charts/Results/Models/20260427154946-update_actor_new-2el192fd128.128GRUh-allCharts-actor-policy-RL/evaluations'}
+04/27/2026 15:49:47 - INFO - main -   SearchConfig: {'load_ground_truth': True, 'search_all_types': True, 'search_single_type': None, 'test_field_selections': False, 'test_design_choices': False, 'max_rc': (1000, 1000), 'expand_limit': 50, 'time_limit': inf, 'dim_count': 600, 'com_count': 1100, 'frontier_size': 300, 'beam_size': 4, 'min_threshold': 0.0, 'log_path': None}
+04/27/2026 15:49:47 - INFO - main -   Starting epoch 0
+/root/RL_table2charts/Table2Charts/data/sequence.py:146: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at ../torch/csrc/utils/tensor_new.cpp:275.)
+  "data_characters": 0 if len(config.empty_data) == 0 else torch.tensor(append_padding(
+04/27/2026 15:50:13 - INFO - Student 0(14473) -   EP-0 train B100: loss=26.485246658325195 critic_loss=26.295799 actor_loss=1.977844 entropy=8.336658 | (tn, fp, fn, tp)=[11944   359   751   105] all_prf1=(0.226293, 0.122664, 0.159091) avg_critic_loss=32.259403 all_acc=0.915647| process=26.0s elapsed=25.7s
+04/27/2026 15:50:27 - INFO - iteration(0) -   EP-0 train progress: handled=559/48355 finished=500/48355 active=59
+04/27/2026 15:50:38 - INFO - Student 0(14473) -   EP-0 train B200: loss=13.25875186920166 critic_loss=14.029020 actor_loss=-7.612683 entropy=8.999418 | (tn, fp, fn, tp)=[24568   580  1457   284] all_prf1=(0.328704, 0.163125, 0.218042) avg_critic_loss=27.645244 all_acc=0.924244| process=51.3s elapsed=50.9s
+04/27/2026 15:51:02 - INFO - Student 0(14473) -   EP-0 train B300: loss=17.03346061706543 critic_loss=20.270655 actor_loss=-32.320866 entropy=5.108190 | (tn, fp, fn, tp)=[37463   796  2158   445] all_prf1=(0.358582, 0.170957, 0.231530) avg_critic_loss=25.490163 all_acc=0.927708| process=75.5s elapsed=74.9s
+04/27/2026 15:51:05 - INFO - iteration(0) -   EP-0 train progress: handled=1053/48355 finished=1001/48355 active=52
+04/27/2026 15:51:27 - INFO - Student 0(14473) -   EP-0 train B400: loss=10.033859252929688 critic_loss=12.129115 actor_loss=-20.918859 entropy=3.369903 | (tn, fp, fn, tp)=[50172   993  2838   622] all_prf1=(0.385139, 0.179769, 0.245123) avg_critic_loss=24.162861 all_acc=0.929867| process=100.4s elapsed=99.6s
+04/27/2026 15:51:45 - INFO - iteration(0) -   EP-0 train progress: handled=1564/48355 finished=1508/48355 active=56
+04/27/2026 15:51:52 - INFO - Student 0(14473) -   EP-0 train B500: loss=28.216922760009766 critic_loss=28.323454 actor_loss=-1.052624 entropy=1.268693 | (tn, fp, fn, tp)=[62714  1231  3536   797] all_prf1=(0.392998, 0.183937, 0.250590) avg_critic_loss=23.572072 all_acc=0.930182| process=125.5s elapsed=124.5s
+04/27/2026 15:52:17 - INFO - Student 0(14473) -   EP-0 train B600: loss=18.34146499633789 critic_loss=17.941277 actor_loss=4.044341 entropy=4.246219 | (tn, fp, fn, tp)=[75102  1442  4190   995] all_prf1=(0.408289, 0.191900, 0.261086) avg_critic_loss=22.987430 all_acc=0.931089| process=150.8s elapsed=149.6s
+04/27/2026 15:52:24 - INFO - iteration(0) -   EP-0 train progress: handled=2066/48355 finished=2011/48355 active=55
+04/27/2026 15:52:41 - INFO - Student 0(14473) -   EP-0 train B700: loss=23.392723083496094 critic_loss=17.057358 actor_loss=63.382584 entropy=2.894186 | (tn, fp, fn, tp)=[87514  1702  4856  1276] all_prf1=(0.428475, 0.208089, 0.280132) avg_critic_loss=22.544173 all_acc=0.931220| process=175.3s elapsed=174.0s
+04/27/2026 15:53:03 - INFO - iteration(0) -   EP-0 train progress: handled=2573/48355 finished=2519/48355 active=54
+04/27/2026 15:53:07 - INFO - Student 0(14473) -   EP-0 train B800: loss=10.102048873901367 critic_loss=20.698898 actor_loss=-105.954010 entropy=1.448824 | (tn, fp, fn, tp)=[99903  1991  5528  1497] all_prf1=(0.429186, 0.213096, 0.284790) avg_critic_loss=22.294969 all_acc=0.930967| process=201.2s elapsed=199.6s
+04/27/2026 15:53:32 - INFO - Student 0(14473) -   EP-0 train B900: loss=6.011322021484375 critic_loss=17.041681 actor_loss=-110.294022 entropy=0.956707 | (tn, fp, fn, tp)=[112398   2336   6246   1765] all_prf1=(0.430383, 0.220322, 0.291446) avg_critic_loss=22.283025 all_acc=0.930083| process=226.0s elapsed=224.4s
+04/27/2026 15:53:42 - INFO - iteration(0) -   EP-0 train progress: handled=3082/48355 finished=3023/48355 active=59
+04/27/2026 15:53:56 - INFO - Student 0(14473) -   EP-0 train B1000: loss=0.19462735950946808 critic_loss=20.359039 actor_loss=-201.618652 entropy=2.546714 | (tn, fp, fn, tp)=[124768   2566   6898   2034] all_prf1=(0.442174, 0.227721, 0.300621) avg_critic_loss=21.980598 all_acc=0.930548| process=250.3s elapsed=248.5s
+04/27/2026 15:54:23 - INFO - Student 0(14473) -   EP-0 train B1100: loss=0.2526145577430725 critic_loss=13.250048 actor_loss=-129.929489 entropy=4.483653 | (tn, fp, fn, tp)=[137190   2842   7519   2313] all_prf1=(0.448691, 0.235252, 0.308668) avg_critic_loss=21.624327 all_acc=0.930864| process=277.7s elapsed=275.7s
+04/27/2026 15:54:23 - INFO - iteration(0) -   EP-0 train progress: handled=3583/48355 finished=3526/48355 active=57
+04/27/2026 15:54:49 - INFO - Student 0(14473) -   EP-0 train B1200: loss=29.01236343383789 critic_loss=20.300995 actor_loss=87.128967 entropy=1.530108 | (tn, fp, fn, tp)=[149843   3106   8120   2584] all_prf1=(0.454130, 0.241405, 0.315237) avg_critic_loss=21.296288 all_acc=0.931404| process=304.0s elapsed=301.8s
+04/27/2026 15:55:02 - INFO - iteration(0) -   EP-0 train progress: handled=4087/48355 finished=4029/48355 active=58
+04/27/2026 15:55:14 - INFO - Student 0(14473) -   EP-0 train B1300: loss=-2.689089059829712 critic_loss=14.167828 actor_loss=-168.553864 entropy=1.530000 | (tn, fp, fn, tp)=[162470   3365   8700   2896] all_prf1=(0.462546, 0.249741, 0.324355) avg_critic_loss=21.062194 all_acc=0.932002| process=329.3s elapsed=326.9s
+04/27/2026 15:55:40 - INFO - Student 0(14473) -   EP-0 train B1400: loss=32.08542251586914 critic_loss=16.628416 actor_loss=154.574600 entropy=0.452124 | (tn, fp, fn, tp)=[175322   3662   9350   3173] all_prf1=(0.464228, 0.253374, 0.327823) avg_critic_loss=20.978358 all_acc=0.932055| process=354.8s elapsed=352.3s
+04/27/2026 15:55:41 - INFO - iteration(0) -   EP-0 train progress: handled=4590/48355 finished=4531/48355 active=59
+04/27/2026 15:56:04 - INFO - Student 0(14473) -   EP-0 train B1500: loss=4.772286891937256 critic_loss=19.058884 actor_loss=-142.856888 entropy=0.907523 | (tn, fp, fn, tp)=[187727   4007   9971   3523] all_prf1=(0.467862, 0.261079, 0.335141) avg_critic_loss=20.830285 all_acc=0.931890| process=379.6s elapsed=376.9s
+04/27/2026 15:56:19 - INFO - iteration(0) -   EP-0 train progress: handled=5092/48355 finished=5036/48355 active=56
+04/27/2026 15:56:28 - INFO - Student 0(14473) -   EP-0 train B1600: loss=-17.052391052246094 critic_loss=12.208153 actor_loss=-292.604858 entropy=0.057254 | (tn, fp, fn, tp)=[200240   4341  10537   3942] all_prf1=(0.475915, 0.272256, 0.346367) avg_critic_loss=20.725459 all_acc=0.932083| process=403.5s elapsed=400.7s
+04/27/2026 15:56:54 - INFO - Student 0(14473) -   EP-0 train B1700: loss=-63.6855583190918 critic_loss=25.419672 actor_loss=-891.046692 entropy=0.559790 | (tn, fp, fn, tp)=[213006   4654  11203   4270] all_prf1=(0.478485, 0.275965, 0.350043) avg_critic_loss=20.684463 all_acc=0.931983| process=429.5s elapsed=426.5s
+04/27/2026 15:56:59 - INFO - iteration(0) -   EP-0 train progress: handled=5599/48355 finished=5541/48355 active=58
+04/27/2026 15:57:19 - INFO - Student 0(14473) -   EP-0 train B1800: loss=67.12576293945312 critic_loss=19.815926 actor_loss=473.100647 entropy=0.225120 | (tn, fp, fn, tp)=[225660   4949  11860   4655] all_prf1=(0.484694, 0.281865, 0.356445) avg_critic_loss=20.616117 all_acc=0.931982| process=455.0s elapsed=451.8s
+04/27/2026 15:57:36 - INFO - iteration(0) -   EP-0 train progress: handled=6100/48355 finished=6042/48355 active=58
+04/27/2026 15:57:43 - INFO - Student 0(14473) -   EP-0 train B1900: loss=-31.62159538269043 critic_loss=16.412205 actor_loss=-480.329651 entropy=0.834002 | (tn, fp, fn, tp)=[238760   5258  12466   5045] all_prf1=(0.489663, 0.288105, 0.362767) avg_critic_loss=20.563035 all_acc=0.932229| process=479.4s elapsed=476.1s
+04/27/2026 15:58:08 - INFO - Student 0(14473) -   EP-0 train B2000: loss=86.87186431884766 critic_loss=22.603746 actor_loss=642.687378 entropy=0.615266 | (tn, fp, fn, tp)=[251856   5569  13100   5445] all_prf1=(0.494371, 0.293610, 0.368416) avg_critic_loss=20.524379 all_acc=0.932351| process=504.1s elapsed=500.6s
+04/27/2026 15:58:17 - INFO - iteration(0) -   EP-0 train progress: handled=6601/48355 finished=6543/48355 active=58
+04/27/2026 15:58:33 - INFO - Student 0(14473) -   EP-0 train B2100: loss=78.9471206665039 critic_loss=18.727230 actor_loss=602.199646 entropy=0.075616 | (tn, fp, fn, tp)=[265073   5909  13768   5821] all_prf1=(0.496249, 0.297157, 0.371723) avg_critic_loss=20.582797 all_acc=0.932282| process=528.8s elapsed=525.3s
+04/27/2026 15:58:56 - INFO - iteration(0) -   EP-0 train progress: handled=7104/48355 finished=7050/48355 active=54
+04/27/2026 15:58:58 - INFO - Student 0(14473) -   EP-0 train B2200: loss=-112.43428802490234 critic_loss=29.123419 actor_loss=-1415.576538 entropy=0.047023 | (tn, fp, fn, tp)=[278647   6292  14456   6220] all_prf1=(0.497123, 0.300832, 0.374834) avg_critic_loss=20.645155 all_acc=0.932111| process=554.2s elapsed=550.5s
+04/27/2026 15:59:21 - INFO - Student 0(14473) -   EP-0 train B2300: loss=-14.333779335021973 critic_loss=14.037630 actor_loss=-283.713562 entropy=0.051975 | (tn, fp, fn, tp)=[292854   6660  15163   6594] all_prf1=(0.497510, 0.303075, 0.376682) avg_critic_loss=20.737196 all_acc=0.932073| process=577.9s elapsed=574.1s
+04/27/2026 15:59:36 - INFO - iteration(0) -   EP-0 train progress: handled=7612/48355 finished=7555/48355 active=57
+04/27/2026 15:59:46 - INFO - Student 0(14473) -   EP-0 train B2400: loss=150.33364868164062 critic_loss=23.470203 actor_loss=1268.640015 entropy=0.557419 | (tn, fp, fn, tp)=[307572   6926  15845   6898] all_prf1=(0.498987, 0.303302, 0.377280) avg_critic_loss=20.748796 all_acc=0.932479| process=603.1s elapsed=599.1s
+04/27/2026 16:00:11 - INFO - Student 0(14473) -   EP-0 train B2500: loss=120.50946044921875 critic_loss=26.676769 actor_loss=938.328979 entropy=0.215059 | (tn, fp, fn, tp)=[322358   7254  16498   7250] all_prf1=(0.499862, 0.305289, 0.379065) avg_critic_loss=20.811114 all_acc=0.932782| process=627.9s elapsed=623.8s
+04/27/2026 16:00:14 - INFO - iteration(0) -   EP-0 train progress: handled=8117/48355 finished=8057/48355 active=60
+04/27/2026 16:00:36 - INFO - Student 0(14473) -   EP-0 train B2600: loss=56.052955627441406 critic_loss=33.730160 actor_loss=223.228210 entropy=0.023076 | (tn, fp, fn, tp)=[337408   7565  17156   7687] all_prf1=(0.503999, 0.309423, 0.383439) avg_critic_loss=20.878414 all_acc=0.933153| process=652.8s elapsed=648.5s
+04/27/2026 16:00:54 - INFO - iteration(0) -   EP-0 train progress: handled=8615/48355 finished=8557/48355 active=58
+04/27/2026 16:01:00 - INFO - Student 0(14473) -   EP-0 train B2700: loss=-36.61394500732422 critic_loss=17.338520 actor_loss=-539.524170 entropy=0.047045 | (tn, fp, fn, tp)=[352568   7886  17817   8030] all_prf1=(0.504524, 0.310674, 0.384551) avg_critic_loss=20.900620 all_acc=0.933464| process=677.4s elapsed=672.8s
+04/27/2026 16:01:24 - INFO - Student 0(14473) -   EP-0 train B2800: loss=-16.474496841430664 critic_loss=18.869461 actor_loss=-353.439392 entropy=0.017811 | (tn, fp, fn, tp)=[368678   8196  18466   8404] all_prf1=(0.506265, 0.312765, 0.386657) avg_critic_loss=20.929341 all_acc=0.933963| process=701.0s elapsed=696.2s
+04/27/2026 16:01:30 - INFO - iteration(0) -   EP-0 train progress: handled=9120/48355 finished=9067/48355 active=53
+04/27/2026 16:01:47 - INFO - Student 0(14473) -   EP-0 train B2900: loss=-76.5025634765625 critic_loss=16.739494 actor_loss=-932.420532 entropy=0.003284 | (tn, fp, fn, tp)=[384688   8518  19193   8736] all_prf1=(0.506317, 0.312793, 0.386694) avg_critic_loss=20.992709 all_acc=0.934199| process=725.2s elapsed=720.2s
+04/27/2026 16:02:13 - INFO - iteration(0) -   EP-0 train progress: handled=9627/48355 finished=9572/48355 active=55
+04/27/2026 16:02:15 - INFO - Student 0(14473) -   EP-0 train B3000: loss=-31.023664474487305 critic_loss=10.949003 actor_loss=-419.726562 entropy=0.010574 | (tn, fp, fn, tp)=[400381   8943  19915   9043] all_prf1=(0.502780, 0.312280, 0.385268) avg_critic_loss=21.263965 all_acc=0.934157| process=753.2s elapsed=748.0s
+04/27/2026 16:02:42 - INFO - Student 0(14473) -   EP-0 train B3100: loss=-103.20545959472656 critic_loss=26.072060 actor_loss=-1292.774902 entropy=0.023383 | (tn, fp, fn, tp)=[415733   9260  20640   9377] all_prf1=(0.503139, 0.312390, 0.385456) avg_critic_loss=21.309860 all_acc=0.934287| process=780.3s elapsed=774.8s
+04/27/2026 16:02:54 - INFO - iteration(0) -   EP-0 train progress: handled=10134/48355 finished=10073/48355 active=61
+04/27/2026 16:03:05 - INFO - Student 0(14473) -   EP-0 train B3200: loss=30.421607971191406 critic_loss=20.742838 actor_loss=96.787704 entropy=0.000659 | (tn, fp, fn, tp)=[431809   9591  21331   9687] all_prf1=(0.502490, 0.312303, 0.385200) avg_critic_loss=21.362157 all_acc=0.934545| process=803.4s elapsed=797.8s
+04/27/2026 16:03:28 - INFO - Student 0(14473) -   EP-0 train B3300: loss=49.91501235961914 critic_loss=19.954315 actor_loss=299.608582 entropy=0.162895 | (tn, fp, fn, tp)=[447368   9948  22045   9990] all_prf1=(0.501053, 0.311846, 0.384430) avg_critic_loss=21.418883 all_acc=0.934622| process=826.4s elapsed=820.3s
+04/27/2026 16:03:32 - INFO - iteration(0) -   EP-0 train progress: handled=10634/48355 finished=10578/48355 active=56
+04/27/2026 16:03:51 - INFO - Student 0(14473) -   EP-0 train B3400: loss=74.70845794677734 critic_loss=26.830458 actor_loss=478.780029 entropy=0.001571 | (tn, fp, fn, tp)=[462520  10308  22716  10335] all_prf1=(0.500654, 0.312699, 0.384959) avg_critic_loss=21.471057 all_acc=0.934720| process=849.9s elapsed=843.7s
+04/27/2026 16:04:11 - INFO - iteration(0) -   EP-0 train progress: handled=11139/48355 finished=11082/48355 active=57
+04/27/2026 16:04:15 - INFO - Student 0(14473) -   EP-0 train B3500: loss=-43.66387176513672 critic_loss=21.466684 actor_loss=-651.305542 entropy=0.000011 | (tn, fp, fn, tp)=[477666  10597  23392  10617] all_prf1=(0.500471, 0.312182, 0.384514) avg_critic_loss=21.462162 all_acc=0.934921| process=874.5s elapsed=867.9s
+04/27/2026 16:04:38 - INFO - Student 0(14473) -   EP-0 train B3600: loss=3.8262431621551514 critic_loss=12.606211 actor_loss=-87.799675 entropy=0.000232 | (tn, fp, fn, tp)=[493287  10989  24085  10936] all_prf1=(0.498791, 0.312270, 0.384083) avg_critic_loss=21.587737 all_acc=0.934963| process=897.8s elapsed=891.1s
+04/27/2026 16:04:50 - INFO - iteration(0) -   EP-0 train progress: handled=11645/48355 finished=11587/48355 active=58
+04/27/2026 16:05:01 - INFO - Student 0(14473) -   EP-0 train B3700: loss=-332.5326232910156 critic_loss=37.759159 actor_loss=-3702.908936 entropy=0.874043 | (tn, fp, fn, tp)=[507787  11367  24816  11297] all_prf1=(0.498456, 0.312824, 0.384402) avg_critic_loss=21.712615 all_acc=0.934837| process=920.9s elapsed=914.1s
+04/27/2026 16:05:25 - INFO - Student 0(14473) -   EP-0 train B3800: loss=-72.00297546386719 critic_loss=27.999119 actor_loss=-1000.015747 entropy=0.517227 | (tn, fp, fn, tp)=[522623  11774  25552  11579] all_prf1=(0.495825, 0.311842, 0.382878) avg_critic_loss=21.880662 all_acc=0.934691| process=944.5s elapsed=937.3s
+04/27/2026 16:05:28 - INFO - iteration(0) -   EP-0 train progress: handled=12149/48355 finished=12090/48355 active=59
+04/27/2026 16:05:46 - INFO - Student 0(14473) -   EP-0 train B3900: loss=-76.59717559814453 critic_loss=16.296871 actor_loss=-928.933594 entropy=0.682146 | (tn, fp, fn, tp)=[537510  12119  26243  11823] all_prf1=(0.493818, 0.310592, 0.381338) avg_critic_loss=21.931868 all_acc=0.934725| process=965.9s elapsed=958.7s
+04/27/2026 16:06:04 - INFO - iteration(0) -   EP-0 train progress: handled=12650/48355 finished=12590/48355 active=60
+04/27/2026 16:06:08 - INFO - Student 0(14473) -   EP-0 train B4000: loss=54.36610794067383 critic_loss=31.546356 actor_loss=228.203003 entropy=0.550385 | (tn, fp, fn, tp)=[552371  12519  26972  12129] all_prf1=(0.492089, 0.310197, 0.380524) avg_critic_loss=22.073346 all_acc=0.934617| process=988.5s elapsed=981.2s
+04/27/2026 16:06:31 - INFO - Student 0(14473) -   EP-0 train B4100: loss=4.353850364685059 critic_loss=19.434610 actor_loss=-150.803970 entropy=0.362538 | (tn, fp, fn, tp)=[566208  12883  27647  12403] all_prf1=(0.490509, 0.309688, 0.379668) avg_critic_loss=22.108167 all_acc=0.934538| process=1010.8s elapsed=1003.4s
+04/27/2026 16:06:41 - INFO - iteration(0) -   EP-0 train progress: handled=13153/48355 finished=13099/48355 active=54
+04/27/2026 16:06:54 - INFO - Student 0(14473) -   EP-0 train B4200: loss=40.58599090576172 critic_loss=24.334663 actor_loss=162.521072 entropy=0.776583 | (tn, fp, fn, tp)=[580594  13218  28339  12680] all_prf1=(0.489613, 0.309125, 0.378977) avg_critic_loss=22.166570 all_acc=0.934538| process=1034.9s elapsed=1027.2s
+04/27/2026 16:07:17 - INFO - Student 0(14473) -   EP-0 train B4300: loss=-59.364994049072266 critic_loss=21.998066 actor_loss=-813.630554 entropy=0.000860 | (tn, fp, fn, tp)=[594471  13520  29035  12928] all_prf1=(0.488808, 0.308081, 0.377951) avg_critic_loss=22.197217 all_acc=0.934526| process=1057.5s elapsed=1049.6s
+04/27/2026 16:07:19 - INFO - iteration(0) -   EP-0 train progress: handled=13658/48355 finished=13600/48355 active=58
+04/27/2026 16:07:38 - INFO - Student 0(14473) -   EP-0 train B4400: loss=-57.81005859375 critic_loss=21.858934 actor_loss=-796.689880 entropy=0.000009 | (tn, fp, fn, tp)=[609093  13859  29738  13166] all_prf1=(0.487179, 0.306871, 0.376553) avg_critic_loss=22.254915 all_acc=0.934525| process=1079.0s elapsed=1070.9s
+04/27/2026 16:07:57 - INFO - iteration(0) -   EP-0 train progress: handled=14160/48355 finished=14101/48355 active=59
+04/27/2026 16:08:01 - INFO - Student 0(14473) -   EP-0 train B4500: loss=-84.94122314453125 critic_loss=28.678179 actor_loss=-1136.187500 entropy=0.651080 | (tn, fp, fn, tp)=[623353  14177  30477  13396] all_prf1=(0.485838, 0.305336, 0.374997) avg_critic_loss=22.295973 all_acc=0.934468| process=1102.0s elapsed=1093.8s
+04/27/2026 16:08:27 - INFO - Student 0(14473) -   EP-0 train B4600: loss=-560.1610107421875 critic_loss=54.823280 actor_loss=-6149.842773 entropy=0.000001 | (tn, fp, fn, tp)=[637465  14529  31187  13654] all_prf1=(0.484476, 0.304498, 0.373959) avg_critic_loss=22.386691 all_acc=0.934395| process=1128.2s elapsed=1119.8s
+04/27/2026 16:08:38 - INFO - iteration(0) -   EP-0 train progress: handled=14663/48355 finished=14605/48355 active=58
+04/27/2026 16:08:52 - INFO - Student 0(14473) -   EP-0 train B4700: loss=102.82154846191406 critic_loss=30.816641 actor_loss=720.049011 entropy=0.000003 | (tn, fp, fn, tp)=[651986  14847  31847  13865] all_prf1=(0.482899, 0.303312, 0.372595) avg_critic_loss=22.392416 all_acc=0.934469| process=1153.1s elapsed=1144.5s
+04/27/2026 16:09:13 - INFO - Student 0(14473) -   EP-0 train B4800: loss=65.18585205078125 critic_loss=28.268600 actor_loss=369.172485 entropy=0.000000 | (tn, fp, fn, tp)=[665902  15262  32574  14127] all_prf1=(0.480690, 0.302499, 0.371323) avg_critic_loss=22.498027 all_acc=0.934279| process=1174.4s elapsed=1165.6s
+04/27/2026 16:09:15 - INFO - iteration(0) -   EP-0 train progress: handled=15165/48355 finished=15108/48355 active=57
+04/27/2026 16:09:35 - INFO - Student 0(14473) -   EP-0 train B4900: loss=204.89312744140625 critic_loss=28.424967 actor_loss=1764.684692 entropy=0.326828 | (tn, fp, fn, tp)=[679680  15611  33253  14372] all_prf1=(0.479338, 0.301774, 0.370374) avg_critic_loss=22.524113 all_acc=0.934227| process=1196.8s elapsed=1188.0s
+04/27/2026 16:09:52 - INFO - iteration(0) -   EP-0 train progress: handled=15669/48355 finished=15610/48355 active=59
+04/27/2026 16:09:59 - INFO - Student 0(14473) -   EP-0 train B5000: loss=210.74053955078125 critic_loss=25.843756 actor_loss=1848.968018 entropy=0.018272 | (tn, fp, fn, tp)=[693586  15962  33965  14638] all_prf1=(0.478366, 0.301175, 0.369632) avg_critic_loss=22.582977 all_acc=0.934146| process=1220.3s elapsed=1211.4s
+04/27/2026 16:10:22 - INFO - Student 0(14473) -   EP-0 train B5100: loss=105.79145050048828 critic_loss=20.505650 actor_loss=852.873901 entropy=1.592528 | (tn, fp, fn, tp)=[707501  16321  34679  14895] all_prf1=(0.477159, 0.300460, 0.368734) avg_critic_loss=22.662824 all_acc=0.934057| process=1244.1s elapsed=1235.0s
+04/27/2026 16:10:32 - INFO - iteration(0) -   EP-0 train progress: handled=16173/48355 finished=16113/48355 active=60
+04/27/2026 16:10:44 - INFO - Student 0(14473) -   EP-0 train B5200: loss=340.17486572265625 critic_loss=39.593502 actor_loss=3005.813477 entropy=0.000000 | (tn, fp, fn, tp)=[721576  16621  35330  15121] all_prf1=(0.476372, 0.299717, 0.367939) avg_critic_loss=22.678329 all_acc=0.934127| process=1265.7s elapsed=1256.7s
+04/27/2026 16:11:07 - INFO - Student 0(14473) -   EP-0 train B5300: loss=-41.42420959472656 critic_loss=34.952671 actor_loss=-763.752197 entropy=1.659610 | (tn, fp, fn, tp)=[735796  16962  36040  15381] all_prf1=(0.475559, 0.299119, 0.367246) avg_critic_loss=22.706983 all_acc=0.934092| process=1288.7s elapsed=1279.8s
+04/27/2026 16:11:10 - INFO - iteration(0) -   EP-0 train progress: handled=16673/48355 finished=16616/48355 active=57
+04/27/2026 16:11:30 - INFO - Student 0(14473) -   EP-0 train B5400: loss=6.183781147003174 critic_loss=7.066031 actor_loss=-8.815777 entropy=0.671831 | (tn, fp, fn, tp)=[749954  17309  36705  15689] all_prf1=(0.475453, 0.299443, 0.367458) avg_critic_loss=22.712841 all_acc=0.934102| process=1312.0s elapsed=1302.9s
+04/27/2026 16:11:49 - INFO - iteration(0) -   EP-0 train progress: handled=17176/48355 finished=17118/48355 active=58
+04/27/2026 16:11:53 - INFO - Student 0(14473) -   EP-0 train B5500: loss=-11.34090805053711 critic_loss=21.963360 actor_loss=-333.036072 entropy=0.659565 | (tn, fp, fn, tp)=[763994  17689  37431  15937] all_prf1=(0.473949, 0.298625, 0.366393) avg_critic_loss=22.758520 all_acc=0.933992| process=1334.7s elapsed=1325.5s
+04/27/2026 16:12:17 - INFO - Student 0(14473) -   EP-0 train B5600: loss=302.4107666015625 critic_loss=37.529785 actor_loss=2648.811279 entropy=0.144242 | (tn, fp, fn, tp)=[778207  18132  38123  16267] all_prf1=(0.472892, 0.299081, 0.366419) avg_critic_loss=22.843765 all_acc=0.933874| process=1358.8s elapsed=1349.6s
+04/27/2026 16:12:30 - INFO - iteration(0) -   EP-0 train progress: handled=17680/48355 finished=17618/48355 active=62
+04/27/2026 16:12:41 - INFO - Student 0(14473) -   EP-0 train B5700: loss=70.49037170410156 critic_loss=20.085760 actor_loss=504.059845 entropy=1.371246 | (tn, fp, fn, tp)=[792761  18470  38822  16512] all_prf1=(0.472014, 0.298406, 0.365649) avg_critic_loss=22.847918 all_acc=0.933886| process=1382.7s elapsed=1373.6s
+04/27/2026 16:13:05 - INFO - Student 0(14473) -   EP-0 train B5800: loss=198.1787109375 critic_loss=32.935940 actor_loss=1652.444580 entropy=1.695138 | (tn, fp, fn, tp)=[807562  18806  39507  16768] all_prf1=(0.471355, 0.297965, 0.365121) avg_critic_loss=22.853436 all_acc=0.933934| process=1406.8s elapsed=1397.6s
+04/27/2026 16:13:09 - INFO - iteration(0) -   EP-0 train progress: handled=18177/48355 finished=18118/48355 active=59
+04/27/2026 16:13:28 - INFO - Student 0(14473) -   EP-0 train B5900: loss=272.9232482910156 critic_loss=25.819983 actor_loss=2471.043701 entropy=1.089858 | (tn, fp, fn, tp)=[822450  19215  40202  17105] all_prf1=(0.470953, 0.298480, 0.365386) avg_critic_loss=22.864021 all_acc=0.933906| process=1429.9s elapsed=1420.5s
+04/27/2026 16:13:46 - INFO - iteration(0) -   EP-0 train progress: handled=18681/48355 finished=18625/48355 active=56
+04/27/2026 16:13:50 - INFO - Student 0(14473) -   EP-0 train B6000: loss=112.81947326660156 critic_loss=26.045174 actor_loss=867.753296 entropy=1.026674 | (tn, fp, fn, tp)=[838082  19608  40939  17366] all_prf1=(0.469681, 0.297848, 0.364529) avg_critic_loss=22.932830 all_acc=0.933900| process=1452.1s elapsed=1442.4s
+04/27/2026 16:14:13 - INFO - Student 0(14473) -   EP-0 train B6100: loss=-159.19349670410156 critic_loss=14.135834 actor_loss=-1733.293213 entropy=0.000000 | (tn, fp, fn, tp)=[853180  19994  41660  17675] all_prf1=(0.469219, 0.297885, 0.364418) avg_critic_loss=23.002192 all_acc=0.933884| process=1475.8s elapsed=1466.0s
+04/27/2026 16:14:25 - INFO - iteration(0) -   EP-0 train progress: handled=19182/48355 finished=19129/48355 active=53
+04/27/2026 16:14:36 - INFO - Student 0(14473) -   EP-0 train B6200: loss=36.28786849975586 critic_loss=27.649281 actor_loss=86.385864 entropy=0.000000 | (tn, fp, fn, tp)=[868177  20382  42351  18017] all_prf1=(0.469205, 0.298453, 0.364838) avg_critic_loss=23.025820 all_acc=0.933891| process=1499.2s elapsed=1489.2s
+04/27/2026 16:14:58 - INFO - Student 0(14473) -   EP-0 train B6300: loss=-34.900936126708984 critic_loss=17.578424 actor_loss=-524.786682 entropy=0.689781 | (tn, fp, fn, tp)=[883491  20717  43034  18280] all_prf1=(0.468754, 0.298137, 0.364467) avg_critic_loss=23.030154 all_acc=0.933973| process=1521.3s elapsed=1511.1s
+04/27/2026 16:15:06 - INFO - iteration(0) -   EP-0 train progress: handled=19692/48355 finished=19634/48355 active=58
+04/27/2026 16:15:21 - INFO - Student 0(14473) -   EP-0 train B6400: loss=1.6829967498779297 critic_loss=20.968004 actor_loss=-192.850067 entropy=0.000000 | (tn, fp, fn, tp)=[898963  21095  43737  18592] all_prf1=(0.468466, 0.298288, 0.364492) avg_critic_loss=23.051005 all_acc=0.934006| process=1544.3s elapsed=1534.0s
+04/27/2026 16:15:45 - INFO - Student 0(14473) -   EP-0 train B6500: loss=203.7705078125 critic_loss=59.446629 actor_loss=1443.265259 entropy=2.638139 | (tn, fp, fn, tp)=[914489  21406  44454  18826] all_prf1=(0.467936, 0.297503, 0.363745) avg_critic_loss=23.089525 all_acc=0.934086| process=1568.0s elapsed=1557.6s
+04/27/2026 16:15:45 - INFO - iteration(0) -   EP-0 train progress: handled=20196/48355 finished=20139/48355 active=57
+04/27/2026 16:16:07 - INFO - Student 0(14473) -   EP-0 train B6600: loss=-188.36192321777344 critic_loss=26.168835 actor_loss=-2145.293701 entropy=1.387847 | (tn, fp, fn, tp)=[929830  21858  45184  19111] all_prf1=(0.466475, 0.297239, 0.363106) avg_critic_loss=23.177530 all_acc=0.934013| process=1590.4s elapsed=1579.8s
+04/27/2026 16:16:23 - INFO - iteration(0) -   EP-0 train progress: handled=20702/48355 finished=20642/48355 active=60
+04/27/2026 16:16:30 - INFO - Student 0(14473) -   EP-0 train B6700: loss=899.773681640625 critic_loss=64.592644 actor_loss=8351.831055 entropy=2.079065 | (tn, fp, fn, tp)=[945402  22194  45895  19356] all_prf1=(0.465848, 0.296639, 0.362469) avg_critic_loss=23.206848 all_acc=0.934076| process=1613.7s elapsed=1603.0s
+04/27/2026 16:16:55 - INFO - Student 0(14473) -   EP-0 train B6800: loss=-13.848123550415039 critic_loss=39.723461 actor_loss=-535.708923 entropy=0.692403 | (tn, fp, fn, tp)=[960738  22534  46615  19632] all_prf1=(0.465588, 0.296345, 0.362171) avg_critic_loss=23.214375 all_acc=0.934114| process=1638.5s elapsed=1627.5s
+04/27/2026 16:17:01 - INFO - iteration(0) -   EP-0 train progress: handled=21205/48355 finished=21146/48355 active=59
+04/27/2026 16:17:16 - INFO - Student 0(14473) -   EP-0 train B6900: loss=-965.6116333007812 critic_loss=41.499485 actor_loss=-10071.104492 entropy=0.677045 | (tn, fp, fn, tp)=[976339  22931  47369  19920] all_prf1=(0.464867, 0.296036, 0.361721) avg_critic_loss=23.299793 all_acc=0.934087| process=1659.9s elapsed=1648.7s
+04/27/2026 16:17:39 - INFO - iteration(0) -   EP-0 train progress: handled=21709/48355 finished=21653/48355 active=56
+04/27/2026 16:17:40 - INFO - Student 0(14473) -   EP-0 train B7000: loss=135.32574462890625 critic_loss=15.243148 actor_loss=1200.825928 entropy=0.000000 | (tn, fp, fn, tp)=[992035  23335  48067  20248] all_prf1=(0.464585, 0.296392, 0.361901) avg_critic_loss=23.333479 all_acc=0.934112| process=1683.8s elapsed=1672.4s
+04/27/2026 16:18:03 - INFO - Student 0(14473) -   EP-0 train B7100: loss=202.30125427246094 critic_loss=18.940248 actor_loss=1833.609985 entropy=0.000000 | (tn, fp, fn, tp)=[1007407   23714   48681   20541] all_prf1=(0.464151, 0.296741, 0.362029) avg_critic_loss=23.326657 all_acc=0.934207| process=1707.6s elapsed=1696.2s
+04/27/2026 16:18:18 - INFO - iteration(0) -   EP-0 train progress: handled=22204/48355 finished=22153/48355 active=51
+04/27/2026 16:18:25 - INFO - Student 0(14473) -   EP-0 train B7200: loss=164.01564025878906 critic_loss=24.424253 actor_loss=1395.913818 entropy=0.000000 | (tn, fp, fn, tp)=[1023083   24092   49418   20821] all_prf1=(0.463585, 0.296431, 0.361626) avg_critic_loss=23.368308 all_acc=0.934214| process=1729.8s elapsed=1718.2s
+04/27/2026 16:18:50 - INFO - Student 0(14473) -   EP-0 train B7300: loss=101.46003723144531 critic_loss=22.475199 actor_loss=789.872253 entropy=2.388494 | (tn, fp, fn, tp)=[1038602   24407   50099   21082] all_prf1=(0.463453, 0.296175, 0.361395) avg_critic_loss=23.361085 all_acc=0.934309| process=1754.0s elapsed=1742.3s
+04/27/2026 16:18:58 - INFO - iteration(0) -   EP-0 train progress: handled=22712/48355 finished=22655/48355 active=57
+04/27/2026 16:19:13 - INFO - Student 0(14473) -   EP-0 train B7400: loss=514.8191528320312 critic_loss=29.058306 actor_loss=4857.614746 entropy=0.587698 | (tn, fp, fn, tp)=[1054277   24756   50796   21372] all_prf1=(0.463319, 0.296142, 0.361331) avg_critic_loss=23.374273 all_acc=0.934371| process=1777.6s elapsed=1765.7s
+04/27/2026 16:19:35 - INFO - Student 0(14473) -   EP-0 train B7500: loss=-27.977405548095703 critic_loss=12.659661 actor_loss=-406.370544 entropy=0.011003 | (tn, fp, fn, tp)=[1069627   25137   51533   21687] all_prf1=(0.463160, 0.296190, 0.361318) avg_critic_loss=23.425512 all_acc=0.934357| process=1799.8s elapsed=1787.8s
+04/27/2026 16:19:37 - INFO - iteration(0) -   EP-0 train progress: handled=23211/48355 finished=23155/48355 active=56
+04/27/2026 16:19:59 - INFO - Student 0(14473) -   EP-0 train B7600: loss=-243.23399353027344 critic_loss=17.481512 actor_loss=-2607.150879 entropy=0.413034 | (tn, fp, fn, tp)=[1084519   25550   52223   21961] all_prf1=(0.462230, 0.296034, 0.360919) avg_critic_loss=23.465162 all_acc=0.934327| process=1823.5s elapsed=1811.4s
+04/27/2026 16:20:16 - INFO - iteration(0) -   EP-0 train progress: handled=23716/48355 finished=23656/48355 active=60
+04/27/2026 16:20:22 - INFO - Student 0(14473) -   EP-0 train B7700: loss=82.03742980957031 critic_loss=16.352476 actor_loss=656.856445 entropy=0.693125 | (tn, fp, fn, tp)=[1099858   25933   52970   22274] all_prf1=(0.462049, 0.296024, 0.360856) avg_critic_loss=23.504797 all_acc=0.934304| process=1847.2s elapsed=1834.9s
+04/27/2026 16:20:43 - INFO - Student 0(14473) -   EP-0 train B7800: loss=-85.97443389892578 critic_loss=23.695038 actor_loss=-1096.683105 entropy=1.160736 | (tn, fp, fn, tp)=[1115608   26248   53677   22571] all_prf1=(0.462340, 0.296021, 0.360943) avg_critic_loss=23.511175 all_acc=0.934386| process=1868.5s elapsed=1856.0s
+04/27/2026 16:20:52 - INFO - iteration(0) -   EP-0 train progress: handled=24218/48355 finished=24160/48355 active=58
+04/27/2026 16:21:09 - INFO - Student 0(14473) -   EP-0 train B7900: loss=147.04373168945312 critic_loss=25.184626 actor_loss=1218.597900 entropy=0.693147 | (tn, fp, fn, tp)=[1130933   26613   54455   22826] all_prf1=(0.461700, 0.295364, 0.360259) avg_critic_loss=23.545841 all_acc=0.934349| process=1893.8s elapsed=1881.3s
+04/27/2026 16:21:32 - INFO - Student 0(14473) -   EP-0 train B8000: loss=195.24803161621094 critic_loss=25.142614 actor_loss=1701.054199 entropy=0.000000 | (tn, fp, fn, tp)=[1146122   26964   55232   23111] all_prf1=(0.461528, 0.294998, 0.359934) avg_critic_loss=23.576719 all_acc=0.934318| process=1917.2s elapsed=1904.6s
+04/27/2026 16:21:33 - INFO - iteration(0) -   EP-0 train progress: handled=24721/48355 finished=24662/48355 active=59
+04/27/2026 16:21:55 - INFO - Student 0(14473) -   EP-0 train B8100: loss=-128.11314392089844 critic_loss=26.777916 actor_loss=-1548.896729 entropy=1.386293 | (tn, fp, fn, tp)=[1161133   27301   55984   23389] all_prf1=(0.461413, 0.294672, 0.359656) avg_critic_loss=23.588163 all_acc=0.934308| process=1940.1s elapsed=1927.3s
+04/27/2026 16:22:14 - INFO - iteration(0) -   EP-0 train progress: handled=25223/48355 finished=25166/48355 active=57
+04/27/2026 16:22:19 - INFO - Student 0(14473) -   EP-0 train B8200: loss=39.909942626953125 critic_loss=19.706467 actor_loss=202.052673 entropy=1.791759 | (tn, fp, fn, tp)=[1176818   27631   56739   23626] all_prf1=(0.460932, 0.293984, 0.358998) avg_critic_loss=23.610668 all_acc=0.934333| process=1964.8s elapsed=1951.8s
+04/27/2026 16:22:42 - INFO - Student 0(14473) -   EP-0 train B8300: loss=-207.39193725585938 critic_loss=26.739876 actor_loss=-2341.318115 entropy=0.000000 | (tn, fp, fn, tp)=[1191764   28062   57579   23907] all_prf1=(0.460024, 0.293388, 0.358278) avg_critic_loss=23.661903 all_acc=0.934189| process=1988.3s elapsed=1975.2s
+04/27/2026 16:22:52 - INFO - iteration(0) -   EP-0 train progress: handled=25729/48355 finished=25672/48355 active=57
+04/27/2026 16:23:04 - INFO - Student 0(14473) -   EP-0 train B8400: loss=-37.24949645996094 critic_loss=21.017319 actor_loss=-582.657166 entropy=1.098612 | (tn, fp, fn, tp)=[1207017   28461   58382   24182] all_prf1=(0.459358, 0.292888, 0.357703) avg_critic_loss=23.726516 all_acc=0.934112| process=2010.2s elapsed=1997.0s
+04/27/2026 16:23:29 - INFO - Student 0(14473) -   EP-0 train B8500: loss=505.2178649902344 critic_loss=52.809689 actor_loss=4524.086914 entropy=0.514454 | (tn, fp, fn, tp)=[1222323   28910   59171   24481] all_prf1=(0.458523, 0.292653, 0.357275) avg_critic_loss=23.795169 all_acc=0.934016| process=2034.9s elapsed=2021.5s
+04/27/2026 16:23:31 - INFO - iteration(0) -   EP-0 train progress: handled=26233/48355 finished=26172/48355 active=61
+04/27/2026 16:23:53 - INFO - Student 0(14473) -   EP-0 train B8600: loss=558.1939697265625 critic_loss=35.562653 actor_loss=5226.312500 entropy=0.000000 | (tn, fp, fn, tp)=[1237703   29259   59947   24729] all_prf1=(0.458046, 0.292043, 0.356675) avg_critic_loss=23.820555 all_acc=0.934002| process=2059.4s elapsed=2045.9s
+04/27/2026 16:24:10 - INFO - iteration(0) -   EP-0 train progress: handled=26727/48355 finished=26674/48355 active=53
+04/27/2026 16:24:14 - INFO - Student 0(14473) -   EP-0 train B8700: loss=578.6197509765625 critic_loss=46.432068 actor_loss=5321.876953 entropy=0.000000 | (tn, fp, fn, tp)=[1253347   29573   60756   24934] all_prf1=(0.457446, 0.290979, 0.355699) avg_critic_loss=23.849943 all_acc=0.933999| process=2080.7s elapsed=2067.0s
+04/27/2026 16:24:39 - INFO - Student 0(14473) -   EP-0 train B8800: loss=191.83346557617188 critic_loss=30.316095 actor_loss=1615.173584 entropy=0.000000 | (tn, fp, fn, tp)=[1269110   29875   61462   25211] all_prf1=(0.457666, 0.290875, 0.355688) avg_critic_loss=23.850073 all_acc=0.934084| process=2106.0s elapsed=2092.0s
+04/27/2026 16:24:49 - INFO - iteration(0) -   EP-0 train progress: handled=27237/48355 finished=27181/48355 active=56
+04/27/2026 16:25:03 - INFO - Student 0(14473) -   EP-0 train B8900: loss=-68.88449096679688 critic_loss=18.346300 actor_loss=-872.307251 entropy=0.062444 | (tn, fp, fn, tp)=[1284783   30175   62160   25456] all_prf1=(0.457587, 0.290541, 0.355414) avg_critic_loss=23.843912 all_acc=0.934167| process=2129.9s elapsed=2115.7s
+04/27/2026 16:25:27 - INFO - iteration(0) -   EP-0 train progress: handled=27743/48355 finished=27689/48355 active=54
+04/27/2026 16:25:29 - INFO - Student 0(14473) -   EP-0 train B9000: loss=-241.23095703125 critic_loss=27.688761 actor_loss=-2689.179688 entropy=1.757096 | (tn, fp, fn, tp)=[1300173   30480   62952   25688] all_prf1=(0.457342, 0.289801, 0.354787) avg_critic_loss=23.858102 all_acc=0.934170| process=2156.4s elapsed=2141.9s
+04/27/2026 16:25:53 - INFO - Student 0(14473) -   EP-0 train B9100: loss=0.9749034643173218 critic_loss=20.756744 actor_loss=-197.791321 entropy=2.708050 | (tn, fp, fn, tp)=[1315455   30793   63728   25910] all_prf1=(0.456942, 0.289052, 0.354104) avg_critic_loss=23.889162 all_acc=0.934172| process=2180.7s elapsed=2166.1s
+04/27/2026 16:26:03 - INFO - iteration(0) -   EP-0 train progress: handled=28252/48355 finished=28199/48355 active=53
+04/27/2026 16:26:15 - INFO - Student 0(14473) -   EP-0 train B9200: loss=165.2323455810547 critic_loss=39.656788 actor_loss=1255.832275 entropy=7.677863 | (tn, fp, fn, tp)=[1330690   31129   64538   26104] all_prf1=(0.456101, 0.287990, 0.353055) avg_critic_loss=23.953838 all_acc=0.934135| process=2202.4s elapsed=2187.7s
+04/27/2026 16:26:40 - INFO - Student 0(14473) -   EP-0 train B9300: loss=-17.069538116455078 critic_loss=22.507748 actor_loss=-395.681549 entropy=9.128695 | (tn, fp, fn, tp)=[1346387   31407   65316   26259] all_prf1=(0.455364, 0.286749, 0.351901) avg_critic_loss=24.008889 all_acc=0.934174| process=2227.2s elapsed=2212.4s
+04/27/2026 16:26:42 - INFO - iteration(0) -   EP-0 train progress: handled=28759/48355 finished=28701/48355 active=58
+04/27/2026 16:27:02 - INFO - Student 0(14473) -   EP-0 train B9400: loss=550.192138671875 critic_loss=48.137840 actor_loss=5020.603027 entropy=5.990108 | (tn, fp, fn, tp)=[1361695   31753   66132   26434] all_prf1=(0.454294, 0.285569, 0.350693) avg_critic_loss=24.055275 all_acc=0.934129| process=2249.8s elapsed=2234.9s
+04/27/2026 16:27:21 - INFO - iteration(0) -   EP-0 train progress: handled=29264/48355 finished=29207/48355 active=57
+04/27/2026 16:27:26 - INFO - Student 0(14473) -   EP-0 train B9500: loss=-37.765419006347656 critic_loss=12.900271 actor_loss=-506.645905 entropy=1.098101 | (tn, fp, fn, tp)=[1376962   32028   66851   26648] all_prf1=(0.454155, 0.285008, 0.350228) avg_critic_loss=24.056798 all_acc=0.934190| process=2273.4s elapsed=2258.4s
+04/27/2026 16:27:50 - INFO - Student 0(14473) -   EP-0 train B9600: loss=71.32550811767578 critic_loss=37.444115 actor_loss=338.820923 entropy=0.693147 | (tn, fp, fn, tp)=[1392315   32375   67607   26878] all_prf1=(0.453614, 0.284468, 0.349660) avg_critic_loss=24.089222 all_acc=0.934187| process=2297.9s elapsed=2282.7s
+04/27/2026 16:28:01 - INFO - iteration(0) -   EP-0 train progress: handled=29770/48355 finished=29709/48355 active=61
+04/27/2026 16:28:12 - INFO - Student 0(14473) -   EP-0 train B9700: loss=90.1871109008789 critic_loss=17.477501 actor_loss=727.096069 entropy=-0.000000 | (tn, fp, fn, tp)=[1408021   32679   68343   27128] all_prf1=(0.453592, 0.284149, 0.349412) avg_critic_loss=24.084765 all_acc=0.934238| process=2320.3s elapsed=2305.2s
+04/27/2026 16:28:37 - INFO - Student 0(14473) -   EP-0 train B9800: loss=-26.25257110595703 critic_loss=15.639325 actor_loss=-418.907959 entropy=1.098612 | (tn, fp, fn, tp)=[1423487   33039   69056   27402] all_prf1=(0.453368, 0.284082, 0.349295) avg_critic_loss=24.097404 all_acc=0.934259| process=2345.2s elapsed=2330.0s
+04/27/2026 16:28:41 - INFO - iteration(0) -   EP-0 train progress: handled=30270/48355 finished=30212/48355 active=58
+04/27/2026 16:28:59 - INFO - Student 0(14473) -   EP-0 train B9900: loss=278.4028015136719 critic_loss=21.471375 actor_loss=2569.314209 entropy=-0.000000 | (tn, fp, fn, tp)=[1439504   33326   69763   27660] all_prf1=(0.453547, 0.283917, 0.349223) avg_critic_loss=24.097453 all_acc=0.934349| process=2366.9s elapsed=2351.6s
+04/27/2026 16:29:21 - INFO - iteration(0) -   EP-0 train progress: handled=30774/48355 finished=30713/48355 active=61
+04/27/2026 16:29:24 - INFO - Student 0(14473) -   EP-0 train B10000: loss=-113.68132781982422 critic_loss=23.122061 actor_loss=-1368.033936 entropy=-0.000000 | (tn, fp, fn, tp)=[1455590   33696   70523   27952] all_prf1=(0.453413, 0.283849, 0.349132) avg_critic_loss=24.119444 all_acc=0.934361| process=2392.0s elapsed=2376.4s
+04/27/2026 16:29:48 - INFO - Student 0(14473) -   EP-0 train B10100: loss=31.766281127929688 critic_loss=19.978243 actor_loss=117.880371 entropy=-0.000000 | (tn, fp, fn, tp)=[1471670   33989   71224   28226] all_prf1=(0.453685, 0.283821, 0.349191) avg_critic_loss=24.121964 all_acc=0.934451| process=2416.6s elapsed=2400.7s
+04/27/2026 16:30:01 - INFO - iteration(0) -   EP-0 train progress: handled=31276/48355 finished=31216/48355 active=60
+04/27/2026 16:30:11 - INFO - Student 0(14473) -   EP-0 train B10200: loss=-534.1790161132812 critic_loss=38.359306 actor_loss=-5725.377930 entropy=0.570311 | (tn, fp, fn, tp)=[1487570   34333   71973   28511] all_prf1=(0.453679, 0.283737, 0.349126) avg_critic_loss=24.140346 all_acc=0.934476| process=2439.5s elapsed=2423.4s
+04/27/2026 16:30:34 - INFO - Student 0(14473) -   EP-0 train B10300: loss=455.4231262207031 critic_loss=29.944916 actor_loss=4254.789062 entropy=0.693147 | (tn, fp, fn, tp)=[1503464   34658   72761   28772] all_prf1=(0.453602, 0.283376, 0.348830) avg_critic_loss=24.173149 all_acc=0.934487| process=2463.5s elapsed=2447.2s
+04/27/2026 16:30:40 - INFO - iteration(0) -   EP-0 train progress: handled=31775/48355 finished=31718/48355 active=57
+04/27/2026 16:30:56 - INFO - Student 0(14473) -   EP-0 train B10400: loss=83.61978912353516 critic_loss=36.239010 actor_loss=473.817932 entropy=1.016655 | (tn, fp, fn, tp)=[1519204   34952   73543   28990] all_prf1=(0.453380, 0.282738, 0.348281) avg_critic_loss=24.206769 all_acc=0.934511| process=2485.5s elapsed=2468.9s
+04/27/2026 16:31:18 - INFO - iteration(0) -   EP-0 train progress: handled=32281/48355 finished=32222/48355 active=59
+04/27/2026 16:31:20 - INFO - Student 0(14473) -   EP-0 train B10500: loss=354.472900390625 critic_loss=32.922318 actor_loss=3215.511719 entropy=0.617939 | (tn, fp, fn, tp)=[1535074   35203   74262   29184] all_prf1=(0.453259, 0.282118, 0.347774) avg_critic_loss=24.194558 all_acc=0.934598| process=2509.7s elapsed=2493.0s
+04/27/2026 16:31:42 - INFO - Student 0(14473) -   EP-0 train B10600: loss=-12.18851089477539 critic_loss=16.175699 actor_loss=-283.642090 entropy=-0.000000 | (tn, fp, fn, tp)=[1550535   35491   75040   29430] all_prf1=(0.453320, 0.281708, 0.347480) avg_critic_loss=24.202638 all_acc=0.934616| process=2532.2s elapsed=2515.2s
+04/27/2026 16:31:57 - INFO - iteration(0) -   EP-0 train progress: handled=32784/48355 finished=32728/48355 active=56
+04/27/2026 16:32:07 - INFO - Student 0(14473) -   EP-0 train B10700: loss=-297.6123962402344 critic_loss=36.370518 actor_loss=-3339.817871 entropy=1.120380 | (tn, fp, fn, tp)=[1565597   35769   75832   29673] all_prf1=(0.453424, 0.281247, 0.347160) avg_critic_loss=24.218874 all_acc=0.934617| process=2556.4s elapsed=2539.3s
+04/27/2026 16:32:28 - INFO - Student 0(14473) -   EP-0 train B10800: loss=116.76239013671875 critic_loss=17.351934 actor_loss=994.104492 entropy=-0.000000 | (tn, fp, fn, tp)=[1581020   36069   76622   29931] all_prf1=(0.453500, 0.280902, 0.346919) avg_critic_loss=24.217215 all_acc=0.934620| process=2578.4s elapsed=2561.2s
+04/27/2026 16:32:35 - INFO - iteration(0) -   EP-0 train progress: handled=33291/48355 finished=33231/48355 active=60
+04/27/2026 16:32:52 - INFO - Student 0(14473) -   EP-0 train B10900: loss=167.59869384765625 critic_loss=42.493042 actor_loss=1251.056396 entropy=-0.000000 | (tn, fp, fn, tp)=[1596321   36366   77409   30162] all_prf1=(0.453373, 0.280392, 0.346493) avg_critic_loss=24.223831 all_acc=0.934622| process=2601.7s elapsed=2584.3s
+04/27/2026 16:33:13 - INFO - iteration(0) -   EP-0 train progress: handled=33788/48355 finished=33731/48355 active=57
+04/27/2026 16:33:15 - INFO - Student 0(14473) -   EP-0 train B11000: loss=-920.340087890625 critic_loss=21.909929 actor_loss=-9422.500000 entropy=-0.000000 | (tn, fp, fn, tp)=[1610851   36624   78152   30399] all_prf1=(0.453561, 0.280043, 0.346281) avg_critic_loss=24.207009 all_acc=0.934639| process=2625.8s elapsed=2608.1s
+04/27/2026 16:33:37 - INFO - Student 0(14473) -   EP-0 train B11100: loss=-815.2592163085938 critic_loss=15.601435 actor_loss=-8308.601562 entropy=0.509543 | (tn, fp, fn, tp)=[1625525   36920   78888   30645] all_prf1=(0.453563, 0.279779, 0.346080) avg_critic_loss=24.196173 all_acc=0.934645| process=2647.9s elapsed=2630.1s
+04/27/2026 16:33:51 - INFO - iteration(0) -   EP-0 train progress: handled=34291/48355 finished=34231/48355 active=60
+04/27/2026 16:34:01 - INFO - Student 0(14473) -   EP-0 train B11200: loss=1061.1971435546875 critic_loss=53.866199 actor_loss=10073.309570 entropy=-0.000000 | (tn, fp, fn, tp)=[1640212   37180   79724   30877] all_prf1=(0.453693, 0.279175, 0.345655) avg_critic_loss=24.206885 all_acc=0.934617| process=2672.0s elapsed=2654.0s
+04/27/2026 16:34:24 - INFO - Student 0(14473) -   EP-0 train B11300: loss=-462.8938903808594 critic_loss=14.151866 actor_loss=-4770.448730 entropy=0.846759 | (tn, fp, fn, tp)=[1654877   37473   80527   31070] all_prf1=(0.453292, 0.278413, 0.344954) avg_critic_loss=24.211532 all_acc=0.934588| process=2695.0s elapsed=2676.9s
+04/27/2026 16:34:33 - INFO - iteration(0) -   EP-0 train progress: handled=34794/48355 finished=34735/48355 active=59
+04/27/2026 16:34:51 - INFO - Student 0(14473) -   EP-0 train B11400: loss=85.00695037841797 critic_loss=14.524328 actor_loss=704.858032 entropy=3.178054 | (tn, fp, fn, tp)=[1670192   37690   81321   31242] all_prf1=(0.453229, 0.277551, 0.344274) avg_critic_loss=24.201461 all_acc=0.934625| process=2721.7s elapsed=2703.5s
+04/27/2026 16:35:13 - INFO - Student 0(14473) -   EP-0 train B11500: loss=-29.183937072753906 critic_loss=23.147160 actor_loss=-523.310974 entropy=-0.000000 | (tn, fp, fn, tp)=[1685501   37933   82086   31467] all_prf1=(0.453415, 0.277113, 0.343990) avg_critic_loss=24.194882 all_acc=0.934665| process=2744.1s elapsed=2725.9s
+04/27/2026 16:35:14 - INFO - iteration(0) -   EP-0 train progress: handled=35298/48355 finished=35240/48355 active=58
+04/27/2026 16:35:37 - INFO - Student 0(14473) -   EP-0 train B11600: loss=439.4638366699219 critic_loss=28.235046 actor_loss=4112.294922 entropy=0.693147 | (tn, fp, fn, tp)=[1700751   38199   82839   31646] all_prf1=(0.453089, 0.276420, 0.343362) avg_critic_loss=24.199452 all_acc=0.934695| process=2768.4s elapsed=2750.0s
+04/27/2026 16:35:53 - INFO - iteration(0) -   EP-0 train progress: handled=35803/48355 finished=35743/48355 active=60
+04/27/2026 16:36:00 - INFO - Student 0(14473) -   EP-0 train B11700: loss=-132.9198760986328 critic_loss=19.042189 actor_loss=-1519.620605 entropy=-0.000000 | (tn, fp, fn, tp)=[1715899   38496   83646   31902] all_prf1=(0.453166, 0.276093, 0.343132) avg_critic_loss=24.220203 all_acc=0.934681| process=2791.4s elapsed=2772.9s
+04/27/2026 16:36:26 - INFO - Student 0(14473) -   EP-0 train B11800: loss=-286.5355529785156 critic_loss=12.552397 actor_loss=-2990.872559 entropy=0.693147 | (tn, fp, fn, tp)=[1731560   38767   84417   32130] all_prf1=(0.453193, 0.275683, 0.342822) avg_critic_loss=24.219965 all_acc=0.934715| process=2816.9s elapsed=2798.3s
+04/27/2026 16:36:33 - INFO - iteration(0) -   EP-0 train progress: handled=36303/48355 finished=36246/48355 active=57
+04/27/2026 16:36:51 - INFO - Student 0(14473) -   EP-0 train B11900: loss=-59.88663864135742 critic_loss=13.383235 actor_loss=-732.698730 entropy=-0.000000 | (tn, fp, fn, tp)=[1746672   39045   85226   32389] all_prf1=(0.453412, 0.275382, 0.342652) avg_critic_loss=24.224801 all_acc=0.934709| process=2842.2s elapsed=2823.5s
+04/27/2026 16:37:13 - INFO - Student 0(14473) -   EP-0 train B12000: loss=-575.3272094726562 critic_loss=26.774754 actor_loss=-6021.020020 entropy=-0.000000 | (tn, fp, fn, tp)=[1761980   39338   86079   32598] all_prf1=(0.453153, 0.274678, 0.342033) avg_critic_loss=24.270599 all_acc=0.934678| process=2864.9s elapsed=2846.1s
+04/27/2026 16:37:14 - INFO - iteration(0) -   EP-0 train progress: handled=36806/48355 finished=36750/48355 active=56
+04/27/2026 16:37:40 - INFO - Student 0(14473) -   EP-0 train B12100: loss=1186.7882080078125 critic_loss=38.795559 actor_loss=11479.926758 entropy=-0.000000 | (tn, fp, fn, tp)=[1778006   39551   86920   32764] all_prf1=(0.453073, 0.273754, 0.341293) avg_critic_loss=24.344958 all_acc=0.934716| process=2891.3s elapsed=2872.4s
+04/27/2026 16:37:55 - INFO - iteration(0) -   EP-0 train progress: handled=37308/48355 finished=37250/48355 active=58
+04/27/2026 16:38:03 - INFO - Student 0(14473) -   EP-0 train B12200: loss=-587.1937866210938 critic_loss=16.493706 actor_loss=-6036.868164 entropy=0.649222 | (tn, fp, fn, tp)=[1793787   39854   87848   32962] all_prf1=(0.452675, 0.272842, 0.340471) avg_critic_loss=24.379001 all_acc=0.934661| process=2915.2s elapsed=2895.9s
+04/27/2026 16:38:28 - INFO - Student 0(14473) -   EP-0 train B12300: loss=133.08743286132812 critic_loss=26.700388 actor_loss=1063.900879 entropy=3.044522 | (tn, fp, fn, tp)=[1810146   40101   88717   33185] all_prf1=(0.452815, 0.272227, 0.340031) avg_critic_loss=24.397061 all_acc=0.934681| process=2940.0s elapsed=2920.6s
+04/27/2026 16:38:35 - INFO - iteration(0) -   EP-0 train progress: handled=37806/48355 finished=37752/48355 active=54
+04/27/2026 16:38:49 - INFO - Student 0(14473) -   EP-0 train B12400: loss=797.052734375 critic_loss=25.011576 actor_loss=7720.411133 entropy=-0.000000 | (tn, fp, fn, tp)=[1826401   40326   89555   33415] all_prf1=(0.453140, 0.271733, 0.339737) avg_critic_loss=24.398999 all_acc=0.934723| process=2961.5s elapsed=2942.1s
+04/27/2026 16:39:14 - INFO - Student 0(14473) -   EP-0 train B12500: loss=-564.7765502929688 critic_loss=19.683401 actor_loss=-5844.599609 entropy=-0.000000 | (tn, fp, fn, tp)=[1842623   40585   90406   33649] all_prf1=(0.453283, 0.271243, 0.339394) avg_critic_loss=24.404995 all_acc=0.934741| process=2986.1s elapsed=2966.5s
+04/27/2026 16:39:15 - INFO - iteration(0) -   EP-0 train progress: handled=38312/48355 finished=38258/48355 active=54
+04/27/2026 16:39:36 - INFO - Student 0(14473) -   EP-0 train B12600: loss=158.52560424804688 critic_loss=17.027838 actor_loss=1414.981323 entropy=0.371935 | (tn, fp, fn, tp)=[1859340   40777   91260   33827] all_prf1=(0.453421, 0.270428, 0.338793) avg_critic_loss=24.417817 all_acc=0.934803| process=3008.7s elapsed=2989.0s
+04/27/2026 16:39:54 - INFO - iteration(0) -   EP-0 train progress: handled=38821/48355 finished=38760/48355 active=61
+04/27/2026 16:40:00 - INFO - Student 0(14473) -   EP-0 train B12700: loss=-549.98095703125 critic_loss=27.352709 actor_loss=-5773.314453 entropy=2.181923 | (tn, fp, fn, tp)=[1875454   40995   92095   34016] all_prf1=(0.453480, 0.269731, 0.338262) avg_critic_loss=24.415734 all_acc=0.934842| process=3032.8s elapsed=3013.0s
+04/27/2026 16:40:22 - INFO - Student 0(14473) -   EP-0 train B12800: loss=201.31101989746094 critic_loss=16.839224 actor_loss=1844.735840 entropy=1.791759 | (tn, fp, fn, tp)=[1891523   41257   92947   34239] all_prf1=(0.453521, 0.269204, 0.337859) avg_critic_loss=24.424941 all_acc=0.934851| process=3054.4s elapsed=3034.4s
+04/27/2026 16:40:31 - INFO - iteration(0) -   EP-0 train progress: handled=39321/48355 finished=39261/48355 active=60
+04/27/2026 16:40:46 - INFO - Student 0(14473) -   EP-0 train B12900: loss=452.7290954589844 critic_loss=18.922007 actor_loss=4338.103516 entropy=3.262854 | (tn, fp, fn, tp)=[1907367   41456   93787   34408] all_prf1=(0.453548, 0.268404, 0.337236) avg_critic_loss=24.415653 all_acc=0.934886| process=3078.5s elapsed=3058.4s
+04/27/2026 16:41:08 - INFO - Student 0(14473) -   EP-0 train B13000: loss=-397.3213195800781 critic_loss=14.661251 actor_loss=-4119.812012 entropy=1.386294 | (tn, fp, fn, tp)=[1923222   41648   94580   34587] all_prf1=(0.453689, 0.267770, 0.336774) avg_critic_loss=24.404241 all_acc=0.934945| process=3101.1s elapsed=3080.9s
+04/27/2026 16:41:09 - INFO - iteration(0) -   EP-0 train progress: handled=39823/48355 finished=39765/48355 active=58
+04/27/2026 16:41:33 - INFO - Student 0(14473) -   EP-0 train B13100: loss=456.25439453125 critic_loss=20.638254 actor_loss=4356.192383 entropy=3.091043 | (tn, fp, fn, tp)=[1938712   41892   95380   34824] all_prf1=(0.453934, 0.267457, 0.336594) avg_critic_loss=24.401097 all_acc=0.934967| process=3126.1s elapsed=3105.7s
+04/27/2026 16:41:49 - INFO - iteration(0) -   EP-0 train progress: handled=40328/48355 finished=40267/48355 active=61
+04/27/2026 16:41:56 - INFO - Student 0(14473) -   EP-0 train B13200: loss=-397.82281494140625 critic_loss=19.622528 actor_loss=-4174.432617 entropy=2.079442 | (tn, fp, fn, tp)=[1954333   42088   96218   35049] all_prf1=(0.454373, 0.267005, 0.336356) avg_critic_loss=24.398890 all_acc=0.934997| process=3148.9s elapsed=3128.3s
+04/27/2026 16:42:21 - INFO - Student 0(14473) -   EP-0 train B13300: loss=466.47967529296875 critic_loss=22.777647 actor_loss=4437.044922 entropy=2.463371 | (tn, fp, fn, tp)=[1969878   42327   97011   35304] all_prf1=(0.454767, 0.266818, 0.336315) avg_critic_loss=24.395532 all_acc=0.935026| process=3174.3s elapsed=3153.6s
+04/27/2026 16:42:29 - INFO - iteration(0) -   EP-0 train progress: handled=40827/48355 finished=40769/48355 active=58
+04/27/2026 16:42:42 - INFO - Student 0(14473) -   EP-0 train B13400: loss=-57.101173400878906 critic_loss=18.945969 actor_loss=-760.471375 entropy=-0.000000 | (tn, fp, fn, tp)=[1985134   42510   97837   35506] all_prf1=(0.455112, 0.266276, 0.335978) avg_critic_loss=24.388779 all_acc=0.935054| process=3195.9s elapsed=3175.1s
+04/27/2026 16:43:07 - INFO - Student 0(14473) -   EP-0 train B13500: loss=660.2014770507812 critic_loss=28.779566 actor_loss=6314.223633 entropy=0.396822 | (tn, fp, fn, tp)=[1999685   42753   98634   35725] all_prf1=(0.455223, 0.265892, 0.335703) avg_critic_loss=24.384743 all_acc=0.935048| process=3221.3s elapsed=3200.2s
+04/27/2026 16:43:07 - INFO - iteration(0) -   EP-0 train progress: handled=41326/48355 finished=41272/48355 active=54
+04/27/2026 16:43:30 - INFO - Student 0(14473) -   EP-0 train B13600: loss=-517.0677490234375 critic_loss=23.215508 actor_loss=-5402.816406 entropy=1.609426 | (tn, fp, fn, tp)=[2014332   42966   99433   35920] all_prf1=(0.455341, 0.265380, 0.335326) avg_critic_loss=24.376862 all_acc=0.935056| process=3243.6s elapsed=3222.3s
+04/27/2026 16:43:48 - INFO - iteration(0) -   EP-0 train progress: handled=41832/48355 finished=41776/48355 active=56
+04/27/2026 16:43:55 - INFO - Student 0(14473) -   EP-0 train B13700: loss=-344.5492858886719 critic_loss=22.758944 actor_loss=-3673.082275 entropy=-0.000000 | (tn, fp, fn, tp)=[2029368   43185  100209   36109] all_prf1=(0.455381, 0.264888, 0.334944) avg_critic_loss=24.365169 all_acc=0.935083| process=3268.8s elapsed=3247.2s
+04/27/2026 16:44:17 - INFO - Student 0(14473) -   EP-0 train B13800: loss=-429.26312255859375 critic_loss=20.083515 actor_loss=-4493.466309 entropy=-0.000000 | (tn, fp, fn, tp)=[2044759   43396  101031   36274] all_prf1=(0.455303, 0.264186, 0.334361) avg_critic_loss=24.363563 all_acc=0.935102| process=3291.6s elapsed=3269.8s
+04/27/2026 16:44:25 - INFO - iteration(0) -   EP-0 train progress: handled=42336/48355 finished=42277/48355 active=59
+04/27/2026 16:44:42 - INFO - Student 0(14473) -   EP-0 train B13900: loss=-31.958879470825195 critic_loss=21.176868 actor_loss=-531.345703 entropy=1.176214 | (tn, fp, fn, tp)=[2059857   43632  101823   36475] all_prf1=(0.455328, 0.263742, 0.334012) avg_critic_loss=24.359649 all_acc=0.935116| process=3316.4s elapsed=3294.5s
+04/27/2026 16:45:04 - INFO - Student 0(14473) -   EP-0 train B14000: loss=-1315.2978515625 critic_loss=15.990569 actor_loss=-13312.869141 entropy=1.476082 | (tn, fp, fn, tp)=[2074954   43883  102651   36622] all_prf1=(0.454903, 0.262951, 0.333264) avg_critic_loss=24.355481 all_acc=0.935108| process=3339.2s elapsed=3317.1s
+04/27/2026 16:45:05 - INFO - iteration(0) -   EP-0 train progress: handled=42840/48355 finished=42786/48355 active=54
+04/27/2026 16:45:29 - INFO - Student 0(14473) -   EP-0 train B14100: loss=-241.1758270263672 critic_loss=27.317238 actor_loss=-2684.916016 entropy=1.450533 | (tn, fp, fn, tp)=[2090215   44056  103500   36787] all_prf1=(0.455042, 0.262227, 0.332718) avg_critic_loss=24.347846 all_acc=0.935128| process=3363.9s elapsed=3341.5s
+04/27/2026 16:45:42 - INFO - iteration(0) -   EP-0 train progress: handled=43344/48355 finished=43292/48355 active=52
+04/27/2026 16:45:51 - INFO - Student 0(14473) -   EP-0 train B14200: loss=-962.2811279296875 critic_loss=20.973379 actor_loss=-9832.544922 entropy=-0.000000 | (tn, fp, fn, tp)=[2105903   44249  104285   36938] all_prf1=(0.454974, 0.261558, 0.332161) avg_critic_loss=24.344761 all_acc=0.935177| process=3386.0s elapsed=3363.4s
+04/27/2026 16:46:16 - INFO - Student 0(14473) -   EP-0 train B14300: loss=-65.18338775634766 critic_loss=23.311255 actor_loss=-884.931641 entropy=1.478581 | (tn, fp, fn, tp)=[2121561   44351  105102   37021] all_prf1=(0.454960, 0.260486, 0.331292) avg_critic_loss=24.327597 all_acc=0.935247| process=3411.1s elapsed=3388.3s
+04/27/2026 16:46:19 - INFO - iteration(0) -   EP-0 train progress: handled=43854/48355 finished=43793/48355 active=61
+04/27/2026 16:46:38 - INFO - Student 0(14473) -   EP-0 train B14400: loss=-712.718505859375 critic_loss=16.642950 actor_loss=-7293.614258 entropy=-0.000000 | (tn, fp, fn, tp)=[2137164   44513  105936   37169] all_prf1=(0.455045, 0.259732, 0.330704) avg_critic_loss=24.315493 all_acc=0.935285| process=3433.3s elapsed=3410.3s
+04/27/2026 16:46:52 - INFO - iteration(0) -   EP-0 train progress: handled=44346/48355 finished=44293/48355 active=53
+04/27/2026 16:47:02 - INFO - Student 0(14473) -   EP-0 train B14500: loss=-1174.6982421875 critic_loss=20.812830 actor_loss=-11955.076172 entropy=3.401197 | (tn, fp, fn, tp)=[2152655   44739  106778   37363] all_prf1=(0.455080, 0.259211, 0.330291) avg_critic_loss=24.309875 all_acc=0.935292| process=3458.1s elapsed=3434.9s
+04/27/2026 16:47:23 - INFO - Student 0(14473) -   EP-0 train B14600: loss=-497.15106201171875 critic_loss=23.977068 actor_loss=-5211.267578 entropy=1.386294 | (tn, fp, fn, tp)=[2168348   44980  107545   37516] all_prf1=(0.454761, 0.258622, 0.329728) avg_critic_loss=24.292545 all_acc=0.935327| process=3479.2s elapsed=3455.9s
+04/27/2026 16:47:29 - INFO - iteration(0) -   EP-0 train progress: handled=44854/48355 finished=44795/48355 active=59
+04/27/2026 16:47:45 - INFO - Student 0(14473) -   EP-0 train B14700: loss=-258.7221374511719 critic_loss=23.535393 actor_loss=-2822.564453 entropy=1.098612 | (tn, fp, fn, tp)=[2184044   45210  108357   37720] all_prf1=(0.454841, 0.258220, 0.329422) avg_critic_loss=24.294026 all_acc=0.935349| process=3500.8s elapsed=3477.3s
+04/27/2026 16:48:06 - INFO - iteration(0) -   EP-0 train progress: handled=45358/48355 finished=45295/48355 active=63
+04/27/2026 16:48:09 - INFO - Student 0(14473) -   EP-0 train B14800: loss=-2146.294677734375 critic_loss=30.651937 actor_loss=-21769.457031 entropy=0.692156 | (tn, fp, fn, tp)=[2199436   45454  109145   37962] all_prf1=(0.455093, 0.258057, 0.329355) avg_critic_loss=24.284165 all_acc=0.935368| process=3525.9s elapsed=3502.0s
+04/27/2026 16:48:31 - INFO - Student 0(14473) -   EP-0 train B14900: loss=-507.1451110839844 critic_loss=13.833492 actor_loss=-5209.770020 entropy=1.609438 | (tn, fp, fn, tp)=[2214948   45679  109899   38121] all_prf1=(0.454905, 0.257540, 0.328884) avg_critic_loss=24.270268 all_acc=0.935409| process=3547.9s elapsed=3523.9s
+04/27/2026 16:48:43 - INFO - iteration(0) -   EP-0 train progress: handled=45854/48355 finished=45797/48355 active=57
+04/27/2026 16:48:56 - INFO - Student 0(14473) -   EP-0 train B15000: loss=-845.7908935546875 critic_loss=17.308331 actor_loss=-8630.976562 entropy=1.609438 | (tn, fp, fn, tp)=[2230884   45889  110676   38323] all_prf1=(0.455078, 0.257203, 0.328655) avg_critic_loss=24.258297 all_acc=0.935458| process=3573.0s elapsed=3548.8s
+04/27/2026 16:49:17 - INFO - iteration(0) -   EP-0 train progress: handled=46356/48355 finished=46299/48355 active=57
+04/27/2026 16:49:19 - INFO - Student 0(14473) -   EP-0 train B15100: loss=824.8565063476562 critic_loss=26.628275 actor_loss=7982.282227 entropy=-0.000000 | (tn, fp, fn, tp)=[2246164   46097  111429   38543] all_prf1=(0.455376, 0.257001, 0.328568) avg_critic_loss=24.241913 all_acc=0.935499| process=3595.7s elapsed=3571.4s
+04/27/2026 16:49:44 - INFO - Student 0(14473) -   EP-0 train B15200: loss=-1097.5260009765625 critic_loss=27.281385 actor_loss=-11248.041992 entropy=3.218876 | (tn, fp, fn, tp)=[2261938   46331  112158   38772] all_prf1=(0.455589, 0.256887, 0.328530) avg_critic_loss=24.228382 all_acc=0.935553| process=3620.7s elapsed=3596.3s
+04/27/2026 16:49:55 - INFO - iteration(0) -   EP-0 train progress: handled=46859/48355 finished=46799/48355 active=60
+04/27/2026 16:50:05 - INFO - Student 0(14473) -   EP-0 train B15300: loss=-687.1619873046875 critic_loss=24.818737 actor_loss=-7119.792969 entropy=1.386294 | (tn, fp, fn, tp)=[2277607   46532  112936   38969] all_prf1=(0.455772, 0.256535, 0.328290) avg_critic_loss=24.213777 all_acc=0.935596| process=3642.8s elapsed=3618.1s
+04/27/2026 16:50:31 - INFO - Student 0(14473) -   EP-0 train B15400: loss=59.35465621948242 critic_loss=23.526276 actor_loss=358.283813 entropy=-0.000000 | (tn, fp, fn, tp)=[2293227   46772  113735   39193] all_prf1=(0.455918, 0.256284, 0.328122) avg_critic_loss=24.205724 all_acc=0.935615| process=3668.1s elapsed=3643.2s
+04/27/2026 16:50:34 - INFO - iteration(0) -   EP-0 train progress: handled=47361/48355 finished=47303/48355 active=58
+04/27/2026 16:50:53 - INFO - Student 0(14473) -   EP-0 train B15500: loss=-699.8680419921875 critic_loss=24.235773 actor_loss=-7241.038086 entropy=-0.000000 | (tn, fp, fn, tp)=[2308745   46948  114548   39385] all_prf1=(0.456199, 0.255858, 0.327845) avg_critic_loss=24.194594 all_acc=0.935649| process=3690.7s elapsed=3665.7s
+04/27/2026 16:51:14 - INFO - iteration(0) -   EP-0 train progress: handled=47864/48355 finished=47803/48355 active=61
+04/27/2026 16:51:19 - INFO - Student 0(14473) -   EP-0 train B15600: loss=-754.5284423828125 critic_loss=34.390308 actor_loss=-7889.166504 entropy=2.079412 | (tn, fp, fn, tp)=[2324702   47145  115371   39604] all_prf1=(0.456536, 0.255551, 0.327680) avg_critic_loss=24.186566 all_acc=0.935684| process=3716.6s elapsed=3691.5s
+04/27/2026 16:51:41 - INFO - Student 0(14473) -   EP-0 train B15700: loss=406.21612548828125 critic_loss=28.184839 actor_loss=3780.340576 entropy=2.772589 | (tn, fp, fn, tp)=[2340353   47324  116213   39787] all_prf1=(0.456739, 0.255045, 0.327316) avg_critic_loss=24.182989 all_acc=0.935708| process=3738.7s elapsed=3713.3s
+04/27/2026 16:51:51 - INFO - iteration(0) -   EP-0 train progress: handled=48355/48355 finished=48305/48355 active=50
+04/27/2026 16:51:55 - INFO - iteration(0) -   EP-0 train progress: handled=48355/48355 finished=48355/48355 active=0
+04/27/2026 16:52:00 - INFO - Student 0(14473) -   EP-0 train SUMMARY: elapsed=3727.8s | avg_loss=24.285982 (tn, fp, fn, tp)=[2351319   47506  116808   39916] precision=0.456590 recall=0.254690 f1=0.326985 | total_cnt=15770success_cnt=45884 #states(expanded, reached, cut, dropped, complete)=(41.10, 108.80, 0.00, 7.16, 21.92) t(perf, process)=(4.90s, 4.93s) final_stage_cnt=45884 R@1=0.3724827826693401 R@3=0.6901752244791213 R@5=0.7700723563769506 R@10=0.8268895475547031
+04/27/2026 16:52:00 - INFO - main -   EP-0 model saved at: /root/RL_table2charts/Results/Models/20260427154946-update_actor_new-2el192fd128.128GRUh-allCharts-actor-policy-RL/states_ep0.pt
+04/27/2026 16:52:23 - INFO - iteration(0) -   EP-0 valid progress: handled=559/6789 finished=502/6789 active=57
+04/27/2026 16:52:27 - INFO - Student 0(14473) -   EP-0 test/valid B100: loss=-4686.0751953125 critic_loss=127.498116 actor_loss=-48135.726562 entropy=0.373086 | (tn, fp, fn, tp)=[59956  1918  2874   912] all_prf1=(0.322261, 0.240887, 0.275695) avg_critic_loss=304.034770 all_acc=0.927018| process=27.1s elapsed=26.8s
+04/27/2026 16:52:44 - INFO - iteration(0) -   EP-0 valid progress: handled=1064/6789 finished=1007/6789 active=57
+04/27/2026 16:52:53 - INFO - Student 0(14473) -   EP-0 test/valid B200: loss=-1279.37890625 critic_loss=827.492676 actor_loss=-21068.662109 entropy=5.347041 | (tn, fp, fn, tp)=[126896   3806   6556   1435] all_prf1=(0.273803, 0.179577, 0.216898) avg_critic_loss=457.269226 all_acc=0.925288| process=53.3s elapsed=52.6s
+04/27/2026 16:53:06 - INFO - iteration(0) -   EP-0 valid progress: handled=1569/6789 finished=1514/6789 active=55
+04/27/2026 16:53:19 - INFO - Student 0(14473) -   EP-0 test/valid B300: loss=-2714.6220703125 critic_loss=348.160004 actor_loss=-30627.746094 entropy=7.245707 | (tn, fp, fn, tp)=[201923   6069  10331   2085] all_prf1=(0.255703, 0.167928, 0.202722) avg_critic_loss=503.215970 all_acc=0.925593| process=79.9s elapsed=79.1s
+04/27/2026 16:53:29 - INFO - iteration(0) -   EP-0 valid progress: handled=2075/6789 finished=2015/6789 active=60
+04/27/2026 16:53:46 - INFO - Student 0(14473) -   EP-0 test/valid B400: loss=-3987.301025390625 critic_loss=104.050133 actor_loss=-40913.484375 entropy=2.772543 | (tn, fp, fn, tp)=[262981   8331  13325   2977] all_prf1=(0.263265, 0.182616, 0.215647) avg_critic_loss=515.759529 all_acc=0.924705| process=106.5s elapsed=105.6s
+04/27/2026 16:53:50 - INFO - iteration(0) -   EP-0 valid progress: handled=2572/6789 finished=2517/6789 active=55
+04/27/2026 16:54:10 - INFO - Student 0(14473) -   EP-0 test/valid B500: loss=-4664.728515625 critic_loss=138.274185 actor_loss=-48029.972656 entropy=5.257439 | (tn, fp, fn, tp)=[317043  10606  15971   4228] all_prf1=(0.285021, 0.209317, 0.241372) avg_critic_loss=438.398737 all_acc=0.923596| process=130.6s elapsed=129.4s
+04/27/2026 16:54:11 - INFO - iteration(0) -   EP-0 valid progress: handled=3078/6789 finished=3019/6789 active=59
+04/27/2026 16:54:32 - INFO - iteration(0) -   EP-0 valid progress: handled=3578/6789 finished=3522/6789 active=56
+04/27/2026 16:54:35 - INFO - Student 0(14473) -   EP-0 test/valid B600: loss=-5084.24462890625 critic_loss=172.060577 actor_loss=-52562.953125 entropy=9.534058 | (tn, fp, fn, tp)=[375066  12714  18540   5347] all_prf1=(0.296052, 0.223846, 0.254935) avg_critic_loss=385.713641 all_acc=0.924079| process=155.9s elapsed=154.3s
+04/27/2026 16:54:53 - INFO - iteration(0) -   EP-0 valid progress: handled=4085/6789 finished=4028/6789 active=57
+04/27/2026 16:54:59 - INFO - Student 0(14473) -   EP-0 test/valid B700: loss=-2331.926025390625 critic_loss=63.437740 actor_loss=-23953.601562 entropy=3.688848 | (tn, fp, fn, tp)=[432929  14850  21106   6504] all_prf1=(0.304580, 0.235567, 0.265665) avg_critic_loss=347.174282 all_acc=0.924365| process=180.8s elapsed=179.0s
+04/27/2026 16:55:14 - INFO - iteration(0) -   EP-0 valid progress: handled=4590/6789 finished=4530/6789 active=60
+04/27/2026 16:55:24 - INFO - Student 0(14473) -   EP-0 test/valid B800: loss=-3960.509521484375 critic_loss=204.074493 actor_loss=-41645.742188 entropy=9.703915 | (tn, fp, fn, tp)=[489477  17006  23679   7676] all_prf1=(0.310996, 0.244809, 0.273962) avg_critic_loss=317.862563 all_acc=0.924355| process=205.9s elapsed=204.0s
+04/27/2026 16:55:35 - INFO - iteration(0) -   EP-0 valid progress: handled=5088/6789 finished=5030/6789 active=58
+04/27/2026 16:55:47 - INFO - Student 0(14473) -   EP-0 test/valid B900: loss=-7605.34130859375 critic_loss=95.917198 actor_loss=-77012.562500 entropy=2.079380 | (tn, fp, fn, tp)=[544064  19034  26349   8819] all_prf1=(0.316627, 0.250768, 0.279875) avg_critic_loss=294.859281 all_acc=0.924142| process=229.5s elapsed=227.3s
+04/27/2026 16:55:55 - INFO - iteration(0) -   EP-0 valid progress: handled=5591/6789 finished=5530/6789 active=61
+04/27/2026 16:56:13 - INFO - Student 0(14473) -   EP-0 test/valid B1000: loss=-5031.89306640625 critic_loss=104.274475 actor_loss=-51361.640625 entropy=3.400611 | (tn, fp, fn, tp)=[602100  20806  28927   9771] all_prf1=(0.319554, 0.252494, 0.282093) avg_critic_loss=278.410745 all_acc=0.924830| process=254.8s elapsed=252.4s
+04/27/2026 16:56:17 - INFO - iteration(0) -   EP-0 valid progress: handled=6092/6789 finished=6032/6789 active=60
+04/27/2026 16:56:37 - INFO - iteration(0) -   EP-0 valid progress: handled=6589/6789 finished=6532/6789 active=57
+04/27/2026 16:56:38 - INFO - Student 0(14473) -   EP-0 test/valid B1100: loss=-4370.74658203125 critic_loss=130.378250 actor_loss=-45011.175781 entropy=7.336650 | (tn, fp, fn, tp)=[653122  22613  31655  10732] all_prf1=(0.321847, 0.253191, 0.283420) avg_critic_loss=263.806586 all_acc=0.924431| process=280.2s elapsed=277.6s
+04/27/2026 16:56:47 - INFO - iteration(0) -   EP-0 valid progress: handled=6789/6789 finished=6789/6789 active=0
+04/27/2026 16:56:47 - INFO - Student 0(14473) -   EP-0 test/valid SUMMARY: elapsed=286.7s | avg_loss=256.596457 (tn, fp, fn, tp)=[672001  23122  32503  11020] precision=0.322770 recall=0.253199 f1=0.283783 | total_cnt=1143success_cnt=6431 #states(expanded, reached, cut, dropped, complete)=(41.27, 118.86, 0.00, 9.60, 21.24) t(perf, process)=(2.77s, 2.79s) final_stage_cnt=6431 R@1=0.30866117244596486 R@3=0.5576115689628363 R@5=0.6163893640180377 R@10=0.6823200124397449
+04/27/2026 16:56:47 - INFO - main -   Finished!
+resolved_train_command=python -m torch.distributed.launch --nproc_per_node 1 --master_port 29653 --module reinforce.update_actor_new_learn_dist --corpus_path /root/RL_table2charts/Data/PlotlyTable2Charts --model_size=small --model_name=cp --features=all-fast --negative_weight=0.8 --search_limits=e50-b4-na --epochs=1 --model_save_path /root/RL_table2charts/Results/Models -p /root/RL_table2charts/Results/Models/sft_states_ep0.pt --summary_path /root/RL_table2charts/Results/summary --search_type allCharts --input_type allCharts --previous_type allCharts --lang=en --queue_mode=local --log_freq_agent=500 --log_freq_batch=100 --max_tables=64 --min_memory=1000 --memory_sample_size=64 --memory_sample_rounds=2 --actor_loss_weight=0.1 --entropy_weight=0.001 --actor_sampling_temperature=1.0 --actor_policy_seed=20260424 --actor_eval_greedy
+discovered_actor_critic_dir=/root/RL_table2charts/Results/Models/20260427154946-update_actor_new-2el192fd128.128GRUh-allCharts-actor-policy-RL
+discovered_actor_critic_ckpt=/root/RL_table2charts/Results/Models/20260427154946-update_actor_new-2el192fd128.128GRUh-allCharts-actor-policy-RL/states_ep0.pt
+
+=== running eval experiments/configs/actor_critic_actor_score.json ===
+04/27/2026 16:56:53 - INFO - test() -   Test Args: Namespace(empirical_study=False, empirical_corpus_path='/home/exp/pivot-clean-data/', empirical_log_path='/home/exp/empirical_result', corpus_path='/root/RL_table2charts/Data/PlotlyTable2Charts', lang='en', model_name='cp', model_dir_path='/root/RL_table2charts/Results/Models/20260427154946-update_actor_new-2el192fd128.128GRUh-allCharts-actor-policy-RL', model_file='states_ep0.pt', log_save_path='evaluations/test-actor_critic_actor_score-20260427T074935Z', recommend_log_path='/root/RL_table2charts/Results/Models/20260427154946-update_actor_new-2el192fd128.128GRUh-allCharts-actor-policy-RL/evaluations/test-actor_critic_actor_score-20260427T074935Z/recommendations', model_size='small', features='all-fast', search_type='allCharts', test_type=None, input_type='allCharts', previous_type='allCharts', limit_search_group=True, mode=None, log_freq_agent=100, use_valid_set=False, test_whole_plotly=False, web_table=False, unified_ana_token=False, search_algo='drill_down', nprocs=1, nagents=64, nthreads=5, search_limits='e50-b4-na', add_sep_to_dim=False, force_keep_empty_dim=False, test_field_selections=False, test_design_choices=False, score_mode='actor', critic_score_weight=0.5)
+04/27/2026 16:56:53 - INFO - test() -   DataConfig: {'corpus_path': '/root/RL_table2charts/Data/PlotlyTable2Charts', 'encoding': 'utf-8-sig', 'lang': 'en', 'english_only': True, 'max_field_num': 128, 'max_val_num': 4, 'max_dim_num': 4, 'need_field_indices': True, 'field_permutation': False, 'unified_ana_token': False, 'allow_multiple_values': True, 'limit_search_group': True, 'use_field_type': True, 'use_field_role': True, 'use_binary_tags': True, 'use_data_features': True, 'use_semantic_embeds': True, 'load_at_most': None, 'num_train_analysis': None, 'embed_model': 'fasttext', 'embed_len': 50, 'embed_in_json': True, 'embed_layer': '0', 'embed_reduce_type': 'mean', 'data_len': 31, 'data_cleanup_fn': <function cleanup_data_features_nn at 0x765ba929d000>, 'train_ratio': 0.7, 'valid_ratio': 0.1, 'test_ratio': 0.2, 'empirical_study': False, 'cat_nums': [5, 3, 3, 3, 3, 3, 3, 3], 'search_all_types': True, 'search_types': [<AnaType.LineChart: 1>, <AnaType.BarChart: 2>, <AnaType.ScatterChart: 3>, <AnaType.PieChart: 4>], 'model_types': [<AnaType.LineChart: 1>, <AnaType.BarChart: 2>, <AnaType.ScatterChart: 3>, <AnaType.PieChart: 4>], 'input_types': [<AnaType.LineChart: 1>, <AnaType.BarChart: 2>, <AnaType.ScatterChart: 3>, <AnaType.PieChart: 4>], 'consider_grouping_operations': True, 'top_freq_func': 0, 'cat_len': 8, 'empty_embed': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'empty_cat': [0, 0, 0, 0, 0, 0, 0, 0], 'empty_data': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'num_permute_samples': [0, 1, 2, 4, 8], 'score_mode': 'actor', 'critic_score_weight': 0.5}
+04/27/2026 16:56:53 - INFO - test() -   CPConfig: {'encoder_layers': 2, 'decoder_layers': 1, 'num_cmd_tokens': 3, 'encoder_GRU_hidden': 128, 'decoder_GRU_hidden': 128, 'feature_dim': 192, 'decoder_hidden_size': 192, 'embed_len': 50, 'data_len': 31, 'cat_len': 8, 'positional': False, 'num_token_type': 14, 'num_segment_type': 9, 'num_categories': [5, 3, 3, 3, 3, 3, 3, 3], 'hidden': 192, 'dropout': 0.1}
+04/27/2026 16:56:53 - INFO - test() -   SearchConfig: {'load_ground_truth': True, 'search_all_types': True, 'search_single_type': None, 'test_field_selections': False, 'test_design_choices': False, 'max_rc': (1000, 1000), 'expand_limit': 50, 'time_limit': inf, 'dim_count': 600, 'com_count': 1100, 'frontier_size': 300, 'beam_size': 4, 'min_threshold': 0.0, 'log_path': '/root/RL_table2charts/Results/Models/20260427154946-update_actor_new-2el192fd128.128GRUh-allCharts-actor-policy-RL/evaluations/test-actor_critic_actor_score-20260427T074935Z/recommendations'}
+04/27/2026 16:56:53 - INFO - test() -   Loading index...
+04/27/2026 16:56:59 - INFO - Index init() -   Total schemas is 72939
+04/27/2026 16:56:59 - INFO - Index init() -   file filtered by language: 0
+04/27/2026 16:56:59 - INFO - Index init() -   file filtered by openfile: 0
+04/27/2026 16:56:59 - INFO - Index init() -   table filtered by no embedding: 0
+04/27/2026 16:56:59 - INFO - Index init() -   table filtered by too many fields: 0
+04/27/2026 16:56:59 - INFO - Index init() -   table filtered by no valid analysis: 3902
+04/27/2026 16:56:59 - INFO - Index init() -   chart filtered by no valnum: 0
+04/27/2026 16:56:59 - INFO - Index init() -   chart filtered by too many values: 4484
+04/27/2026 16:56:59 - INFO - Index init() -   pivot filtered by too many dimensions: 0
+04/27/2026 16:56:59 - INFO - Index init() -   Total tables is 69037
+04/27/2026 16:56:59 - INFO - Index init() -   Total charts is 104635
+04/27/2026 16:56:59 - INFO - Index init() -   Total pivot tables is 0
+04/27/2026 16:57:00 - INFO - test() -   Testing 13893 files from /root/RL_table2charts/Data/PlotlyTable2Charts/index/schema_ids.json
+  0%|          | 0/13893 [00:00<?, ?it/s]100%|██████████| 13893/13893 [00:00<00:00, 256710.41it/s]
+04/27/2026 16:57:00 - INFO - summary(@75642) -   Start to summarize info.
+04/27/2026 16:57:00 - INFO - model config() -   UpdateActorCopyNetConfig: {'encoder_layers': 2, 'decoder_layers': 1, 'num_cmd_tokens': 3, 'encoder_GRU_hidden': 128, 'decoder_GRU_hidden': 128, 'feature_dim': 192, 'decoder_hidden_size': 192, 'embed_len': 50, 'data_len': 31, 'cat_len': 8, 'positional': False, 'num_token_type': 14, 'num_segment_type': 9, 'num_categories': [5, 3, 3, 3, 3, 3, 3, 3], 'hidden': 192, 'dropout': 0.1}
+04/27/2026 16:57:00 - INFO - process_parallel (0@75642) -   Start to search on 0.
+/root/RL_table2charts/Table2Charts/data/sequence.py:146: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at ../torch/csrc/utils/tensor_new.cpp:275.)
+  "data_characters": 0 if len(config.empty_data) == 0 else torch.tensor(append_padding(
+04/27/2026 16:57:06 - INFO - summary(@75642) -   100th done. 5.9s passed.
+04/27/2026 16:57:10 - INFO - summary(@75642) -   200th done. 10.9s passed.
+04/27/2026 16:57:15 - INFO - summary(@75642) -   300th done. 15.5s passed.
+04/27/2026 16:57:19 - INFO - summary(@75642) -   400th done. 19.5s passed.
+04/27/2026 16:57:24 - INFO - summary(@75642) -   500th done. 24.0s passed.
+04/27/2026 16:57:29 - INFO - summary(@75642) -   600th done. 29.0s passed.
+04/27/2026 16:57:33 - INFO - summary(@75642) -   700th done. 33.7s passed.
+04/27/2026 16:57:37 - INFO - summary(@75642) -   800th done. 37.8s passed.
+04/27/2026 16:57:42 - INFO - summary(@75642) -   900th done. 42.6s passed.
+04/27/2026 16:57:46 - INFO - summary(@75642) -   1000th done. 46.9s passed.
+04/27/2026 16:57:52 - INFO - summary(@75642) -   1100th done. 52.0s passed.
+04/27/2026 16:57:57 - INFO - summary(@75642) -   1200th done. 57.6s passed.
+04/27/2026 16:58:02 - INFO - summary(@75642) -   1300th done. 62.2s passed.
+04/27/2026 16:58:07 - INFO - summary(@75642) -   1400th done. 66.9s passed.
+04/27/2026 16:58:12 - INFO - summary(@75642) -   1500th done. 72.2s passed.
+04/27/2026 16:58:17 - INFO - summary(@75642) -   1600th done. 77.3s passed.
+04/27/2026 16:58:22 - INFO - summary(@75642) -   1700th done. 82.5s passed.
+04/27/2026 16:58:27 - INFO - summary(@75642) -   1800th done. 87.4s passed.
+04/27/2026 16:58:33 - INFO - summary(@75642) -   1900th done. 92.9s passed.
+04/27/2026 16:58:38 - INFO - summary(@75642) -   2000th done. 98.4s passed.
+04/27/2026 16:58:44 - INFO - summary(@75642) -   2100th done. 104.0s passed.
+04/27/2026 16:58:49 - INFO - summary(@75642) -   2200th done. 109.4s passed.
+04/27/2026 16:58:54 - INFO - summary(@75642) -   2300th done. 114.0s passed.
+04/27/2026 16:58:58 - INFO - summary(@75642) -   2400th done. 118.5s passed.
+04/27/2026 16:59:02 - INFO - summary(@75642) -   2500th done. 122.8s passed.
+04/27/2026 16:59:08 - INFO - summary(@75642) -   2600th done. 128.1s passed.
+04/27/2026 16:59:13 - INFO - summary(@75642) -   2700th done. 133.0s passed.
+04/27/2026 16:59:17 - INFO - summary(@75642) -   2800th done. 137.8s passed.
+04/27/2026 16:59:22 - INFO - summary(@75642) -   2900th done. 142.0s passed.
+04/27/2026 16:59:27 - INFO - summary(@75642) -   3000th done. 146.9s passed.
+04/27/2026 16:59:31 - INFO - summary(@75642) -   3100th done. 151.8s passed.
+04/27/2026 16:59:36 - INFO - summary(@75642) -   3200th done. 156.4s passed.
+04/27/2026 16:59:40 - INFO - summary(@75642) -   3300th done. 160.6s passed.
+04/27/2026 16:59:45 - INFO - summary(@75642) -   3400th done. 165.5s passed.
+04/27/2026 16:59:51 - INFO - summary(@75642) -   3500th done. 171.1s passed.
+04/27/2026 16:59:56 - INFO - summary(@75642) -   3600th done. 176.5s passed.
+04/27/2026 17:00:01 - INFO - summary(@75642) -   3700th done. 181.0s passed.
+04/27/2026 17:00:06 - INFO - summary(@75642) -   3800th done. 186.0s passed.
+04/27/2026 17:00:10 - INFO - summary(@75642) -   3900th done. 190.8s passed.
+04/27/2026 17:00:15 - INFO - summary(@75642) -   4000th done. 195.0s passed.
+04/27/2026 17:00:20 - INFO - summary(@75642) -   4100th done. 200.2s passed.
+04/27/2026 17:00:25 - INFO - summary(@75642) -   4200th done. 205.6s passed.
+04/27/2026 17:00:29 - INFO - summary(@75642) -   4300th done. 209.9s passed.
+04/27/2026 17:00:34 - INFO - summary(@75642) -   4400th done. 214.5s passed.
+04/27/2026 17:00:38 - INFO - summary(@75642) -   4500th done. 218.9s passed.
+04/27/2026 17:00:43 - INFO - summary(@75642) -   4600th done. 223.6s passed.
+04/27/2026 17:00:48 - INFO - summary(@75642) -   4700th done. 228.5s passed.
+04/27/2026 17:00:53 - INFO - summary(@75642) -   4800th done. 233.7s passed.
+04/27/2026 17:00:58 - INFO - summary(@75642) -   4900th done. 238.4s passed.
+04/27/2026 17:01:04 - INFO - summary(@75642) -   5000th done. 244.5s passed.
+04/27/2026 17:01:08 - INFO - summary(@75642) -   5100th done. 248.6s passed.
+04/27/2026 17:01:13 - INFO - summary(@75642) -   5200th done. 253.7s passed.
+04/27/2026 17:01:19 - INFO - summary(@75642) -   5300th done. 259.7s passed.
+04/27/2026 17:01:25 - INFO - summary(@75642) -   5400th done. 265.7s passed.
+04/27/2026 17:01:30 - INFO - summary(@75642) -   5500th done. 270.7s passed.
+04/27/2026 17:01:35 - INFO - summary(@75642) -   5600th done. 275.3s passed.
+04/27/2026 17:01:39 - INFO - summary(@75642) -   5700th done. 279.1s passed.
+04/27/2026 17:01:44 - INFO - summary(@75642) -   5800th done. 284.0s passed.
+04/27/2026 17:01:48 - INFO - summary(@75642) -   5900th done. 288.6s passed.
+04/27/2026 17:01:54 - INFO - summary(@75642) -   6000th done. 294.4s passed.
+04/27/2026 17:01:59 - INFO - summary(@75642) -   6100th done. 299.3s passed.
+04/27/2026 17:02:02 - INFO - summary(@75642) -   6200th done. 302.6s passed.
+04/27/2026 17:02:07 - INFO - summary(@75642) -   6300th done. 307.7s passed.
+04/27/2026 17:02:12 - INFO - summary(@75642) -   6400th done. 312.4s passed.
+04/27/2026 17:02:17 - INFO - summary(@75642) -   6500th done. 317.4s passed.
+04/27/2026 17:02:22 - INFO - summary(@75642) -   6600th done. 322.7s passed.
+04/27/2026 17:02:28 - INFO - summary(@75642) -   6700th done. 328.4s passed.
+04/27/2026 17:02:33 - INFO - summary(@75642) -   6800th done. 333.7s passed.
+04/27/2026 17:02:38 - INFO - summary(@75642) -   6900th done. 338.7s passed.
+04/27/2026 17:02:45 - INFO - summary(@75642) -   7000th done. 345.2s passed.
+04/27/2026 17:02:50 - INFO - summary(@75642) -   7100th done. 349.9s passed.
+04/27/2026 17:02:55 - INFO - summary(@75642) -   7200th done. 355.2s passed.
+04/27/2026 17:02:59 - INFO - summary(@75642) -   7300th done. 359.6s passed.
+04/27/2026 17:03:04 - INFO - summary(@75642) -   7400th done. 364.5s passed.
+04/27/2026 17:03:10 - INFO - summary(@75642) -   7500th done. 370.6s passed.
+04/27/2026 17:03:15 - INFO - summary(@75642) -   7600th done. 375.1s passed.
+04/27/2026 17:03:20 - INFO - summary(@75642) -   7700th done. 380.5s passed.
+04/27/2026 17:03:25 - INFO - summary(@75642) -   7800th done. 385.0s passed.
+04/27/2026 17:03:29 - INFO - summary(@75642) -   7900th done. 389.4s passed.
+04/27/2026 17:03:34 - INFO - summary(@75642) -   8000th done. 394.8s passed.
+04/27/2026 17:03:39 - INFO - summary(@75642) -   8100th done. 399.4s passed.
+04/27/2026 17:03:44 - INFO - summary(@75642) -   8200th done. 404.6s passed.
+04/27/2026 17:03:50 - INFO - summary(@75642) -   8300th done. 410.5s passed.
+04/27/2026 17:03:55 - INFO - summary(@75642) -   8400th done. 415.4s passed.
+04/27/2026 17:03:59 - INFO - summary(@75642) -   8500th done. 419.6s passed.
+04/27/2026 17:04:05 - INFO - summary(@75642) -   8600th done. 425.9s passed.
+04/27/2026 17:04:09 - INFO - summary(@75642) -   8700th done. 429.8s passed.
+04/27/2026 17:04:14 - INFO - summary(@75642) -   8800th done. 434.4s passed.
+04/27/2026 17:04:20 - INFO - summary(@75642) -   8900th done. 440.6s passed.
+04/27/2026 17:04:25 - INFO - summary(@75642) -   9000th done. 445.0s passed.
+04/27/2026 17:04:29 - INFO - summary(@75642) -   9100th done. 449.5s passed.
+04/27/2026 17:04:34 - INFO - summary(@75642) -   9200th done. 454.0s passed.
+04/27/2026 17:04:39 - INFO - summary(@75642) -   9300th done. 459.7s passed.
+04/27/2026 17:04:44 - INFO - summary(@75642) -   9400th done. 464.3s passed.
+04/27/2026 17:04:48 - INFO - summary(@75642) -   9500th done. 468.4s passed.
+04/27/2026 17:04:54 - INFO - summary(@75642) -   9600th done. 474.3s passed.
+04/27/2026 17:04:58 - INFO - summary(@75642) -   9700th done. 478.7s passed.
+04/27/2026 17:05:03 - INFO - summary(@75642) -   9800th done. 483.4s passed.
+04/27/2026 17:05:09 - INFO - summary(@75642) -   9900th done. 489.1s passed.
+04/27/2026 17:05:13 - INFO - summary(@75642) -   10000th done. 493.9s passed.
+04/27/2026 17:05:18 - INFO - summary(@75642) -   10100th done. 498.2s passed.
+04/27/2026 17:05:22 - INFO - summary(@75642) -   10200th done. 502.7s passed.
+04/27/2026 17:05:29 - INFO - summary(@75642) -   10300th done. 509.7s passed.
+04/27/2026 17:05:35 - INFO - summary(@75642) -   10400th done. 514.9s passed.
+04/27/2026 17:05:39 - INFO - summary(@75642) -   10500th done. 519.2s passed.
+04/27/2026 17:05:45 - INFO - summary(@75642) -   10600th done. 525.2s passed.
+04/27/2026 17:05:49 - INFO - summary(@75642) -   10700th done. 529.5s passed.
+04/27/2026 17:05:54 - INFO - summary(@75642) -   10800th done. 534.6s passed.
+04/27/2026 17:05:58 - INFO - summary(@75642) -   10900th done. 538.8s passed.
+04/27/2026 17:06:05 - INFO - summary(@75642) -   11000th done. 545.1s passed.
+04/27/2026 17:06:09 - INFO - summary(@75642) -   11100th done. 549.1s passed.
+04/27/2026 17:06:14 - INFO - summary(@75642) -   11200th done. 554.4s passed.
+04/27/2026 17:06:19 - INFO - summary(@75642) -   11300th done. 559.5s passed.
+04/27/2026 17:06:25 - INFO - summary(@75642) -   11400th done. 565.7s passed.
+04/27/2026 17:06:30 - INFO - summary(@75642) -   11500th done. 570.8s passed.
+04/27/2026 17:06:35 - INFO - summary(@75642) -   11600th done. 575.4s passed.
+04/27/2026 17:06:40 - INFO - summary(@75642) -   11700th done. 580.2s passed.
+04/27/2026 17:06:46 - INFO - summary(@75642) -   11800th done. 586.4s passed.
+04/27/2026 17:06:50 - INFO - summary(@75642) -   11900th done. 590.7s passed.
+04/27/2026 17:06:55 - INFO - summary(@75642) -   12000th done. 595.7s passed.
+04/27/2026 17:07:00 - INFO - summary(@75642) -   12100th done. 600.6s passed.
+04/27/2026 17:07:04 - INFO - summary(@75642) -   12200th done. 604.7s passed.
+04/27/2026 17:07:11 - INFO - summary(@75642) -   12300th done. 611.3s passed.
+04/27/2026 17:07:14 - INFO - summary(@75642) -   12400th done. 614.6s passed.
+04/27/2026 17:07:19 - INFO - summary(@75642) -   12500th done. 618.9s passed.
+04/27/2026 17:07:23 - INFO - summary(@75642) -   12600th done. 623.1s passed.
+04/27/2026 17:07:29 - INFO - summary(@75642) -   12700th done. 629.5s passed.
+04/27/2026 17:07:33 - INFO - summary(@75642) -   12800th done. 633.5s passed.
+04/27/2026 17:07:38 - INFO - summary(@75642) -   12900th done. 638.8s passed.
+04/27/2026 17:08:10 - INFO - process_parallel (0@75642) -   Finish 13893. 670.0s passed.
+04/27/2026 17:08:11 - INFO - summary(@75642) -   Finish summarize 12946 info into /root/RL_table2charts/Results/Models/20260427154946-update_actor_new-2el192fd128.128GRUh-allCharts-actor-policy-RL/evaluations/test-actor_critic_actor_score-20260427T074935Z/[test-summary]20260427T1657.log. 671.4s passed.
+04/27/2026 17:08:11 - INFO - summary(@75642) -   Complete recall info: {'recall': {'@20': 0.7572223080488182, '@01': 0.0, '@10': 0.5331376486945775, '@03': 0.0326741850764715, 'all': 0.7817086358720841, '@05': 0.048200216283021784}, 'first_rank': '10.24*10120', 'reached': 17.564035223234978, 'targets': 2.396647613162367, 'top': [1, 3, 5, 10, 20], 't_cnt': 12946}
+04/27/2026 17:08:12 - INFO - test() -   Test finished!
+
+=== running eval experiments/configs/actor_critic_critic_score.json ===
+04/27/2026 17:08:14 - INFO - test() -   Test Args: Namespace(empirical_study=False, empirical_corpus_path='/home/exp/pivot-clean-data/', empirical_log_path='/home/exp/empirical_result', corpus_path='/root/RL_table2charts/Data/PlotlyTable2Charts', lang='en', model_name='cp', model_dir_path='/root/RL_table2charts/Results/Models/20260427154946-update_actor_new-2el192fd128.128GRUh-allCharts-actor-policy-RL', model_file='states_ep0.pt', log_save_path='evaluations/test-actor_critic_critic_score-20260427T074935Z', recommend_log_path='/root/RL_table2charts/Results/Models/20260427154946-update_actor_new-2el192fd128.128GRUh-allCharts-actor-policy-RL/evaluations/test-actor_critic_critic_score-20260427T074935Z/recommendations', model_size='small', features='all-fast', search_type='allCharts', test_type=None, input_type='allCharts', previous_type='allCharts', limit_search_group=True, mode=None, log_freq_agent=100, use_valid_set=False, test_whole_plotly=False, web_table=False, unified_ana_token=False, search_algo='drill_down', nprocs=1, nagents=64, nthreads=5, search_limits='e50-b4-na', add_sep_to_dim=False, force_keep_empty_dim=False, test_field_selections=False, test_design_choices=False, score_mode='critic', critic_score_weight=1.0)
+04/27/2026 17:08:14 - INFO - test() -   DataConfig: {'corpus_path': '/root/RL_table2charts/Data/PlotlyTable2Charts', 'encoding': 'utf-8-sig', 'lang': 'en', 'english_only': True, 'max_field_num': 128, 'max_val_num': 4, 'max_dim_num': 4, 'need_field_indices': True, 'field_permutation': False, 'unified_ana_token': False, 'allow_multiple_values': True, 'limit_search_group': True, 'use_field_type': True, 'use_field_role': True, 'use_binary_tags': True, 'use_data_features': True, 'use_semantic_embeds': True, 'load_at_most': None, 'num_train_analysis': None, 'embed_model': 'fasttext', 'embed_len': 50, 'embed_in_json': True, 'embed_layer': '0', 'embed_reduce_type': 'mean', 'data_len': 31, 'data_cleanup_fn': <function cleanup_data_features_nn at 0x70ffda6a1000>, 'train_ratio': 0.7, 'valid_ratio': 0.1, 'test_ratio': 0.2, 'empirical_study': False, 'cat_nums': [5, 3, 3, 3, 3, 3, 3, 3], 'search_all_types': True, 'search_types': [<AnaType.LineChart: 1>, <AnaType.BarChart: 2>, <AnaType.ScatterChart: 3>, <AnaType.PieChart: 4>], 'model_types': [<AnaType.LineChart: 1>, <AnaType.BarChart: 2>, <AnaType.ScatterChart: 3>, <AnaType.PieChart: 4>], 'input_types': [<AnaType.LineChart: 1>, <AnaType.BarChart: 2>, <AnaType.ScatterChart: 3>, <AnaType.PieChart: 4>], 'consider_grouping_operations': True, 'top_freq_func': 0, 'cat_len': 8, 'empty_embed': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'empty_cat': [0, 0, 0, 0, 0, 0, 0, 0], 'empty_data': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'num_permute_samples': [0, 1, 2, 4, 8], 'score_mode': 'critic', 'critic_score_weight': 1.0}
+04/27/2026 17:08:14 - INFO - test() -   CPConfig: {'encoder_layers': 2, 'decoder_layers': 1, 'num_cmd_tokens': 3, 'encoder_GRU_hidden': 128, 'decoder_GRU_hidden': 128, 'feature_dim': 192, 'decoder_hidden_size': 192, 'embed_len': 50, 'data_len': 31, 'cat_len': 8, 'positional': False, 'num_token_type': 14, 'num_segment_type': 9, 'num_categories': [5, 3, 3, 3, 3, 3, 3, 3], 'hidden': 192, 'dropout': 0.1}
+04/27/2026 17:08:14 - INFO - test() -   SearchConfig: {'load_ground_truth': True, 'search_all_types': True, 'search_single_type': None, 'test_field_selections': False, 'test_design_choices': False, 'max_rc': (1000, 1000), 'expand_limit': 50, 'time_limit': inf, 'dim_count': 600, 'com_count': 1100, 'frontier_size': 300, 'beam_size': 4, 'min_threshold': 0.0, 'log_path': '/root/RL_table2charts/Results/Models/20260427154946-update_actor_new-2el192fd128.128GRUh-allCharts-actor-policy-RL/evaluations/test-actor_critic_critic_score-20260427T074935Z/recommendations'}
+04/27/2026 17:08:14 - INFO - test() -   Loading index...
+04/27/2026 17:08:21 - INFO - Index init() -   Total schemas is 72939
+04/27/2026 17:08:21 - INFO - Index init() -   file filtered by language: 0
+04/27/2026 17:08:21 - INFO - Index init() -   file filtered by openfile: 0
+04/27/2026 17:08:21 - INFO - Index init() -   table filtered by no embedding: 0
+04/27/2026 17:08:21 - INFO - Index init() -   table filtered by too many fields: 0
+04/27/2026 17:08:21 - INFO - Index init() -   table filtered by no valid analysis: 3902
+04/27/2026 17:08:21 - INFO - Index init() -   chart filtered by no valnum: 0
+04/27/2026 17:08:21 - INFO - Index init() -   chart filtered by too many values: 4484
+04/27/2026 17:08:21 - INFO - Index init() -   pivot filtered by too many dimensions: 0
+04/27/2026 17:08:21 - INFO - Index init() -   Total tables is 69037
+04/27/2026 17:08:21 - INFO - Index init() -   Total charts is 104635
+04/27/2026 17:08:21 - INFO - Index init() -   Total pivot tables is 0
+04/27/2026 17:08:21 - INFO - test() -   Testing 13893 files from /root/RL_table2charts/Data/PlotlyTable2Charts/index/schema_ids.json
+  0%|          | 0/13893 [00:00<?, ?it/s]100%|██████████| 13893/13893 [00:00<00:00, 381535.04it/s]
+04/27/2026 17:08:21 - INFO - summary(@86897) -   Start to summarize info.
+04/27/2026 17:08:21 - INFO - model config() -   UpdateActorCopyNetConfig: {'encoder_layers': 2, 'decoder_layers': 1, 'num_cmd_tokens': 3, 'encoder_GRU_hidden': 128, 'decoder_GRU_hidden': 128, 'feature_dim': 192, 'decoder_hidden_size': 192, 'embed_len': 50, 'data_len': 31, 'cat_len': 8, 'positional': False, 'num_token_type': 14, 'num_segment_type': 9, 'num_categories': [5, 3, 3, 3, 3, 3, 3, 3], 'hidden': 192, 'dropout': 0.1}
+04/27/2026 17:08:21 - INFO - process_parallel (0@86897) -   Start to search on 0.
+/root/RL_table2charts/Table2Charts/data/sequence.py:146: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at ../torch/csrc/utils/tensor_new.cpp:275.)
+  "data_characters": 0 if len(config.empty_data) == 0 else torch.tensor(append_padding(
+04/27/2026 17:08:27 - INFO - summary(@86897) -   100th done. 6.8s passed.
+04/27/2026 17:08:33 - INFO - summary(@86897) -   200th done. 11.9s passed.
+04/27/2026 17:08:37 - INFO - summary(@86897) -   300th done. 16.8s passed.
+04/27/2026 17:08:42 - INFO - summary(@86897) -   400th done. 21.0s passed.
+04/27/2026 17:08:46 - INFO - summary(@86897) -   500th done. 25.7s passed.
+04/27/2026 17:08:51 - INFO - summary(@86897) -   600th done. 30.8s passed.
+04/27/2026 17:08:57 - INFO - summary(@86897) -   700th done. 36.2s passed.
+04/27/2026 17:09:02 - INFO - summary(@86897) -   800th done. 40.9s passed.
+04/27/2026 17:09:07 - INFO - summary(@86897) -   900th done. 46.6s passed.
+04/27/2026 17:09:11 - INFO - summary(@86897) -   1000th done. 50.5s passed.
+04/27/2026 17:09:17 - INFO - summary(@86897) -   1100th done. 56.3s passed.
+04/27/2026 17:09:22 - INFO - summary(@86897) -   1200th done. 61.3s passed.
+04/27/2026 17:09:28 - INFO - summary(@86897) -   1300th done. 67.0s passed.
+04/27/2026 17:09:32 - INFO - summary(@86897) -   1400th done. 71.8s passed.
+04/27/2026 17:09:37 - INFO - summary(@86897) -   1500th done. 76.6s passed.
+04/27/2026 17:09:42 - INFO - summary(@86897) -   1600th done. 81.6s passed.
+04/27/2026 17:09:48 - INFO - summary(@86897) -   1700th done. 87.1s passed.
+04/27/2026 17:09:53 - INFO - summary(@86897) -   1800th done. 92.3s passed.
+04/27/2026 17:09:59 - INFO - summary(@86897) -   1900th done. 97.9s passed.
+04/27/2026 17:10:03 - INFO - summary(@86897) -   2000th done. 102.6s passed.
+04/27/2026 17:10:08 - INFO - summary(@86897) -   2100th done. 107.7s passed.
+04/27/2026 17:10:14 - INFO - summary(@86897) -   2200th done. 113.7s passed.
+04/27/2026 17:10:19 - INFO - summary(@86897) -   2300th done. 118.5s passed.
+04/27/2026 17:10:24 - INFO - summary(@86897) -   2400th done. 123.6s passed.
+04/27/2026 17:10:29 - INFO - summary(@86897) -   2500th done. 127.9s passed.
+04/27/2026 17:10:34 - INFO - summary(@86897) -   2600th done. 133.0s passed.
+04/27/2026 17:10:39 - INFO - summary(@86897) -   2700th done. 138.6s passed.
+04/27/2026 17:10:45 - INFO - summary(@86897) -   2800th done. 144.3s passed.
+04/27/2026 17:10:51 - INFO - summary(@86897) -   2900th done. 150.4s passed.
+04/27/2026 17:10:57 - INFO - summary(@86897) -   3000th done. 155.9s passed.
+04/27/2026 17:11:01 - INFO - summary(@86897) -   3100th done. 160.6s passed.
+04/27/2026 17:11:07 - INFO - summary(@86897) -   3200th done. 166.1s passed.
+04/27/2026 17:11:13 - INFO - summary(@86897) -   3300th done. 172.3s passed.
+04/27/2026 17:11:19 - INFO - summary(@86897) -   3400th done. 178.1s passed.
+04/27/2026 17:11:25 - INFO - summary(@86897) -   3500th done. 184.2s passed.
+04/27/2026 17:11:30 - INFO - summary(@86897) -   3600th done. 189.5s passed.
+04/27/2026 17:11:35 - INFO - summary(@86897) -   3700th done. 194.8s passed.
+04/27/2026 17:11:41 - INFO - summary(@86897) -   3800th done. 200.3s passed.
+04/27/2026 17:11:45 - INFO - summary(@86897) -   3900th done. 204.7s passed.
+04/27/2026 17:11:51 - INFO - summary(@86897) -   4000th done. 210.4s passed.
+04/27/2026 17:11:56 - INFO - summary(@86897) -   4100th done. 215.7s passed.
+04/27/2026 17:12:02 - INFO - summary(@86897) -   4200th done. 220.9s passed.
+04/27/2026 17:12:06 - INFO - summary(@86897) -   4300th done. 225.4s passed.
+04/27/2026 17:12:10 - INFO - summary(@86897) -   4400th done. 229.6s passed.
+04/27/2026 17:12:16 - INFO - summary(@86897) -   4500th done. 235.3s passed.
+04/27/2026 17:12:22 - INFO - summary(@86897) -   4600th done. 240.9s passed.
+04/27/2026 17:12:26 - INFO - summary(@86897) -   4700th done. 245.8s passed.
+04/27/2026 17:12:31 - INFO - summary(@86897) -   4800th done. 250.1s passed.
+04/27/2026 17:12:35 - INFO - summary(@86897) -   4900th done. 254.4s passed.
+04/27/2026 17:12:41 - INFO - summary(@86897) -   5000th done. 260.1s passed.
+04/27/2026 17:12:45 - INFO - summary(@86897) -   5100th done. 264.4s passed.
+04/27/2026 17:12:51 - INFO - summary(@86897) -   5200th done. 270.5s passed.
+04/27/2026 17:12:57 - INFO - summary(@86897) -   5300th done. 276.0s passed.
+04/27/2026 17:13:02 - INFO - summary(@86897) -   5400th done. 281.2s passed.
+04/27/2026 17:13:07 - INFO - summary(@86897) -   5500th done. 286.0s passed.
+04/27/2026 17:13:11 - INFO - summary(@86897) -   5600th done. 290.9s passed.
+04/27/2026 17:13:16 - INFO - summary(@86897) -   5700th done. 294.9s passed.
+04/27/2026 17:13:21 - INFO - summary(@86897) -   5800th done. 300.6s passed.
+04/27/2026 17:13:26 - INFO - summary(@86897) -   5900th done. 305.6s passed.
+04/27/2026 17:13:31 - INFO - summary(@86897) -   6000th done. 310.6s passed.
+04/27/2026 17:13:37 - INFO - summary(@86897) -   6100th done. 316.0s passed.
+04/27/2026 17:13:41 - INFO - summary(@86897) -   6200th done. 320.1s passed.
+04/27/2026 17:13:47 - INFO - summary(@86897) -   6300th done. 325.9s passed.
+04/27/2026 17:13:51 - INFO - summary(@86897) -   6400th done. 330.4s passed.
+04/27/2026 17:13:57 - INFO - summary(@86897) -   6500th done. 336.1s passed.
+04/27/2026 17:14:03 - INFO - summary(@86897) -   6600th done. 341.9s passed.
+04/27/2026 17:14:09 - INFO - summary(@86897) -   6700th done. 348.1s passed.
+04/27/2026 17:14:14 - INFO - summary(@86897) -   6800th done. 353.5s passed.
+04/27/2026 17:14:20 - INFO - summary(@86897) -   6900th done. 359.5s passed.
+04/27/2026 17:14:26 - INFO - summary(@86897) -   7000th done. 365.0s passed.
+04/27/2026 17:14:31 - INFO - summary(@86897) -   7100th done. 370.3s passed.
+04/27/2026 17:14:36 - INFO - summary(@86897) -   7200th done. 375.6s passed.
+04/27/2026 17:14:41 - INFO - summary(@86897) -   7300th done. 380.3s passed.
+04/27/2026 17:14:46 - INFO - summary(@86897) -   7400th done. 385.8s passed.
+04/27/2026 17:14:52 - INFO - summary(@86897) -   7500th done. 391.2s passed.
+04/27/2026 17:14:57 - INFO - summary(@86897) -   7600th done. 396.0s passed.
+04/27/2026 17:15:03 - INFO - summary(@86897) -   7700th done. 402.4s passed.
+04/27/2026 17:15:07 - INFO - summary(@86897) -   7800th done. 406.8s passed.
+04/27/2026 17:15:12 - INFO - summary(@86897) -   7900th done. 411.7s passed.
+04/27/2026 17:15:18 - INFO - summary(@86897) -   8000th done. 417.0s passed.
+04/27/2026 17:15:23 - INFO - summary(@86897) -   8100th done. 422.0s passed.
+04/27/2026 17:15:29 - INFO - summary(@86897) -   8200th done. 427.9s passed.
+04/27/2026 17:15:35 - INFO - summary(@86897) -   8300th done. 433.9s passed.
+04/27/2026 17:15:40 - INFO - summary(@86897) -   8400th done. 439.3s passed.
+04/27/2026 17:15:45 - INFO - summary(@86897) -   8500th done. 444.1s passed.
+04/27/2026 17:15:51 - INFO - summary(@86897) -   8600th done. 450.4s passed.
+04/27/2026 17:15:55 - INFO - summary(@86897) -   8700th done. 454.4s passed.
+04/27/2026 17:16:01 - INFO - summary(@86897) -   8800th done. 459.9s passed.
+04/27/2026 17:16:07 - INFO - summary(@86897) -   8900th done. 466.1s passed.
+04/27/2026 17:16:12 - INFO - summary(@86897) -   9000th done. 470.9s passed.
+04/27/2026 17:16:16 - INFO - summary(@86897) -   9100th done. 475.6s passed.
+04/27/2026 17:16:22 - INFO - summary(@86897) -   9200th done. 481.0s passed.
+04/27/2026 17:16:27 - INFO - summary(@86897) -   9300th done. 486.5s passed.
+04/27/2026 17:16:32 - INFO - summary(@86897) -   9400th done. 491.7s passed.
+04/27/2026 17:16:38 - INFO - summary(@86897) -   9500th done. 497.6s passed.
+04/27/2026 17:16:43 - INFO - summary(@86897) -   9600th done. 501.9s passed.
+04/27/2026 17:16:47 - INFO - summary(@86897) -   9700th done. 506.8s passed.
+04/27/2026 17:16:54 - INFO - summary(@86897) -   9800th done. 513.3s passed.
+04/27/2026 17:16:59 - INFO - summary(@86897) -   9900th done. 518.1s passed.
+04/27/2026 17:17:04 - INFO - summary(@86897) -   10000th done. 523.7s passed.
+04/27/2026 17:17:09 - INFO - summary(@86897) -   10100th done. 528.1s passed.
+04/27/2026 17:17:15 - INFO - summary(@86897) -   10200th done. 533.9s passed.
+04/27/2026 17:17:20 - INFO - summary(@86897) -   10300th done. 539.2s passed.
+04/27/2026 17:17:26 - INFO - summary(@86897) -   10400th done. 545.1s passed.
+04/27/2026 17:17:32 - INFO - summary(@86897) -   10500th done. 551.7s passed.
+04/27/2026 17:17:37 - INFO - summary(@86897) -   10600th done. 556.6s passed.
+04/27/2026 17:17:42 - INFO - summary(@86897) -   10700th done. 561.7s passed.
+04/27/2026 17:17:49 - INFO - summary(@86897) -   10800th done. 568.2s passed.
+04/27/2026 17:17:54 - INFO - summary(@86897) -   10900th done. 573.1s passed.
+04/27/2026 17:17:59 - INFO - summary(@86897) -   11000th done. 578.0s passed.
+04/27/2026 17:18:03 - INFO - summary(@86897) -   11100th done. 582.7s passed.
+04/27/2026 17:18:09 - INFO - summary(@86897) -   11200th done. 588.7s passed.
+04/27/2026 17:18:15 - INFO - summary(@86897) -   11300th done. 594.0s passed.
+04/27/2026 17:18:19 - INFO - summary(@86897) -   11400th done. 598.3s passed.
+04/27/2026 17:18:24 - INFO - summary(@86897) -   11500th done. 603.4s passed.
+04/27/2026 17:18:30 - INFO - summary(@86897) -   11600th done. 609.9s passed.
+04/27/2026 17:18:35 - INFO - summary(@86897) -   11700th done. 614.5s passed.
+04/27/2026 17:18:40 - INFO - summary(@86897) -   11800th done. 619.8s passed.
+04/27/2026 17:18:45 - INFO - summary(@86897) -   11900th done. 624.0s passed.
+04/27/2026 17:18:50 - INFO - summary(@86897) -   12000th done. 629.1s passed.
+04/27/2026 17:18:56 - INFO - summary(@86897) -   12100th done. 635.4s passed.
+04/27/2026 17:19:01 - INFO - summary(@86897) -   12200th done. 640.2s passed.
+04/27/2026 17:19:06 - INFO - summary(@86897) -   12300th done. 644.9s passed.
+04/27/2026 17:19:09 - INFO - summary(@86897) -   12400th done. 648.6s passed.
+04/27/2026 17:19:15 - INFO - summary(@86897) -   12500th done. 654.7s passed.
+04/27/2026 17:19:20 - INFO - summary(@86897) -   12600th done. 659.3s passed.
+04/27/2026 17:19:25 - INFO - summary(@86897) -   12700th done. 664.1s passed.
+04/27/2026 17:19:29 - INFO - summary(@86897) -   12800th done. 668.0s passed.
+04/27/2026 17:19:37 - INFO - summary(@86897) -   12900th done. 676.1s passed.
+04/27/2026 17:20:08 - INFO - process_parallel (0@86897) -   Finish 13893. 707.2s passed.
+04/27/2026 17:20:09 - INFO - summary(@86897) -   Finish summarize 12946 info into /root/RL_table2charts/Results/Models/20260427154946-update_actor_new-2el192fd128.128GRUh-allCharts-actor-policy-RL/evaluations/test-actor_critic_critic_score-20260427T074935Z/[test-summary]20260427T1708.log. 708.8s passed.
+04/27/2026 17:20:09 - INFO - summary(@86897) -   Complete recall info: {'recall': {'@10': 0.8305268036459138, '@03': 0.674957515835007, '@01': 0.3345434883361656, 'all': 0.8900818785725321, '@20': 0.8855244863278232, '@05': 0.7074772130387764}, 'first_rank': '3.44*11523', 'reached': 19.949250733817394, 'targets': 2.396647613162367, 'top': [1, 3, 5, 10, 20], 't_cnt': 12946}
+04/27/2026 17:20:10 - INFO - test() -   Test finished!
+
+=== running eval experiments/configs/actor_critic_blend_score.json ===
+04/27/2026 17:20:13 - INFO - test() -   Test Args: Namespace(empirical_study=False, empirical_corpus_path='/home/exp/pivot-clean-data/', empirical_log_path='/home/exp/empirical_result', corpus_path='/root/RL_table2charts/Data/PlotlyTable2Charts', lang='en', model_name='cp', model_dir_path='/root/RL_table2charts/Results/Models/20260427154946-update_actor_new-2el192fd128.128GRUh-allCharts-actor-policy-RL', model_file='states_ep0.pt', log_save_path='evaluations/test-actor_critic_blend_score-20260427T074935Z', recommend_log_path='/root/RL_table2charts/Results/Models/20260427154946-update_actor_new-2el192fd128.128GRUh-allCharts-actor-policy-RL/evaluations/test-actor_critic_blend_score-20260427T074935Z/recommendations', model_size='small', features='all-fast', search_type='allCharts', test_type=None, input_type='allCharts', previous_type='allCharts', limit_search_group=True, mode=None, log_freq_agent=100, use_valid_set=False, test_whole_plotly=False, web_table=False, unified_ana_token=False, search_algo='drill_down', nprocs=1, nagents=64, nthreads=5, search_limits='e50-b4-na', add_sep_to_dim=False, force_keep_empty_dim=False, test_field_selections=False, test_design_choices=False, score_mode='blend', critic_score_weight=0.5)
+04/27/2026 17:20:13 - INFO - test() -   DataConfig: {'corpus_path': '/root/RL_table2charts/Data/PlotlyTable2Charts', 'encoding': 'utf-8-sig', 'lang': 'en', 'english_only': True, 'max_field_num': 128, 'max_val_num': 4, 'max_dim_num': 4, 'need_field_indices': True, 'field_permutation': False, 'unified_ana_token': False, 'allow_multiple_values': True, 'limit_search_group': True, 'use_field_type': True, 'use_field_role': True, 'use_binary_tags': True, 'use_data_features': True, 'use_semantic_embeds': True, 'load_at_most': None, 'num_train_analysis': None, 'embed_model': 'fasttext', 'embed_len': 50, 'embed_in_json': True, 'embed_layer': '0', 'embed_reduce_type': 'mean', 'data_len': 31, 'data_cleanup_fn': <function cleanup_data_features_nn at 0x7e5183ca1000>, 'train_ratio': 0.7, 'valid_ratio': 0.1, 'test_ratio': 0.2, 'empirical_study': False, 'cat_nums': [5, 3, 3, 3, 3, 3, 3, 3], 'search_all_types': True, 'search_types': [<AnaType.LineChart: 1>, <AnaType.BarChart: 2>, <AnaType.ScatterChart: 3>, <AnaType.PieChart: 4>], 'model_types': [<AnaType.LineChart: 1>, <AnaType.BarChart: 2>, <AnaType.ScatterChart: 3>, <AnaType.PieChart: 4>], 'input_types': [<AnaType.LineChart: 1>, <AnaType.BarChart: 2>, <AnaType.ScatterChart: 3>, <AnaType.PieChart: 4>], 'consider_grouping_operations': True, 'top_freq_func': 0, 'cat_len': 8, 'empty_embed': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'empty_cat': [0, 0, 0, 0, 0, 0, 0, 0], 'empty_data': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'num_permute_samples': [0, 1, 2, 4, 8], 'score_mode': 'blend', 'critic_score_weight': 0.5}
+04/27/2026 17:20:13 - INFO - test() -   CPConfig: {'encoder_layers': 2, 'decoder_layers': 1, 'num_cmd_tokens': 3, 'encoder_GRU_hidden': 128, 'decoder_GRU_hidden': 128, 'feature_dim': 192, 'decoder_hidden_size': 192, 'embed_len': 50, 'data_len': 31, 'cat_len': 8, 'positional': False, 'num_token_type': 14, 'num_segment_type': 9, 'num_categories': [5, 3, 3, 3, 3, 3, 3, 3], 'hidden': 192, 'dropout': 0.1}
+04/27/2026 17:20:13 - INFO - test() -   SearchConfig: {'load_ground_truth': True, 'search_all_types': True, 'search_single_type': None, 'test_field_selections': False, 'test_design_choices': False, 'max_rc': (1000, 1000), 'expand_limit': 50, 'time_limit': inf, 'dim_count': 600, 'com_count': 1100, 'frontier_size': 300, 'beam_size': 4, 'min_threshold': 0.0, 'log_path': '/root/RL_table2charts/Results/Models/20260427154946-update_actor_new-2el192fd128.128GRUh-allCharts-actor-policy-RL/evaluations/test-actor_critic_blend_score-20260427T074935Z/recommendations'}
+04/27/2026 17:20:13 - INFO - test() -   Loading index...
+04/27/2026 17:20:19 - INFO - Index init() -   Total schemas is 72939
+04/27/2026 17:20:19 - INFO - Index init() -   file filtered by language: 0
+04/27/2026 17:20:19 - INFO - Index init() -   file filtered by openfile: 0
+04/27/2026 17:20:19 - INFO - Index init() -   table filtered by no embedding: 0
+04/27/2026 17:20:19 - INFO - Index init() -   table filtered by too many fields: 0
+04/27/2026 17:20:19 - INFO - Index init() -   table filtered by no valid analysis: 3902
+04/27/2026 17:20:19 - INFO - Index init() -   chart filtered by no valnum: 0
+04/27/2026 17:20:19 - INFO - Index init() -   chart filtered by too many values: 4484
+04/27/2026 17:20:19 - INFO - Index init() -   pivot filtered by too many dimensions: 0
+04/27/2026 17:20:19 - INFO - Index init() -   Total tables is 69037
+04/27/2026 17:20:19 - INFO - Index init() -   Total charts is 104635
+04/27/2026 17:20:19 - INFO - Index init() -   Total pivot tables is 0
+04/27/2026 17:20:19 - INFO - test() -   Testing 13893 files from /root/RL_table2charts/Data/PlotlyTable2Charts/index/schema_ids.json
+  0%|          | 0/13893 [00:00<?, ?it/s]100%|██████████| 13893/13893 [00:00<00:00, 580445.11it/s]
+04/27/2026 17:20:19 - INFO - summary(@98730) -   Start to summarize info.
+04/27/2026 17:20:19 - INFO - model config() -   UpdateActorCopyNetConfig: {'encoder_layers': 2, 'decoder_layers': 1, 'num_cmd_tokens': 3, 'encoder_GRU_hidden': 128, 'decoder_GRU_hidden': 128, 'feature_dim': 192, 'decoder_hidden_size': 192, 'embed_len': 50, 'data_len': 31, 'cat_len': 8, 'positional': False, 'num_token_type': 14, 'num_segment_type': 9, 'num_categories': [5, 3, 3, 3, 3, 3, 3, 3], 'hidden': 192, 'dropout': 0.1}
+04/27/2026 17:20:19 - INFO - process_parallel (0@98730) -   Start to search on 0.
+/root/RL_table2charts/Table2Charts/data/sequence.py:146: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at ../torch/csrc/utils/tensor_new.cpp:275.)
+  "data_characters": 0 if len(config.empty_data) == 0 else torch.tensor(append_padding(
+04/27/2026 17:20:25 - INFO - summary(@98730) -   100th done. 5.8s passed.
+04/27/2026 17:20:30 - INFO - summary(@98730) -   200th done. 11.0s passed.
+04/27/2026 17:20:35 - INFO - summary(@98730) -   300th done. 15.7s passed.
+04/27/2026 17:20:39 - INFO - summary(@98730) -   400th done. 20.1s passed.
+04/27/2026 17:20:44 - INFO - summary(@98730) -   500th done. 24.7s passed.
+04/27/2026 17:20:49 - INFO - summary(@98730) -   600th done. 29.7s passed.
+04/27/2026 17:20:54 - INFO - summary(@98730) -   700th done. 34.7s passed.
+04/27/2026 17:20:58 - INFO - summary(@98730) -   800th done. 38.9s passed.
+04/27/2026 17:21:03 - INFO - summary(@98730) -   900th done. 44.3s passed.
+04/27/2026 17:21:08 - INFO - summary(@98730) -   1000th done. 48.7s passed.
+04/27/2026 17:21:13 - INFO - summary(@98730) -   1100th done. 53.7s passed.
+04/27/2026 17:21:18 - INFO - summary(@98730) -   1200th done. 58.8s passed.
+04/27/2026 17:21:23 - INFO - summary(@98730) -   1300th done. 63.6s passed.
+04/27/2026 17:21:28 - INFO - summary(@98730) -   1400th done. 68.6s passed.
+04/27/2026 17:21:33 - INFO - summary(@98730) -   1500th done. 73.9s passed.
+04/27/2026 17:21:37 - INFO - summary(@98730) -   1600th done. 78.3s passed.
+04/27/2026 17:21:43 - INFO - summary(@98730) -   1700th done. 83.7s passed.
+04/27/2026 17:21:48 - INFO - summary(@98730) -   1800th done. 89.1s passed.
+04/27/2026 17:21:53 - INFO - summary(@98730) -   1900th done. 94.3s passed.
+04/27/2026 17:21:58 - INFO - summary(@98730) -   2000th done. 99.4s passed.
+04/27/2026 17:22:03 - INFO - summary(@98730) -   2100th done. 104.2s passed.
+04/27/2026 17:22:09 - INFO - summary(@98730) -   2200th done. 109.9s passed.
+04/27/2026 17:22:14 - INFO - summary(@98730) -   2300th done. 114.7s passed.
+04/27/2026 17:22:18 - INFO - summary(@98730) -   2400th done. 119.5s passed.
+04/27/2026 17:22:23 - INFO - summary(@98730) -   2500th done. 123.7s passed.
+04/27/2026 17:22:28 - INFO - summary(@98730) -   2600th done. 129.2s passed.
+04/27/2026 17:22:33 - INFO - summary(@98730) -   2700th done. 134.3s passed.
+04/27/2026 17:22:38 - INFO - summary(@98730) -   2800th done. 139.2s passed.
+04/27/2026 17:22:43 - INFO - summary(@98730) -   2900th done. 144.0s passed.
+04/27/2026 17:22:48 - INFO - summary(@98730) -   3000th done. 149.0s passed.
+04/27/2026 17:22:53 - INFO - summary(@98730) -   3100th done. 154.1s passed.
+04/27/2026 17:22:57 - INFO - summary(@98730) -   3200th done. 158.4s passed.
+04/27/2026 17:23:02 - INFO - summary(@98730) -   3300th done. 163.2s passed.
+04/27/2026 17:23:07 - INFO - summary(@98730) -   3400th done. 168.4s passed.
+04/27/2026 17:23:13 - INFO - summary(@98730) -   3500th done. 174.0s passed.
+04/27/2026 17:23:19 - INFO - summary(@98730) -   3600th done. 179.5s passed.
+04/27/2026 17:23:24 - INFO - summary(@98730) -   3700th done. 184.6s passed.
+04/27/2026 17:23:28 - INFO - summary(@98730) -   3800th done. 189.3s passed.
+04/27/2026 17:23:33 - INFO - summary(@98730) -   3900th done. 194.2s passed.
+04/27/2026 17:23:38 - INFO - summary(@98730) -   4000th done. 199.0s passed.
+04/27/2026 17:23:43 - INFO - summary(@98730) -   4100th done. 204.0s passed.
+04/27/2026 17:23:48 - INFO - summary(@98730) -   4200th done. 209.5s passed.
+04/27/2026 17:23:53 - INFO - summary(@98730) -   4300th done. 214.1s passed.
+04/27/2026 17:23:57 - INFO - summary(@98730) -   4400th done. 218.4s passed.
+04/27/2026 17:24:03 - INFO - summary(@98730) -   4500th done. 223.9s passed.
+04/27/2026 17:24:08 - INFO - summary(@98730) -   4600th done. 228.9s passed.
+04/27/2026 17:24:14 - INFO - summary(@98730) -   4700th done. 234.9s passed.
+04/27/2026 17:24:18 - INFO - summary(@98730) -   4800th done. 239.3s passed.
+04/27/2026 17:24:24 - INFO - summary(@98730) -   4900th done. 245.2s passed.
+04/27/2026 17:24:29 - INFO - summary(@98730) -   5000th done. 250.2s passed.
+04/27/2026 17:24:33 - INFO - summary(@98730) -   5100th done. 254.4s passed.
+04/27/2026 17:24:41 - INFO - summary(@98730) -   5200th done. 261.7s passed.
+04/27/2026 17:24:47 - INFO - summary(@98730) -   5300th done. 267.8s passed.
+04/27/2026 17:24:53 - INFO - summary(@98730) -   5400th done. 274.5s passed.
+04/27/2026 17:24:58 - INFO - summary(@98730) -   5500th done. 279.3s passed.
+04/27/2026 17:25:03 - INFO - summary(@98730) -   5600th done. 284.3s passed.
+04/27/2026 17:25:07 - INFO - summary(@98730) -   5700th done. 288.1s passed.
+04/27/2026 17:25:12 - INFO - summary(@98730) -   5800th done. 293.1s passed.
+04/27/2026 17:25:17 - INFO - summary(@98730) -   5900th done. 298.0s passed.
+04/27/2026 17:25:22 - INFO - summary(@98730) -   6000th done. 302.9s passed.
+04/27/2026 17:25:27 - INFO - summary(@98730) -   6100th done. 308.4s passed.
+04/27/2026 17:25:32 - INFO - summary(@98730) -   6200th done. 312.7s passed.
+04/27/2026 17:25:36 - INFO - summary(@98730) -   6300th done. 317.2s passed.
+04/27/2026 17:25:40 - INFO - summary(@98730) -   6400th done. 321.4s passed.
+04/27/2026 17:25:46 - INFO - summary(@98730) -   6500th done. 326.7s passed.
+04/27/2026 17:25:51 - INFO - summary(@98730) -   6600th done. 332.2s passed.
+04/27/2026 17:25:58 - INFO - summary(@98730) -   6700th done. 338.5s passed.
+04/27/2026 17:26:03 - INFO - summary(@98730) -   6800th done. 343.8s passed.
+04/27/2026 17:26:09 - INFO - summary(@98730) -   6900th done. 349.6s passed.
+04/27/2026 17:26:14 - INFO - summary(@98730) -   7000th done. 355.3s passed.
+04/27/2026 17:26:20 - INFO - summary(@98730) -   7100th done. 360.9s passed.
+04/27/2026 17:26:24 - INFO - summary(@98730) -   7200th done. 365.3s passed.
+04/27/2026 17:26:30 - INFO - summary(@98730) -   7300th done. 370.7s passed.
+04/27/2026 17:26:34 - INFO - summary(@98730) -   7400th done. 375.1s passed.
+04/27/2026 17:26:39 - INFO - summary(@98730) -   7500th done. 380.1s passed.
+04/27/2026 17:26:45 - INFO - summary(@98730) -   7600th done. 386.2s passed.
+04/27/2026 17:26:50 - INFO - summary(@98730) -   7700th done. 390.9s passed.
+04/27/2026 17:26:55 - INFO - summary(@98730) -   7800th done. 396.1s passed.
+04/27/2026 17:27:00 - INFO - summary(@98730) -   7900th done. 400.5s passed.
+04/27/2026 17:27:04 - INFO - summary(@98730) -   8000th done. 404.9s passed.
+04/27/2026 17:27:10 - INFO - summary(@98730) -   8100th done. 410.7s passed.
+04/27/2026 17:27:15 - INFO - summary(@98730) -   8200th done. 415.5s passed.
+04/27/2026 17:27:20 - INFO - summary(@98730) -   8300th done. 420.5s passed.
+04/27/2026 17:27:26 - INFO - summary(@98730) -   8400th done. 426.9s passed.
+04/27/2026 17:27:30 - INFO - summary(@98730) -   8500th done. 430.9s passed.
+04/27/2026 17:27:36 - INFO - summary(@98730) -   8600th done. 437.1s passed.
+04/27/2026 17:27:40 - INFO - summary(@98730) -   8700th done. 441.0s passed.
+04/27/2026 17:27:45 - INFO - summary(@98730) -   8800th done. 445.7s passed.
+04/27/2026 17:27:50 - INFO - summary(@98730) -   8900th done. 451.3s passed.
+04/27/2026 17:27:55 - INFO - summary(@98730) -   9000th done. 455.8s passed.
+04/27/2026 17:28:00 - INFO - summary(@98730) -   9100th done. 460.7s passed.
+04/27/2026 17:28:06 - INFO - summary(@98730) -   9200th done. 466.7s passed.
+04/27/2026 17:28:11 - INFO - summary(@98730) -   9300th done. 471.6s passed.
+04/27/2026 17:28:16 - INFO - summary(@98730) -   9400th done. 476.7s passed.
+04/27/2026 17:28:21 - INFO - summary(@98730) -   9500th done. 482.3s passed.
+04/27/2026 17:28:26 - INFO - summary(@98730) -   9600th done. 486.9s passed.
+04/27/2026 17:28:31 - INFO - summary(@98730) -   9700th done. 491.5s passed.
+04/27/2026 17:28:37 - INFO - summary(@98730) -   9800th done. 497.6s passed.
+04/27/2026 17:28:41 - INFO - summary(@98730) -   9900th done. 502.4s passed.
+04/27/2026 17:28:47 - INFO - summary(@98730) -   10000th done. 507.8s passed.
+04/27/2026 17:28:52 - INFO - summary(@98730) -   10100th done. 513.3s passed.
+04/27/2026 17:28:57 - INFO - summary(@98730) -   10200th done. 517.9s passed.
+04/27/2026 17:29:02 - INFO - summary(@98730) -   10300th done. 522.8s passed.
+04/27/2026 17:29:09 - INFO - summary(@98730) -   10400th done. 530.1s passed.
+04/27/2026 17:29:14 - INFO - summary(@98730) -   10500th done. 535.0s passed.
+04/27/2026 17:29:19 - INFO - summary(@98730) -   10600th done. 540.2s passed.
+04/27/2026 17:29:24 - INFO - summary(@98730) -   10700th done. 544.9s passed.
+04/27/2026 17:29:30 - INFO - summary(@98730) -   10800th done. 550.8s passed.
+04/27/2026 17:29:34 - INFO - summary(@98730) -   10900th done. 555.4s passed.
+04/27/2026 17:29:39 - INFO - summary(@98730) -   11000th done. 559.9s passed.
+04/27/2026 17:29:45 - INFO - summary(@98730) -   11100th done. 565.5s passed.
+04/27/2026 17:29:49 - INFO - summary(@98730) -   11200th done. 570.3s passed.
+04/27/2026 17:29:54 - INFO - summary(@98730) -   11300th done. 575.2s passed.
+04/27/2026 17:29:58 - INFO - summary(@98730) -   11400th done. 579.3s passed.
+04/27/2026 17:30:05 - INFO - summary(@98730) -   11500th done. 585.8s passed.
+04/27/2026 17:30:10 - INFO - summary(@98730) -   11600th done. 590.7s passed.
+04/27/2026 17:30:14 - INFO - summary(@98730) -   11700th done. 595.4s passed.
+04/27/2026 17:30:20 - INFO - summary(@98730) -   11800th done. 600.6s passed.
+04/27/2026 17:30:25 - INFO - summary(@98730) -   11900th done. 606.0s passed.
+04/27/2026 17:30:29 - INFO - summary(@98730) -   12000th done. 610.3s passed.
+04/27/2026 17:30:34 - INFO - summary(@98730) -   12100th done. 615.1s passed.
+04/27/2026 17:30:39 - INFO - summary(@98730) -   12200th done. 619.7s passed.
+04/27/2026 17:30:44 - INFO - summary(@98730) -   12300th done. 625.4s passed.
+04/27/2026 17:30:48 - INFO - summary(@98730) -   12400th done. 629.2s passed.
+04/27/2026 17:30:53 - INFO - summary(@98730) -   12500th done. 633.6s passed.
+04/27/2026 17:30:57 - INFO - summary(@98730) -   12600th done. 638.2s passed.
+04/27/2026 17:31:02 - INFO - summary(@98730) -   12700th done. 642.8s passed.
+04/27/2026 17:31:08 - INFO - summary(@98730) -   12800th done. 648.9s passed.
+04/27/2026 17:31:14 - INFO - summary(@98730) -   12900th done. 655.0s passed.
+04/27/2026 17:31:45 - INFO - process_parallel (0@98730) -   Finish 13893. 686.5s passed.
+04/27/2026 17:31:47 - INFO - summary(@98730) -   Finish summarize 12946 info into /root/RL_table2charts/Results/Models/20260427154946-update_actor_new-2el192fd128.128GRUh-allCharts-actor-policy-RL/evaluations/test-actor_critic_blend_score-20260427T074935Z/[test-summary]20260427T1720.log. 688.3s passed.
+04/27/2026 17:31:47 - INFO - summary(@98730) -   Complete recall info: {'recall': {'all': 0.8150007724393635, '@20': 0.8126834543488336, '@01': 0.34033678356249036, '@05': 0.7058550903754055, '@10': 0.7800865132087131, '@03': 0.6786652247798548}, 'first_rank': '2.84*10551', 'reached': 18.811061331685462, 'targets': 2.396647613162367, 'top': [1, 3, 5, 10, 20], 't_cnt': 12946}
+04/27/2026 17:31:48 - INFO - test() -   Test finished!
