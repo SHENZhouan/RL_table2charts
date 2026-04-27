@@ -1,5 +1,34 @@
-# Table2Charts: Recommending Charts by Learning Shared Table Representations
-This repository provides code and data of the paper [_Table2Charts: Recommending Charts by Learning Shared Table Representations_](https://www.microsoft.com/en-us/research/publication/table2charts-recommending-charts-by-learning-shared-table-representations/)
+# Table2Charts Experiment Pipeline
+
+The experiment entry point is [`run_all_experiments.ipynb`](run_all_experiments.ipynb). It prepares a project-local `.venv`, downloads/processes the public Plotly corpus when processed data is missing, then runs the Table2Charts SFT/RL experiment pipeline and recommendation-diversity evaluation.
+
+Runtime data, processed corpora, checkpoints, notebook outputs, and logs are intentionally ignored by Git. A fresh machine should only need the code in this repository plus network access for the public corpus download.
+
+## Quick Start
+
+Open `run_all_experiments.ipynb` and run all cells. By default it runs smoke mode:
+
+```bash
+T2C_RUN_MODE=smoke
+```
+
+For the full pipeline, set:
+
+```bash
+T2C_RUN_MODE=full
+```
+
+Data processing defaults to auto mode:
+
+```bash
+T2C_RUN_DATA_PROCESSING=auto
+```
+
+That means existing processed data is reused if present; otherwise the notebook downloads `corpus.zip`, extracts `raw_data_all.csv`, and runs `Data/Plotly/prepare_plotly_corpus.py`.
+
+## Original Project Context
+
+This repository is based on the code for [_Table2Charts: Recommending Charts by Learning Shared Table Representations_](https://www.microsoft.com/en-us/research/publication/table2charts-recommending-charts-by-learning-shared-table-representations/).
 
 ## Table2Charts Code
 The core parts included in the folder [`Table2Charts`](Table2Charts). See [`Table2Charts/README.md`](Table2Charts/README.md) for details.

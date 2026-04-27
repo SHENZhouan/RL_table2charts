@@ -102,6 +102,9 @@ celerybeat.pid
 *.sage.py
 
 # Environments
+.venv/
+venv/
+env/
 
 # Spyder project settings
 .spyderproject
@@ -133,6 +136,13 @@ dmypy.json
 command.md
 Table2Charts/result.json
 result.json
+nohup.out
+notes/
+notebooks/
+results.md
+results_zhouan.md
+plotly_finetuned_0420_pipeline.md
+e-greedy-result.md
 
 # Downloaded archives
 *.zip
@@ -153,6 +163,9 @@ Data/PlotlyTable2Charts/
 Data/PlotlyTable2Charts_smoke/
 Data/PlotlyTable2ChartsSmoke/
 Data/PlotlyTable2ChartsSmokeFast/
+Data/PlotlyTable2ChartsSmokeGenerated/
+Data/PlotlyTable2ChartsSmokeSynthetic/
+Data/PlotlyProcessing/
 Data/raw_data_all.csv
 
 # Third-party baseline clones / duplicated external repositories
@@ -163,21 +176,19 @@ vizml/
 # Training and evaluation outputs
 # ----------------------------------------------------------------------
 
+# Ad-hoc output directories created by notebook/scripts.
+checkpoints/
+logs/
+
 # Model checkpoints and evaluation folders can be very large.
 Results/Models/
-!Results/Models/
-Results/Models/*
-!Results/Models/sft_states_ep0.pt
-!Results/Models/*/
-Results/Models/*/*
-!Results/Models/*/evaluations/
-Results/Models/*/evaluations/*
-!Results/Models/*/evaluations/test-*/
-Results/Models/*/evaluations/test-*/*
-!Results/Models/*/evaluations/test-*/[[]test-summary]*.log
 
 # TensorBoard event files and generated summaries.
 Results/summary/
+Results/teacher_data/
+
+# Notebook-local consolidated runtime artifacts
+notebook_runs/
 
 # Pipeline logs/status/markers are local runtime state. Keep reusable
 # launcher scripts under Results/run_logs tracked if desired.

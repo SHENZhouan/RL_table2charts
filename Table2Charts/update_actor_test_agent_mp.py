@@ -31,6 +31,19 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(name)s -   %(message
 AGENT_NAMES = sorted(["drill_down"])
 
 
+def _slice_eval_tuids(tuids: List[str], max_eval_tables: int = None,
+                      eval_table_offset: int = 0, eval_table_stride: int = 1) -> List[str]:
+    if eval_table_stride <= 0:
+        raise ValueError("--eval_table_stride must be >= 1")
+    if eval_table_offset < 0:
+        raise ValueError("--eval_table_offset must be >= 0")
+
+    selected = tuids[eval_table_offset::eval_table_stride]
+    if max_eval_tables is not None and max_eval_tables >= 0:
+        selected = selected[:max_eval_tables]
+    return selected
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description="Concurrent Test Search Agents")
 
@@ -79,6 +92,12 @@ def parse_args():
                         help='set this flag if test whole Plotly dataset.')
     parser.add_argument('--web_table', action='store_true',
                         help='set this flag if test web table dataset.')
+    parser.add_argument('--max_eval_tables', default=None, type=int, metavar='N',
+                        help='optionally limit evaluation to the first N tables after offset/stride slicing')
+    parser.add_argument('--eval_table_offset', default=0, type=int, metavar='N',
+                        help='skip the first N tables before evaluation subset selection')
+    parser.add_argument('--eval_table_stride', default=1, type=int, metavar='N',
+                        help='evaluate every Nth table after the offset to build a lighter subset')
     parser.add_argument('--unified_ana_token', default=False, dest='unified_ana_token', action='store_true',
                         help="Whether to use unified analysis token [ANA] instead of concrete type tokens.")
 
@@ -318,6 +337,10 @@ def test(args):
     else:
         tUIDs = index.test_tUIDs()
 
+    tUIDs = _slice_eval_tuids(tUIDs, args.max_eval_tables, args.eval_table_offset, args.eval_table_stride)
+    logger.info("Eval subset selected: %d files "
+                "(offset=%d, stride=%d, max_eval_tables=%s).",
+                len(tUIDs), args.eval_table_offset, args.eval_table_stride, args.max_eval_tables)
     logger.info(f"Testing {len(tUIDs)} files from {index.config.index_path()}")
     if args.nprocs > 1 and device_count:  # Will start args.nprocs processes, evenly distributed on all GPUs.
         context = mp.get_context(method='spawn')

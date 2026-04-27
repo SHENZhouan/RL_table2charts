@@ -1,10 +1,39 @@
---extra-index-url https://download.pytorch.org/whl/cu118
+--extra-index-url https://mirror.sjtu.edu.cn/pytorch-wheels/cu118
 
-# Core runtime for Table2Charts training, RL, evaluation, and Plotly corpus prep.
-# Verified against the local .venv on Python 3.10.12.
+# Table2Charts unified notebook runtime.
+# Install these packages into the same Python environment used by the Jupyter
+# kernel so `torch.cuda.is_available()` is True inside the notebook.
+#
+# Recommended setup:
+#   python -m pip install -i https://mirrors.aliyun.com/pypi/simple/ -r requirements-table2charts-cu118.txt
+#   python -m ipykernel install --user --name table2charts-cu118 --display-name "Table2Charts CUDA 11.8"
+#
+# Verified against the local project .venv on Python 3.10.12. The Data2VisRaw
+# TensorFlow/Flask demo code is intentionally not included because it is not used
+# by run_all_experiments.ipynb or the Plotly corpus preparation path.
+
+# Jupyter kernel integration
+ipykernel>=6.29
+
+# PyTorch CUDA 11.8 stack
 torch==2.2.2+cu118
 torchvision==0.17.2+cu118
+nvidia-cublas-cu11==11.11.3.6
+nvidia-cuda-cupti-cu11==11.8.87
+nvidia-cuda-nvrtc-cu11==11.8.89
+nvidia-cuda-runtime-cu11==11.8.89
+nvidia-cudnn-cu11==8.7.0.84
+nvidia-cufft-cu11==10.9.0.58
+nvidia-curand-cu11==10.3.0.86
+nvidia-cusolver-cu11==11.4.1.48
+nvidia-cusparse-cu11==11.7.5.86
+nvidia-nccl-cu11==2.19.3
+nvidia-nvtx-cu11==11.8.86
+triton==2.2.0
+
+# Numeric, ML, and experiment utilities
 numpy==1.26.4
+pandas==1.5.3
 scipy==1.15.3
 scikit-learn==1.7.2
 tensorboard==2.20.0
@@ -13,3 +42,29 @@ sortedcontainers==2.4.0
 pika==1.3.2
 requests==2.33.1
 pillow==12.2.0
+
+# Transitive packages captured from the working .venv for reproducibility
+absl-py==2.4.0
+certifi==2026.2.25
+charset-normalizer==3.4.7
+filelock==3.25.2
+fsspec==2026.2.0
+grpcio==1.80.0
+idna==3.11
+Jinja2==3.1.6
+joblib==1.5.3
+Markdown==3.10.2
+MarkupSafe==3.0.3
+mpmath==1.3.0
+networkx==3.4.2
+packaging==26.1
+protobuf==7.34.1
+python-dateutil==2.9.0.post0
+pytz==2026.1.post1
+six==1.17.0
+sympy==1.14.0
+tensorboard-data-server==0.7.2
+threadpoolctl==3.6.0
+typing_extensions==4.15.0
+urllib3==2.6.3
+Werkzeug==3.1.8
