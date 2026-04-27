@@ -190,3 +190,8 @@ Results/run_logs/*
 !experiments/results/raw_logs/
 !experiments/results/raw_logs/**
 experiments/results/raw_logs/reward_intensity_20260426T021230Z.log
+
+# Per-table recommendation JSON backfills are large generated artifacts.
+# Keep the aggregate CSV outputs in experiments/results/, but do not track the
+# raw recommendation directories.
+experiments/results/recommendations/
