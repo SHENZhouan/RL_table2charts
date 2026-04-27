@@ -43,6 +43,50 @@ Optional extra matrix:
 7. `aggressive soft reward + greedy`
 8. `aggressive soft reward + epsilon=0.20`
 
+## Reward Parameter Design
+
+The reward-intensity experiment changes the strength of dense intermediate
+rewards while keeping the exact-match reward, default reward, and positive
+classification threshold fixed.
+
+The hard-reward baseline is the original sparse/baseline reward:
+
+| setting | config family | reward mode | exact reward | default reward | same-token reward | field reward | same-field-type reward | positive threshold |
+| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| hard | `baseline_rl_greedy_train_eval`, epsilon baseline | `baseline` | code default | code default | not used | not used | not used | code default |
+| conservative | `reward_conservative_*` | `soft_reward` | `0.95` | `0.05` | `0.07` | `0.10` | `0.20` | `0.50` |
+| current | `reward_current_*` | `soft_reward` | `0.95` | `0.05` | `0.10` | `0.15` | `0.35` | `0.50` |
+| aggressive | `reward_aggressive_*` | `soft_reward` | `0.95` | `0.05` | `0.15` | `0.25` | `0.50` | `0.50` |
+
+Interpretation:
+
+- `exact_reward`: reward for an exact positive action match.
+- `default_reward`: fallback reward for ordinary non-matching actions.
+- `same_token_reward`: small reward for matching the command/token family.
+- `field_reward`: intermediate reward for matching the field.
+- `same_field_type_reward`: stronger partial reward for matching a compatible field type.
+- `positive_threshold`: threshold used by the reward-update training objective when turning shaped rewards into positive/negative labels.
+
+Only the partial-credit terms increase across the three soft-reward levels:
+
+```text
+conservative: same_token=0.07, field=0.10, same_field_type=0.20
+current:      same_token=0.10, field=0.15, same_field_type=0.35
+aggressive:   same_token=0.15, field=0.25, same_field_type=0.50
+```
+
+For each soft-reward level, there are two sampling variants:
+
+| sampling label | config suffix | strategy | epsilon start | epsilon end | epsilon decay | top-M |
+| --- | --- | --- | ---: | ---: | ---: | ---: |
+| greedy | `_greedy` | `greedy` | not used | not used | not used | not used |
+| epsilon | `_epsilon` | `epsilon_top_m` | `0.20` | `0.02` | `0.80` | `5` |
+
+This design isolates two effects:
+
+- reward intensity: hard vs conservative vs current vs aggressive;
+- sampling interaction: greedy vs the same epsilon-top-5 exploration schedule.
+
 ## Existing Relevant Results
 
 Completed:
